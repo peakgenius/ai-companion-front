@@ -15,8 +15,8 @@ import axios from "axios";
 import CustomButton from "../components/CustomButton";
 import Popup from "../components/Popup";
 import { AuthContext } from "../contexts/auth";
-import { getAuthToken } from "../util/asyncStorage";
-import QeustionPopup from "./QuestionPopup";
+import UserQeustionPopup from "./UserQuestionPopup";
+import GoalQeustionPopup from "./GoalQuestionPopup";
 import Input from "../components/Input";
 
 const Home = () => {
@@ -24,17 +24,35 @@ const Home = () => {
   const { authToken, isAuthenticated, setIsAuthenticated, setUser } =
     useContext(AuthContext);
   const [visible, setVisible] = useState(false);
-  const [visibleQuestionPopup, setVisibleQuestionPopup] = useState(false);
+  const [visibleUserQuestionPopup, setVisibleUserQuestionPopup] =
+    useState(false);
+  const [visibleGoalQuestionPopup, setVisibleGoalQuestionPopup] =
+    useState(false);
+  const [userAnswer, setUserAnswer] = useState("");
+  const [userQuestionId, setUserQuestionId] = useState("");
+  const [userQuestion, setUserQuestion] = useState("");
+  const [goalQuestionId, setGoalQuestionId] = useState("");
+  const [goalQuestion, setGoalQuestion] = useState("");
+  const [goalAnswer, setGoalAnswer] = useState("");
+  const [isSkipUserAnswer, setIsSkipUserAnswer] = useState(false);
+  const [isSkipGoalAnswer, setIsSkipGoalAnswer] = useState(false);
 
   useEffect(() => {
     if (!authToken) return;
     getQuestions();
-    openQuestionPopup();
   }, [authToken]);
 
+  useEffect(() => {
+    if (!isSkipUserAnswer) return;
+    saveUserAnswer();
+  }, [isSkipUserAnswer]);
+
+  useEffect(() => {
+    if (!isSkipGoalAnswer) return;
+    saveGoalAnswer();
+  }, [isSkipGoalAnswer]);
+
   const openPopup = async () => {
-    const data = await getAuthToken();
-    console.log("data", data);
     setVisible(true);
   };
 
@@ -42,12 +60,20 @@ const Home = () => {
     setVisible(false);
   };
 
-  const openQuestionPopup = () => {
-    setVisibleQuestionPopup(true);
+  const openUserQuestionPopup = () => {
+    setVisibleUserQuestionPopup(true);
   };
 
-  const closeQuestionPopup = () => {
-    setVisibleQuestionPopup(false);
+  const closeUserQuestionPopup = () => {
+    setVisibleUserQuestionPopup(false);
+  };
+
+  const openGoalQuestionPopup = () => {
+    setVisibleGoalQuestionPopup(true);
+  };
+
+  const closeGoalQuestionPopup = () => {
+    setVisibleGoalQuestionPopup(false);
   };
 
   const getQuestions = () => {
@@ -58,8 +84,65 @@ const Home = () => {
           "Access-Control-Allow-Origin": "*",
         },
       })
-      .then((res) => {})
+      .then((res) => {
+        console.log("dd", res.data);
+        const data = res.data;
+        setUserQuestionId(data.user_question_id._id);
+        setUserQuestion(data.user_question_id.content);
+        setGoalQuestionId(data.goal_question_id._id);
+        setGoalQuestion(data.goal_question_id.content);
+        openUserQuestionPopup();
+      })
       .catch((err) => {});
+  };
+
+  const skipUserAnswer = () => {
+    setIsSkipUserAnswer(true);
+  };
+
+  const skipGoalAnswer = () => {
+    setIsSkipGoalAnswer(true);
+  };
+
+  const saveUserAnswer = () => {
+    axios
+      .post(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/question/user-question`,
+        { userQuestionId, isSkipUserAnswer, userAnswer },
+        {
+          headers: {
+            Authorization: `${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
+      .then((res) => {
+        closeUserQuestionPopup();
+        openGoalQuestionPopup();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const saveGoalAnswer = () => {
+    axios
+      .post(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/question/goal-question`,
+        { goalQuestionId, isSkipGoalAnswer, goalAnswer },
+        {
+          headers: {
+            Authorization: `${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
+      .then((res) => {
+        closeGoalQuestionPopup();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const logout = async () => {
@@ -168,10 +251,24 @@ const Home = () => {
             </View>
           </View>
         </Popup>
-        <QeustionPopup
-          visibleQuestionPopup={visibleQuestionPopup}
-          closeQuestionPopup={closeQuestionPopup}
-        ></QeustionPopup>
+        <UserQeustionPopup
+          visibleQuestionPopup={visibleUserQuestionPopup}
+          question={userQuestion}
+          answer={userAnswer}
+          setAnswer={setUserAnswer}
+          saveAnswer={saveUserAnswer}
+          skipAnswer={skipUserAnswer}
+          closeQuestionPopup={closeUserQuestionPopup}
+          ></UserQeustionPopup>
+        <GoalQeustionPopup
+          visibleQuestionPopup={visibleGoalQuestionPopup}
+          question={goalQuestion}
+          answer={goalAnswer}
+          setAnswer={setGoalAnswer}
+          saveAnswer={saveGoalAnswer}
+          skipAnswer={skipGoalAnswer}
+          closeQuestionPopup={closeGoalQuestionPopup}
+        ></GoalQeustionPopup>
       </View>
     </SafeAreaView>
   );

@@ -1,13 +1,22 @@
 import React from "react";
-import { View, Image, Text } from "react-native";
+import { View, Image, Text, Pressable } from "react-native";
 import TypingText from "react-native-typing-text";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import Popup from "../components/Popup";
 import Input from "../components/Input";
+import CustomButton from "../components/CustomButton";
 
 const QuestionPopup = (props) => {
-  const { visibleQuestionPopup, closeQuestionPopup, answer, setAnswer } = props;
+  const {
+    visibleQuestionPopup,
+    closeQuestionPopup,
+    question,
+    answer,
+    setAnswer,
+    saveAnswer,
+    skipAnswer,
+  } = props;
 
   return (
     <Popup
@@ -25,31 +34,37 @@ const QuestionPopup = (props) => {
             className="w-10 h-10"
           ></Image>
           <View className="h-auto W-5/6  w-5/6 pt-2">
-            <TypingText
-              text="Hi, I’m your friendly AI companion. Please set the goal of the dommains"
-              textSize={16}
-            />
+            <TypingText text={question} textSize={16} />
           </View>
+        </View>
+        <View>
+          <CustomButton
+            title="Skip a question"
+            color={"red"}
+            onPress={skipAnswer}
+          />
         </View>
         <View className="absolute bottom-2 w-11/12 ml-6 flex-row">
           <Input
             multiline={true}
-						className="flex-1"
+            className="flex-1"
             numberOfLines={3}
             defaultValue={answer}
             style={{ backgroundColor: "#f1f1f1" }}
             setText={(value) => {
-              setAnswer((prev) => ({ ...prev, content: value }));
+              setAnswer(value);
             }}
           />
-          <View className="flex items-center justify-center bg-sky-600 w-11 rounded-full h-12 ml-3">
-            <FontAwesome
-              name="send-o"
-              size={18}
-              color="white"
-              style={{ textAlign: "center" }}
-            />
-          </View>
+          <Pressable onPress={saveAnswer}>
+            <View className="flex items-center justify-center bg-sky-600 w-11 rounded-full h-12 ml-3">
+              <FontAwesome
+                name="send-o"
+                size={18}
+                color="white"
+                style={{ textAlign: "center" }}
+              />
+            </View>
+          </Pressable>
         </View>
       </View>
     </Popup>
