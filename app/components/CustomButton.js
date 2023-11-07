@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, Pressable, Image } from "react-native";
+import { Text, View, StyleSheet, Pressable, Image, width } from "react-native";
 
 const styles = StyleSheet.create({
   btnClickContain: {
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 
 const CustomButton = React.forwardRef(({ title, color, img, ...rest }, ref) => (
   <Pressable
-    style={{ ...styles.btnClickContain, backgroundColor: color }}
+    style={{ ...styles.btnClickContain, backgroundColor: color, width: width }}
     {...rest}
     ref={ref}
   >

@@ -37,11 +37,12 @@ const QuestionPopup = (props) => {
             <TypingText text={question} textSize={16} />
           </View>
         </View>
-        <View>
+        <View className="ml-14">
           <CustomButton
             title="Skip a question"
             color={"red"}
             onPress={skipAnswer}
+            width={100}
           />
         </View>
         <View className="absolute bottom-2 w-11/12 ml-6 flex-row">
