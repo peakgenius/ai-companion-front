@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, Text, Pressable } from "react-native";
+import { View, Image, Text, Pressable, StyleSheet } from "react-native";
 import TypingText from "react-native-typing-text";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
@@ -40,7 +40,7 @@ const GoalQuestionPopup = (props) => {
         <View>
           <CustomButton
             title="Skip a question"
-            color={"red"}
+            color={"#d9ab3c"}
             onPress={skipAnswer}
           />
         </View>
@@ -70,5 +70,11 @@ const GoalQuestionPopup = (props) => {
     </Popup>
   );
 };
+
+const styles = StyleSheet.create({
+  buttonColor: {
+    backgroundColor: "#d9ab3c"
+  }
+})
 
 export default GoalQuestionPopup;

@@ -31,6 +31,7 @@ const Home = () => {
   const [userAnswer, setUserAnswer] = useState("");
   const [userQuestionId, setUserQuestionId] = useState("");
   const [userQuestion, setUserQuestion] = useState("");
+  const [goalId, setGoalId] = useState("");
   const [goalQuestionId, setGoalQuestionId] = useState("");
   const [goalQuestion, setGoalQuestion] = useState("");
   const [goalAnswer, setGoalAnswer] = useState("");
@@ -89,8 +90,11 @@ const Home = () => {
         const data = res.data;
         setUserQuestionId(data.user_question_id._id);
         setUserQuestion(data.user_question_id.content);
-        setGoalQuestionId(data.goal_question_id._id);
-        setGoalQuestion(data.goal_question_id.content);
+        if (data.goal_id) {
+          setGoalId(data.goal_id);
+          setGoalQuestionId(data.goal_question_id._id);
+          setGoalQuestion(data.goal_question_id.content);
+        }
         openUserQuestionPopup();
       })
       .catch((err) => {});
@@ -107,7 +111,7 @@ const Home = () => {
   const saveUserAnswer = () => {
     axios
       .post(
-        `${process.env.EXPO_PUBLIC_BASE_URL}/question/user-question`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/question/user-question-answer`,
         { userQuestionId, isSkipUserAnswer, userAnswer },
         {
           headers: {
@@ -118,7 +122,9 @@ const Home = () => {
       )
       .then((res) => {
         closeUserQuestionPopup();
-        openGoalQuestionPopup();
+        if (goalQuestionId !== "") {
+          openGoalQuestionPopup();
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -128,8 +134,8 @@ const Home = () => {
   const saveGoalAnswer = () => {
     axios
       .post(
-        `${process.env.EXPO_PUBLIC_BASE_URL}/question/goal-question`,
-        { goalQuestionId, isSkipGoalAnswer, goalAnswer },
+        `${process.env.EXPO_PUBLIC_BASE_URL}/question/goal-question-answer`,
+        { goalQuestionId, goalId, isSkipGoalAnswer, goalAnswer },
         {
           headers: {
             Authorization: `${authToken}`,
@@ -259,7 +265,7 @@ const Home = () => {
           saveAnswer={saveUserAnswer}
           skipAnswer={skipUserAnswer}
           closeQuestionPopup={closeUserQuestionPopup}
-          ></UserQeustionPopup>
+        ></UserQeustionPopup>
         <GoalQeustionPopup
           visibleQuestionPopup={visibleGoalQuestionPopup}
           question={goalQuestion}

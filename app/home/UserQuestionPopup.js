@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, Text, Pressable } from "react-native";
+import { View, Image, Text, Pressable, StyleSheet } from "react-native";
 import TypingText from "react-native-typing-text";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
@@ -28,7 +28,7 @@ const QuestionPopup = (props) => {
       borderRadius={20}
     >
       <View className="bg-white border-gray-950 h-[250] pt-5 pl-5 pr-5">
-        <View className="flex-row">
+        <View className="flex-row mb-3">
           <Image
             source={require("../../assets/chatbot.png")}
             className="w-10 h-10"
@@ -37,12 +37,11 @@ const QuestionPopup = (props) => {
             <TypingText text={question} textSize={16} />
           </View>
         </View>
-        <View className="ml-14">
+        <View className="ml-auto w-3/5">
           <CustomButton
             title="Skip a question"
-            color={"red"}
+            color={"#d9ab3c"}
             onPress={skipAnswer}
-            width={100}
           />
         </View>
         <View className="absolute bottom-2 w-11/12 ml-6 flex-row">
@@ -57,7 +56,7 @@ const QuestionPopup = (props) => {
             }}
           />
           <Pressable onPress={saveAnswer}>
-            <View className="flex items-center justify-center bg-sky-600 w-11 rounded-full h-12 ml-3">
+            <View className="flex items-center justify-center w-11 rounded-full h-12 ml-3" style={styles.buttonColor}>
               <FontAwesome
                 name="send-o"
                 size={18}
@@ -71,5 +70,11 @@ const QuestionPopup = (props) => {
     </Popup>
   );
 };
+
+const styles = StyleSheet.create({
+  buttonColor: {
+    backgroundColor: "#d9ab3c"
+  }
+})
 
 export default QuestionPopup;
