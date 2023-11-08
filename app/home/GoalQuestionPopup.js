@@ -11,6 +11,7 @@ const GoalQuestionPopup = (props) => {
   const {
     visibleQuestionPopup,
     closeQuestionPopup,
+    goal,
     question,
     answer,
     setAnswer,
@@ -27,17 +28,18 @@ const GoalQuestionPopup = (props) => {
       marginTop={"15%"}
       borderRadius={20}
     >
-      <View className="bg-white border-gray-950 h-[250] pt-5 pl-5 pr-5">
+      <View className="bg-white border-gray-950 h-[300] pt-5 pl-5 pr-5">
         <View className="flex-row">
           <Image
             source={require("../../assets/chatbot.png")}
             className="w-10 h-10"
           ></Image>
           <View className="h-auto W-5/6  w-5/6 pt-2">
+            <Text className="mb-3 p-2">{goal}</Text>
             <TypingText text={question} textSize={16} />
           </View>
         </View>
-        <View>
+        <View className="ml-auto w-3/5">
           <CustomButton
             title="Skip a question"
             color={"#d9ab3c"}
@@ -56,7 +58,7 @@ const GoalQuestionPopup = (props) => {
             }}
           />
           <Pressable onPress={saveAnswer}>
-            <View className="flex items-center justify-center bg-sky-600 w-11 rounded-full h-12 ml-3">
+            <View className="flex items-center justify-center w-11 rounded-full h-12 ml-3" style={styles.buttonColor}>
               <FontAwesome
                 name="send-o"
                 size={18}

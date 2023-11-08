@@ -32,6 +32,7 @@ const Home = () => {
   const [userQuestionId, setUserQuestionId] = useState("");
   const [userQuestion, setUserQuestion] = useState("");
   const [goalId, setGoalId] = useState("");
+  const [goal, setGoal] = useState("");
   const [goalQuestionId, setGoalQuestionId] = useState("");
   const [goalQuestion, setGoalQuestion] = useState("");
   const [goalAnswer, setGoalAnswer] = useState("");
@@ -90,8 +91,10 @@ const Home = () => {
         const data = res.data;
         setUserQuestionId(data.user_question_id._id);
         setUserQuestion(data.user_question_id.content);
+        console.log(" goal id", data.goal_id);
         if (data.goal_id) {
-          setGoalId(data.goal_id);
+          setGoalId(data.goal_id._id);
+          setGoal(data.goal_id.content);
           setGoalQuestionId(data.goal_question_id._id);
           setGoalQuestion(data.goal_question_id.content);
         }
@@ -268,6 +271,7 @@ const Home = () => {
         ></UserQeustionPopup>
         <GoalQeustionPopup
           visibleQuestionPopup={visibleGoalQuestionPopup}
+          goal={goal}
           question={goalQuestion}
           answer={goalAnswer}
           setAnswer={setGoalAnswer}
