@@ -60,6 +60,7 @@ const AuthProvider = ({ children }) => {
         setUser,
         getUser,
         authToken,
+        setAuthToken
       }}
     >
       {children}

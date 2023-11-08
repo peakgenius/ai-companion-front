@@ -12,7 +12,7 @@ import Input from "../components/Input";
 const SignIn = () => {
   const buttonColor = "#d9ab3c";
   const [profile, setProfile] = useState({ email: "", password: "" });
-  const { setIsAuthenticated, setUser } = useContext(AuthContext);
+  const { setIsAuthenticated, setUser, setAuthToken } = useContext(AuthContext);
 
   const signIn = async () => {
     console.log(process.env.EXPO_PUBLIC_BASE_URL );
@@ -25,6 +25,7 @@ const SignIn = () => {
           setUser(user);
           try {
             const authToken = JSON.stringify(token);
+            setAuthToken(authToken);
             await AsyncStorage.setItem("auth-token", authToken);
           } catch (e) {
             console.log(e);

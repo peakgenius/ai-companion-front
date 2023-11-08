@@ -110,7 +110,7 @@ const SignUp = () => {
           <Text className="text-white flex-1 text-xl">Height:</Text>
           <InputNumber
             separatorWidth={0}
-            maxValue={150}
+            maxValue={300}
             totalWidth={250}
             value={profile.height}
             onChange={(value) => {
@@ -125,7 +125,7 @@ const SignUp = () => {
           <Text className="text-white flex-1 text-xl">Weight:</Text>
           <InputNumber
             separatorWidth={0}
-            maxValue={150}
+            maxValue={300}
             totalWidth={250}
             value={profile.weight}
             onChange={(value) => {
