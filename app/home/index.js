@@ -36,6 +36,7 @@ const Home = () => {
   const [goalQuestionId, setGoalQuestionId] = useState("");
   const [goalQuestion, setGoalQuestion] = useState("");
   const [goalAnswer, setGoalAnswer] = useState("");
+  const [questionDisplayInterval, setQuestionDisplayInterval] = useState(-1);
   const [isSkipUserAnswer, setIsSkipUserAnswer] = useState(false);
   const [isSkipGoalAnswer, setIsSkipGoalAnswer] = useState(false);
 
@@ -91,6 +92,7 @@ const Home = () => {
         const data = res.data;
         setUserQuestionId(data.user_question_id._id);
         setUserQuestion(data.user_question_id.content);
+        setQuestionDisplayInterval(data.question_display_interval);
         console.log(" goal id", data.goal_id);
         if (data.goal_id) {
           setGoalId(data.goal_id._id);
@@ -127,6 +129,10 @@ const Home = () => {
         closeUserQuestionPopup();
         if (goalQuestionId !== "") {
           openGoalQuestionPopup();
+          return;
+        }
+        if (questionDisplayInterval * 1 === 0) {
+          updateQuestionDate();
         }
       })
       .catch((err) => {
@@ -138,7 +144,12 @@ const Home = () => {
     axios
       .post(
         `${process.env.EXPO_PUBLIC_BASE_URL}/question/goal-question-answer`,
-        { goalQuestionId, goalId, isSkipGoalAnswer, goalAnswer },
+        {
+          goalQuestionId,
+          goalId,
+          isSkipGoalAnswer,
+          goalAnswer,
+        },
         {
           headers: {
             Authorization: `${authToken}`,
@@ -148,6 +159,9 @@ const Home = () => {
       )
       .then((res) => {
         closeGoalQuestionPopup();
+        if (questionDisplayInterval * 1 === 0) {
+          updateQuestionDate();
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -169,6 +183,27 @@ const Home = () => {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const updateQuestionDate = () => {
+    console.log(authToken);
+    axios
+      .patch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/question/question-date`,
+        {},
+        {
+          headers: {
+            Authorization: `${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
+      .then((res) => {
+        console.log("date updating success!");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
