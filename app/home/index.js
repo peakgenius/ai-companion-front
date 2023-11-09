@@ -18,6 +18,7 @@ import { AuthContext } from "../contexts/auth";
 import UserQeustionPopup from "./UserQuestionPopup";
 import GoalQeustionPopup from "./GoalQuestionPopup";
 import Input from "../components/Input";
+import { getUrl } from "../util/asyncStorage";
 
 const Home = () => {
   const buttonColor = "#d9ab3c";
@@ -81,7 +82,7 @@ const Home = () => {
 
   const getQuestions = () => {
     axios
-      .get(process.env.EXPO_PUBLIC_BASE_URL + "/question/questions", {
+      .get(getUrl() + "/question/questions", {
         headers: {
           Authorization: `${authToken}`,
           "Access-Control-Allow-Origin": "*",
@@ -116,7 +117,7 @@ const Home = () => {
   const saveUserAnswer = () => {
     axios
       .post(
-        `${process.env.EXPO_PUBLIC_BASE_URL}/question/user-question-answer`,
+        `${getUrl()}/question/user-question-answer`,
         { userQuestionId, isSkipUserAnswer, userAnswer },
         {
           headers: {
@@ -143,7 +144,7 @@ const Home = () => {
   const saveGoalAnswer = () => {
     axios
       .post(
-        `${process.env.EXPO_PUBLIC_BASE_URL}/question/goal-question-answer`,
+        `${getUrl()}/question/goal-question-answer`,
         {
           goalQuestionId,
           goalId,
@@ -189,7 +190,7 @@ const Home = () => {
     console.log(authToken);
     axios
       .patch(
-        `${process.env.EXPO_PUBLIC_BASE_URL}/question/question-date`,
+        `${getUrl()}/question/question-date`,
         {},
         {
           headers: {

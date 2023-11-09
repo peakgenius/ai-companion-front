@@ -8,6 +8,7 @@ import Footer from "./Footer";
 import UserInfo from "./UserInfo";
 import Popup from "../components/Popup";
 import CustomButton from "../components/CustomButton";
+import { getUrl } from "../util/asyncStorage";
 
 const Profile = () => {
   const { user, isAuthenticated, getUser, authToken } = useContext(AuthContext);
@@ -32,7 +33,7 @@ const Profile = () => {
 
   const getGoals = () => {
     axios
-      .get(process.env.EXPO_PUBLIC_BASE_URL + "/profile/goal", {
+      .get(getUrl() + "/profile/goal", {
         headers: {
           Authorization: `${authToken}`,
           "Access-Control-Allow-Origin": "*",
@@ -73,7 +74,7 @@ const Profile = () => {
     setQuestionDisplayInterval(value);
     axios
       .post(
-        process.env.EXPO_PUBLIC_BASE_URL + "/profile/set-question-interval",
+        getUrl() + "/profile/set-question-interval",
         {
           email: user.userEmail,
           questionDisplayInterval: value,
@@ -98,7 +99,7 @@ const Profile = () => {
     setTipDisplayInterval(value);
     axios
       .post(
-        process.env.EXPO_PUBLIC_BASE_URL + "/profile/set-tip-interval",
+        getUrl() + "/profile/set-tip-interval",
         {
           email: user.userEmail,
           tipDisplayInterval: value,
@@ -121,7 +122,7 @@ const Profile = () => {
 
   const deleteGoal = () => {
     axios
-      .delete(`${process.env.EXPO_PUBLIC_BASE_URL}/profile/goal?id=${deletingGoalId}`, {
+      .delete(`${getUrl()}/profile/goal?id=${deletingGoalId}`, {
         headers: {
           Authorization: `${authToken}`,
           "Access-Control-Allow-Origin": "*",

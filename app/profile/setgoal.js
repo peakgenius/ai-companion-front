@@ -10,6 +10,7 @@ import Input from "../components/Input";
 import Select from "../components/Select";
 import { getAuthToken } from "../util/asyncStorage";
 import { AuthContext } from "../contexts/auth";
+import { getUrl } from "../util/asyncStorage";
 
 const SetGoal = () => {
   const buttonColor = "#d9ab3c";
@@ -25,7 +26,7 @@ const SetGoal = () => {
 
   const getDomain = async () => {
     axios
-      .get(process.env.EXPO_PUBLIC_BASE_URL + "/profile/domain", {
+      .get(getUrl() + "/profile/domain", {
         headers: {
           Authorization: `${authToken}`,
           "Access-Control-Allow-Origin": "*",
@@ -47,7 +48,7 @@ const SetGoal = () => {
 
   const create = () => {
     axios
-      .post(process.env.EXPO_PUBLIC_BASE_URL + "/profile/set-goal", goal, {
+      .post(getUrl() + "/profile/set-goal", goal, {
         headers: {
           Authorization: `${authToken}`,
           "Access-Control-Allow-Origin": "*",

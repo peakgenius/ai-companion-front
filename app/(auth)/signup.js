@@ -8,6 +8,7 @@ import CustomButton from "../components/CustomButton";
 import Input from "../components/Input";
 import InputNumber from "../components/InputNumber";
 import Select from "../components/Select";
+import { getUrl } from "../util/asyncStorage";
 
 const SignUp = () => {
   const buttonColor = "#d9ab3c";
@@ -25,9 +26,9 @@ const SignUp = () => {
   });
 
   const signUp = () => {
-    console.log("signup", process.env.EXPO_PUBLIC_BASE_URL, profile);
+    console.log("signup", getUrl(), profile);
     axios
-      .post(process.env.EXPO_PUBLIC_BASE_URL + "/auth/signup", profile, {
+      .post(getUrl() + "/auth/signup", profile, {
         headers: {
           "Access-Control-Allow-Origin": "*",
         },

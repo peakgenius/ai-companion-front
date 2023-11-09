@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { router, usePathname } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-
 export const AuthContext = React.createContext({});
+import { getUrl } from "../util/asyncStorage";
 
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -41,7 +41,7 @@ const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
         setAuthToken(res);
         axios
-          .get(`${process.env.EXPO_PUBLIC_BASE_URL}/auth/user?id=${res}`)
+          .get(`${getUrl()}/auth/user?id=${res}`)
           .then((response) => {
             setUser(response.data.user);
           });

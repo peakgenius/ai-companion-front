@@ -8,6 +8,7 @@ import axios from "axios";
 import { AuthContext } from "../contexts/auth";
 import CustomButton from "../components/CustomButton";
 import Input from "../components/Input";
+import { getUrl } from "../util/asyncStorage";
 
 const SignIn = () => {
   const buttonColor = "#d9ab3c";
@@ -15,9 +16,9 @@ const SignIn = () => {
   const { setIsAuthenticated, setUser, setAuthToken } = useContext(AuthContext);
 
   const signIn = async () => {
-    console.log(process.env.EXPO_PUBLIC_BASE_URL );
+    console.log(getUrl() );
     axios
-      .post(process.env.EXPO_PUBLIC_BASE_URL + "/auth/signin", profile)
+      .post(getUrl() + "/auth/signin", profile)
       .then(async (res) => {
         const {user, token, } = res.data;
         if (token) {
