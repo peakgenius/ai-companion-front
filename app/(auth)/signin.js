@@ -16,18 +16,26 @@ const SignIn = () => {
   const { setIsAuthenticated, setUser, setAuthToken } = useContext(AuthContext);
 
   const signIn = async () => {
-    console.log(getUrl() );
+    console.log(getUrl());
     axios
       .post(getUrl() + "/auth/signin", profile)
       .then(async (res) => {
-        const {user, token, } = res.data;
+        const { user, token } = res.data;
         if (token) {
           setIsAuthenticated(true);
           setUser(user);
           try {
-            const authToken = JSON.stringify(token);
-            setAuthToken(authToken);
-            await AsyncStorage.setItem("auth-token", authToken);
+            setAuthToken(token);
+            const storageExpirationTimeInMinutes = 60;
+            const now = new Date();
+            now.setMinutes(now.getMinutes() + storageExpirationTimeInMinutes); // add the expiration time to the current Date time
+            const expiryTimeInTimestamp = Math.floor(now.getTime() / 1000);
+            const authTokenData = {
+              token: token,
+              expiryTime: expiryTimeInTimestamp,
+            };
+            const authTokenJson = JSON.stringify(authTokenData);
+            await AsyncStorage.setItem("auth-token", authTokenJson);
           } catch (e) {
             console.log(e);
           }

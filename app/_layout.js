@@ -8,17 +8,17 @@ NativeWindStyleSheet.setOutput({
 });
 
 export default function HomeLayout() {
-  Notifications.requestPermissionsAsync();
+  // Notifications.requestPermissionsAsync();
 
-  Notifications.scheduleNotificationAsync({
-    content: {
-      title: "Hi, I need to ask a question.",
-    },
-    trigger: {
-      seconds: 3600,
-      repeats: true,
-    },
-  });
+  // Notifications.scheduleNotificationAsync({
+  //   content: {
+  //     title: "Hi, I need to ask a question.",
+  //   },
+  //   trigger: {
+  //     seconds: 3600,
+  //     repeats: true,
+  //   },
+  // });
   return (
     <AuthProvider>
       <Slot />

@@ -8,7 +8,6 @@ import axios from "axios";
 import CustomButton from "../components/CustomButton";
 import Input from "../components/Input";
 import Select from "../components/Select";
-import { getAuthToken } from "../util/asyncStorage";
 import { AuthContext } from "../contexts/auth";
 import { getUrl } from "../util/asyncStorage";
 

@@ -11,7 +11,7 @@ const InputNumber = (props) => {
       totalWidth={totalWidth}
       totalHeight={40}
       iconSize={25}
-      step={1}
+      step={1.5}
       valueType="real"
       rounded
       textColor="white"

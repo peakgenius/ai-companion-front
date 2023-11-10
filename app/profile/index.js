@@ -9,13 +9,16 @@ import UserInfo from "./UserInfo";
 import Popup from "../components/Popup";
 import CustomButton from "../components/CustomButton";
 import { getUrl } from "../util/asyncStorage";
+import InputNumber from "../components/InputNumber";
 
 const Profile = () => {
   const { user, isAuthenticated, getUser, authToken } = useContext(AuthContext);
   const [visibleConfirmPopup, setVisibleConfirmPopup] = useState(false);
+  const [visibleProgressPopup, setVisibleProgressPopup] = useState(false);
   const [visibleSettingQuestion, setVisibleSettingQuestion] = useState(false);
   const [visibleSettingTip, setVisibleSettingTip] = useState(false);
-  const [deletingGoalId, setDeletingGoalId] = useState("1");
+  const [goalId, setGoalId] = useState("1");
+  const [progress, setProgress] = useState(0);
   const [questionDisplayInterval, setQuestionDisplayInterval] = useState(
     user.question_display_interval
   );
@@ -62,12 +65,21 @@ const Profile = () => {
   };
 
   const openConfimrPopup = (id) => {
-    setDeletingGoalId(id)
+    setGoalId(id);
     setVisibleConfirmPopup(true);
   };
 
   const closeConfimrPopup = () => {
     setVisibleConfirmPopup(false);
+  };
+
+  const openProgressPopup = (id) => {
+    setGoalId(id);
+    setVisibleProgressPopup(true);
+  };
+
+  const closeProgressPopup = () => {
+    setVisibleProgressPopup(false);
   };
 
   const setQuestionInterval = async (value) => {
@@ -120,9 +132,25 @@ const Profile = () => {
       });
   };
 
+  const saveGoalProgress = () => {
+    axios
+      .post(
+        `${getUrl()}/profile/goal-progress`,
+        { goalId, progress },
+        {
+          headers: {
+            Authorization: `${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
+      .then((res) => {console.log(res.data)})
+      .catch((err) => {console.log(err)});
+  };
+
   const deleteGoal = () => {
     axios
-      .delete(`${getUrl()}/profile/goal?id=${deletingGoalId}`, {
+      .delete(`${getUrl()}/profile/goal?id=${goalId}`, {
         headers: {
           Authorization: `${authToken}`,
           "Access-Control-Allow-Origin": "*",
@@ -136,8 +164,6 @@ const Profile = () => {
         console.log(err);
       });
   };
-
-
 
   return (
     <View className="flex-1 bg-neutral-900 relative">
@@ -154,13 +180,16 @@ const Profile = () => {
             <Pressable
               title="Delete"
               className="absolute top-3 right-0"
+              onPress={(e) => openProgressPopup(item._id)}
+            >
+              <FontAwesome name="pencil" size={15} color={"#fff"} />
+            </Pressable>
+            <Pressable
+              title="Delete"
+              className="absolute bottom-3 right-0"
               onPress={(e) => openConfimrPopup(item._id)}
             >
-              <FontAwesome
-                name="trash"
-                size={15}
-                color={"#fff"}
-              />
+              <FontAwesome name="trash" size={15} color={"#fff"} />
             </Pressable>
           </View>
         ))}
@@ -188,10 +217,59 @@ const Profile = () => {
           <Text className="text-2xl mb-8">Are you sure to delete?</Text>
           <View className="flex-row justify-center gap-3">
             <View>
-              <CustomButton color={"red"} title={"delete"} onPress={deleteGoal}/>
+              <CustomButton
+                color={"red"}
+                title={"delete"}
+                onPress={deleteGoal}
+              />
             </View>
             <View>
-              <CustomButton color={"grey"} title={"cancel"} onPress={closeConfimrPopup}/>
+              <CustomButton
+                color={"grey"}
+                title={"cancel"}
+                onPress={closeConfimrPopup}
+              />
+            </View>
+          </View>
+        </View>
+      </Popup>
+      <Popup
+        visible={visibleProgressPopup}
+        transparent={true}
+        dismiss={closeProgressPopup}
+        margin={"10%"}
+        marginTop={"25%"}
+      >
+        <View className="bg-white border-gray-950 h-[280] pt-10 pl-5 pr-5 rounded-lg">
+          <Text className="text-2xl mb-8 text-center">
+            Which level of this goal are you in 1-10?
+          </Text>
+          <InputNumber
+            separatorWidth={0}
+            minValue={0}
+            maxValue={10}
+            totalWidth={250}
+            value={progress}
+            textColor="#000"
+            containerStyle={{ border: "none" }}
+            onChange={(value) => {
+              setProgress(value);
+            }}
+          />
+          <View className="flex-row justify-center gap-3 mt-3">
+            <View>
+              <CustomButton
+                color={"#d9ab3c"}
+                title={"save"}
+                onPress={saveGoalProgress}
+              />
+            </View>
+            <View>
+              <CustomButton
+                color={"grey"}
+                title={"cancel"}
+                onPress={closeProgressPopup}
+              />
             </View>
           </View>
         </View>

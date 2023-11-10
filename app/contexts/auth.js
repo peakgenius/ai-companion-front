@@ -8,6 +8,7 @@ import { getUrl } from "../util/asyncStorage";
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authToken, setAuthToken] = useState("");
+  const [dayToGetQuestions, setDayToGetQuestions] = useState(0);
   const pathname = usePathname();
   const [user, setUser] = useState({
     name: "",
@@ -29,7 +30,14 @@ const AuthProvider = ({ children }) => {
   const getUser = () => {
     AsyncStorage.getItem("auth-token")
       .then((res) => {
-        if (res === null) {
+        const ParsedToken = JSON.parse(res);
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+        if (currentTimestamp >= ParsedToken?.expiryTime) {
+          AsyncStorage.removeItem("auth-token");
+          router.replace("/");
+          return; 
+        }
+        if (ParsedToken.token === null) {
           if (
             pathname !== "/" &&
             pathname !== "/signup" &&
@@ -39,9 +47,9 @@ const AuthProvider = ({ children }) => {
           return;
         }
         setIsAuthenticated(true);
-        setAuthToken(res);
+        setAuthToken(ParsedToken.token);
         axios
-          .get(`${getUrl()}/auth/user?id=${res}`)
+          .get(`${getUrl()}/auth/user?token=${ParsedToken.token}`)
           .then((response) => {
             setUser(response.data.user);
           });
@@ -60,7 +68,9 @@ const AuthProvider = ({ children }) => {
         setUser,
         getUser,
         authToken,
-        setAuthToken
+        setAuthToken,
+        dayToGetQuestions,
+        setDayToGetQuestions,
       }}
     >
       {children}

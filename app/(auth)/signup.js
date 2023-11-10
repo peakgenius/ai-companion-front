@@ -98,6 +98,7 @@ const SignUp = () => {
             separatorWidth={0}
             totalWidth={250}
             maxValue={150}
+            containerStyle={{border: "none"}}
             value={profile.age}
             onChange={(value) => {
               setProfile((prev) => ({
@@ -112,6 +113,7 @@ const SignUp = () => {
           <InputNumber
             separatorWidth={0}
             maxValue={300}
+            containerStyle={{border: "none"}}
             totalWidth={250}
             value={profile.height}
             onChange={(value) => {
@@ -127,6 +129,7 @@ const SignUp = () => {
           <InputNumber
             separatorWidth={0}
             maxValue={300}
+            containerStyle={{border: "none"}}
             totalWidth={250}
             value={profile.weight}
             onChange={(value) => {
