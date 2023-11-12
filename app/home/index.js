@@ -44,12 +44,19 @@ const Home = () => {
   const [goalAnswer, setGoalAnswer] = useState("");
   const [isSkipUserAnswer, setIsSkipUserAnswer] = useState(false);
   const [isSkipGoalAnswer, setIsSkipGoalAnswer] = useState(false);
+  const [progresses, setProgresses] = useState({
+    health: 0,
+    income: 0,
+    happiness: 0,
+    romantic: 0,
+    family: 0,
+  });
 
   useEffect(() => {
     if (!authToken) return;
     getProgress();
     const now = new Date();
-    if (dayToGetQuestions === now.getDate()) return;//to call getquestions funtion once per day
+    if (dayToGetQuestions === now.getDate()) return; //to call getquestions funtion once per day
     getQuestions();
   }, [authToken]);
 
@@ -95,7 +102,14 @@ const Home = () => {
           "Access-Control-Allow-Origin": "*",
         },
       });
-
+      const domains = progress.data.domains;
+      setProgresses({
+        health: (domains[0].avg_progress || 0) * 10,
+        income: (domains[1].avg_progress || 0) * 10,
+        happiness: (domains[2].avg_progress || 0) * 10,
+        family: (domains[3].avg_progress || 0) * 10,
+        romantic: (domains[4].avg_progress || 0) * 10,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -246,7 +260,7 @@ const Home = () => {
             source={require("../../assets/home.png")}
           />
         )}
-        {isAuthenticated && <Progress />}
+        {isAuthenticated && <Progress progresses={progresses} />}
         <View className="p-4 pt-0 items-stretch">
           {!isAuthenticated && (
             <>

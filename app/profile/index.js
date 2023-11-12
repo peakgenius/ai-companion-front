@@ -12,7 +12,7 @@ import { getUrl } from "../util/asyncStorage";
 import InputNumber from "../components/InputNumber";
 
 const Profile = () => {
-  const { user, isAuthenticated, getUser, authToken } = useContext(AuthContext);
+  const { user, getUser, authToken } = useContext(AuthContext);
   const [visibleConfirmPopup, setVisibleConfirmPopup] = useState(false);
   const [visibleProgressPopup, setVisibleProgressPopup] = useState(false);
   const [visibleSettingQuestion, setVisibleSettingQuestion] = useState(false);
@@ -75,6 +75,13 @@ const Profile = () => {
 
   const openProgressPopup = (id) => {
     setGoalId(id);
+    const goalsLength = goals.length;
+    for (let i = 0; i < goalsLength; i++) {
+      if (goals[i]._id === id) {
+        setProgress(goals[i].progress);
+        break;
+      }
+    }
     setVisibleProgressPopup(true);
   };
 
@@ -144,8 +151,12 @@ const Profile = () => {
           },
         }
       )
-      .then((res) => {console.log(res.data)})
-      .catch((err) => {console.log(err)});
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const deleteGoal = () => {
