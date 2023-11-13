@@ -35,6 +35,7 @@ const Home = () => {
     setDayToGetQuestions,
   } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [visible, setVisible] = useState(false);
   const [visibleUserQuestionPopup, setVisibleUserQuestionPopup] =
     useState(false);
@@ -287,24 +288,29 @@ const Home = () => {
       });
   };
 
-  const saveChat = () => {
-    axios
-      .post(
-        `${getUrl()}/chat/message`,
-        {
-          userMessage,
+  const saveChat = async () => {
+    setIsSaving(true);
+    const messageRow = [{ user_message: userMessage }];
+    setMessages((prev) => {
+      return [...prev, ...messageRow];
+    });
+    const res = await axios.post(
+      `${getUrl()}/chat/message`,
+      {
+        userMessage,
+      },
+      {
+        headers: {
+          Authorization: `${authToken}`,
+          "Access-Control-Allow-Origin": "*",
         },
-        {
-          headers: {
-            Authorization: `${authToken}`,
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      )
-      .then((res) => {})
-      .catch((err) => {
-        console.log(err);
-      });
+      }
+    );
+    setMessages((prev) => {
+      prev[prev.length - 1].ai_message = res.data;
+      return prev;
+    });
+    setIsSaving(false);
   };
 
   return (
@@ -368,7 +374,7 @@ const Home = () => {
           visible={visible}
           dismiss={closePopup}
           viewContainerClassName={
-            "bg-white border-gray-950 h-[570] pt-5 pl-5 pr-5 rounded-md"
+            "bg-white border-gray-950 h-[570] pt-5 pl-5 pr-5 rounded-md relative"
           }
         >
           <View>
@@ -384,8 +390,8 @@ const Home = () => {
               </View>
               {messages.map((item, index) => (
                 <View key={index}>
-                  <View className="flex-row mb-3 justify-end">
-                    <Text className="bg-slate-300 p-2 inline-block rounded-l-md rounded-br-lg mr-3">
+                  <View className="flex-row mb-3">
+                    <Text className="ml-auto flex-1 bg-slate-300 inline-block rounded-l-md rounded-br-lg whitespace-nowrap mr-3 p-2">
                       {item.user_message}
                     </Text>
                     <Image
@@ -393,15 +399,17 @@ const Home = () => {
                       className="w-10 h-10"
                     ></Image>
                   </View>
-                  <View className="flex-row mb-3">
-                    <Image
-                      source={require("../../assets/chatbot.png")}
-                      className="w-10 h-10 mr-3"
-                    ></Image>
-                    <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
-                      {item.ai_message}
-                    </Text>
-                  </View>
+                  {item.ai_message && (
+                    <View className="flex-row mb-3 justify-start">
+                      <Image
+                        source={require("../../assets/chatbot.png")}
+                        className="w-10 h-10 mr-3"
+                      ></Image>
+                      <Text className="bg-slate-300 flex-1 p-2 rounded-r-md rounded-bl-lg mr-auto inline-block whitespace-nowrap">
+                        {item.ai_message}
+                      </Text>
+                    </View>
+                  )}
                 </View>
               ))}
             </ScrollView>
@@ -416,7 +424,7 @@ const Home = () => {
                   setUserMessage(value);
                 }}
               />
-              <Pressable onPress={saveChat}>
+              <Pressable onPress={saveChat} disabled={isSaving}>
                 <View
                   className="flex items-center justify-center w-11 rounded-full h-12 ml-3"
                   style={styles.buttonColor}
