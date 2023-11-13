@@ -21,7 +21,7 @@ const Footer = (props) => {
   } = props;
   return (
     <>
-      <View className="flex-row justify-around p-2 bg-slate-700 border-t-slate-300 bottom-0 left-0 right-0 absolute">
+      <View className="flex-row justify-around p-2 bg-slate-700 border-t-slate-300 bottom-0 left-0 right-0" style={{position: "fixed"}}>
         <Link href="/profile/setgoal">
           <View className="flex-col">
             <FontAwesome
