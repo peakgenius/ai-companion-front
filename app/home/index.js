@@ -34,6 +34,7 @@ const Home = () => {
     dayToGetQuestions,
     setDayToGetQuestions,
   } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [visibleUserQuestionPopup, setVisibleUserQuestionPopup] =
     useState(false);
@@ -62,6 +63,8 @@ const Home = () => {
     romantic: 0,
     family: 0,
   });
+  const [userMessage, setUserMessage] = useState("");
+  const [messages, setMessages] = useState([]);
   const [tips, setTips] = useState([]);
 
   useEffect(() => {
@@ -84,6 +87,7 @@ const Home = () => {
   }, [isSkipGoalAnswer]);
 
   const openPopup = async () => {
+    getMessages();
     setVisible(true);
   };
 
@@ -167,6 +171,19 @@ const Home = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const getMessages = async () => {
+    setIsLoading(true);
+    const resMessages = await axios.get(getUrl() + "/chat/messages", {
+      headers: {
+        Authorization: `${authToken}`,
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+    setMessages(resMessages.data);
+    console.log("resMessages->", resMessages);
+    setIsLoading(false);
   };
 
   const skipUserAnswer = () => {
@@ -270,7 +287,25 @@ const Home = () => {
       });
   };
 
-  const saveChat = () => {};
+  const saveChat = () => {
+    axios
+      .post(
+        `${getUrl()}/chat/message`,
+        {
+          userMessage,
+        },
+        {
+          headers: {
+            Authorization: `${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <SafeAreaView className="h-full">
@@ -338,87 +373,48 @@ const Home = () => {
         >
           <View>
             <ScrollView className="mb-24 pr-4">
-              <View>
-                <View className="flex-row mb-3">
-                  <Image
-                    source={require("../../assets/chatbot.png")}
-                    className="w-10 h-10 mr-3"
-                  ></Image>
-                  <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
-                    hello. Can I assist you?
-                  </Text>
-                </View>
-                <View className="flex-row mb-3 justify-end">
-                  <Text className="bg-slate-300 p-2 inline-block rounded-l-md rounded-br-lg mr-3">
-                    Help me, what are you doing?
-                  </Text>
-                  <Image
-                    source={require("../../assets/male_avatar.png")}
-                    className="w-10 h-10"
-                  ></Image>
-                </View>
-                <View className="flex-row mb-3">
-                  <Image
-                    source={require("../../assets/chatbot.png")}
-                    className="w-10 h-10 mr-3"
-                  ></Image>
-                  <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
-                    hello. Can I assist you?
-                  </Text>
-                </View>
-                <View className="flex-row mb-3 justify-end">
-                  <Text className="bg-slate-300 p-2 inline-block rounded-l-md rounded-br-lg mr-3">
-                    Help me, what are you doing?
-                  </Text>
-                  <Image
-                    source={require("../../assets/male_avatar.png")}
-                    className="w-10 h-10"
-                  ></Image>
-                </View>
-                <View className="flex-row mb-3">
-                  <Image
-                    source={require("../../assets/chatbot.png")}
-                    className="w-10 h-10 mr-3"
-                  ></Image>
-                  <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
-                    hello. Can I assist you?
-                  </Text>
-                </View>
-                <View className="flex-row mb-3 justify-end">
-                  <Text className="bg-slate-300 p-2 inline-block rounded-l-md rounded-br-lg mr-3">
-                    Help me, what are you doing?
-                  </Text>
-                  <Image
-                    source={require("../../assets/male_avatar.png")}
-                    className="w-10 h-10"
-                  ></Image>
-                </View>
-                <View className="flex-row mb-3">
-                  <Image
-                    source={require("../../assets/chatbot.png")}
-                    className="w-10 h-10 mr-3"
-                  ></Image>
-                  <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
-                    hello. Can I assist you?
-                  </Text>
-                </View>
-                <View className="flex-row mb-3 justify-end">
-                  <Text className="bg-slate-300 p-2 inline-block rounded-l-md rounded-br-lg mr-3">
-                    Help me, what are you doing?
-                  </Text>
-                  <Image
-                    source={require("../../assets/male_avatar.png")}
-                    className="w-10 h-10"
-                  ></Image>
-                </View>
+              <View className="flex-row mb-3">
+                <Image
+                  source={require("../../assets/chatbot.png")}
+                  className="w-10 h-10 mr-3"
+                ></Image>
+                <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
+                  hello. How can I assist you?
+                </Text>
               </View>
+              {messages.map((item, index) => (
+                <View key={index}>
+                  <View className="flex-row mb-3 justify-end">
+                    <Text className="bg-slate-300 p-2 inline-block rounded-l-md rounded-br-lg mr-3">
+                      {item.user_message}
+                    </Text>
+                    <Image
+                      source={require("../../assets/male_avatar.png")}
+                      className="w-10 h-10"
+                    ></Image>
+                  </View>
+                  <View className="flex-row mb-3">
+                    <Image
+                      source={require("../../assets/chatbot.png")}
+                      className="w-10 h-10 mr-3"
+                    ></Image>
+                    <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
+                      {item.ai_message}
+                    </Text>
+                  </View>
+                </View>
+              ))}
             </ScrollView>
             <View className="absolute bottom-2 w-11/12 ml-6 flex-row items-center">
               <Input
-                multiline={true}
                 className="flex-1"
-                numberOfLines={4}
                 style={{ backgroundColor: "#f1f1f1" }}
+                multiline={true}
+                numberOfLines={4}
+                defaultValue={userMessage}
+                setText={(value) => {
+                  setUserMessage(value);
+                }}
               />
               <Pressable onPress={saveChat}>
                 <View
