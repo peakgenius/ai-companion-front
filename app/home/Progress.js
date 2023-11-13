@@ -64,7 +64,7 @@ const ProgressRings = (props) => {
           <Text className="text-white mt-2">Health</Text>
         </View>
         {/* top-left prgress ring */}
-        <View className="absolute bottom-1/2 left-4">
+        <View className="absolute bottom-full left-4">
           <CircularProgress
             children={incomeText}
             childrenContainerStyle={{}}
@@ -81,20 +81,22 @@ const ProgressRings = (props) => {
           <Text className="text-white text-center mt-3">Income</Text>
         </View>
         {/* center progressring */}
-        <CircularProgress
-          children={totalText}
-          childrenContainerStyle={{}}
-          linecap="round"
-          rotation={0}
-          size={screenWidth * 0.4}
-          width={29}
-          lineCap="round"
-          backgroundWidth={30}
-          fill={fill}
-          tintColor="#00e0ff"
-          backgroundColor="#3d5875"
-        />
-        <Text className="text-white text-center mt-3">Total</Text>
+        <View className="relative -bottom-6">
+          <CircularProgress
+            children={totalText}
+            childrenContainerStyle={{}}
+            linecap="round"
+            rotation={0}
+            size={screenWidth * 0.4}
+            width={29}
+            lineCap="round"
+            backgroundWidth={30}
+            fill={fill}
+            tintColor="#00e0ff"
+            backgroundColor="#3d5875"
+          />
+        </View>
+        <Text className="text-white text-center mt-7 text-lg">Total</Text>
         {/* bottom-left progress ring */}
         <View className="absolute bottom-0 left-12">
           <CircularProgress
@@ -130,7 +132,7 @@ const ProgressRings = (props) => {
           <Text className="text-white text-center mt-3">Family</Text>
         </View>
         {/* top-right progress ring */}
-        <View className="absolute bottom-1/2 right-4">
+        <View className="absolute bottom-full right-4">
           <CircularProgress
             children={romanticText}
             childrenContainerStyle={{}}

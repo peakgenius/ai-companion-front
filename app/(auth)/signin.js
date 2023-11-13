@@ -16,6 +16,7 @@ const SignIn = () => {
   const { setIsAuthenticated, setUser, setAuthToken } = useContext(AuthContext);
 
   const signIn = async () => {
+    console.log('ddd')
     console.log(getUrl());
     axios
       .post(getUrl() + "/auth/signin", profile)

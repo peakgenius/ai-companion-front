@@ -21,13 +21,12 @@ const QuestionPopup = (props) => {
   return (
     <Popup
       visible={visibleQuestionPopup}
-      transparent={true}
       dismiss={closeQuestionPopup}
-      margin={"5%"}
-      marginTop={"15%"}
-      borderRadius={20}
+      viewContainerClassName={
+        "bg-white border-gray-950 h-[250] pt-5 pl-5 pr-5 rounded-md"
+      }
     >
-      <View className="bg-white border-gray-950 h-[250] pt-5 pl-5 pr-5">
+      <View>
         <View className="flex-row mb-3">
           <Image
             source={require("../../assets/chatbot.png")}

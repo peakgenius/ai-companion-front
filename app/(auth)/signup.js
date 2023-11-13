@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, ScrollView } from "react-native";
 import { Link, router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import axios from "axios";
@@ -43,7 +43,7 @@ const SignUp = () => {
   };
 
   return (
-    <View className="flex-1 bg-neutral-900">
+    <ScrollView className="flex-1 bg-neutral-900">
       <View className="w-full flex justify-center p-4 pt-6">
         <Link href="/">
           <Ionicons name="arrow-back" size={32} color="white" />
@@ -143,7 +143,7 @@ const SignUp = () => {
 
         <CustomButton title="Sign Up" color={buttonColor} onPress={signUp} />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

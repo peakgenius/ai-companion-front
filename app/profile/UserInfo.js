@@ -7,7 +7,7 @@ const UserInfo = (props) => {
   const { user } = props;
   return (
     <View className="w-full flex justify-center p-4 pt-6">
-      <Link href="/">
+      <Link href="/" className="mb-4">
         <Ionicons name="arrow-back" size={32} color="white" />
       </Link>
       <Image

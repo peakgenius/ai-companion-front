@@ -21,7 +21,7 @@ const Footer = (props) => {
   } = props;
   return (
     <>
-      <View className="flex-row justify-around p-2 bg-slate-700 border-t-slate-300 bottom-0 left-0 right-0" style={{position: "fixed"}}>
+      <View className="flex-row justify-around p-2 bg-slate-700 border-t-slate-300 bottom-0 left-0 right-0 fixed">
         <Link href="/profile/setgoal">
           <View className="flex-col">
             <FontAwesome
@@ -58,18 +58,18 @@ const Footer = (props) => {
       </View>
       <Popup
         visible={visibleSettingQuestion}
-        transparent={true}
         dismiss={closePopupSettingQuestion}
-        margin={"10%"}
-        marginTop={"25%"}
+        viewContainerClassName={
+          "bg-white border-gray-950 h-[370] pt-5 pl-5 pr-5 rounded-md"
+        }
       >
-        <View className="bg-white border-gray-950 h-[300] pt-5 pl-5 pr-5">
+        <View>
           <View className=" mb-5">
             <Image
               source={require("../../assets/chatbot.png")}
               className="w-20 h-20 rounded-full"
             ></Image>
-            <Text className="p-1 inline-block">
+            <Text className="p-1 inline-block text-lg">
               Would you like to display a question once every few days?
             </Text>
           </View>
@@ -81,17 +81,29 @@ const Footer = (props) => {
           >
             <RadioButtonItem
               value={0}
-              label={<Text className="pb-3">A day</Text>}
+              label={
+                <Text className="text-lg pb-4" style={styles.radioButtonItemText}>
+                  A day
+                </Text>
+              }
               style={styles.radioMarginB}
             />
             <RadioButtonItem
               value={1}
-              label={<Text className="pb-3">A week</Text>}
+              label={
+                <Text className="text-lg pb-4" style={styles.radioButtonItemText}>
+                  A week
+                </Text>
+              }
               style={styles.radioMarginB}
             />
             <RadioButtonItem
               value={2}
-              label={<Text className="pb-3">A month</Text>}
+              label={
+                <Text className="text-lg pb-4" style={styles.radioButtonItemText}>
+                  A month
+                </Text>
+              }
               style={styles.radioMarginB}
             />
           </RadioButtonGroup>
@@ -99,18 +111,18 @@ const Footer = (props) => {
       </Popup>
       <Popup
         visible={visibleSettingTip}
-        transparent={true}
         dismiss={closePopupSettingTip}
-        margin={"10%"}
-        marginTop={"25%"}
+        viewContainerClassName={
+          "bg-white border-gray-950 h-[370] pt-5 pl-5 pr-5 rounded-md"
+        }
       >
-        <View className="bg-white border-gray-950 h-[300] pt-5 pl-5 pr-5">
+        <View>
           <View className=" mb-5">
             <Image
               source={require("../../assets/chatbot.png")}
               className="w-20 h-20 rounded-full"
             ></Image>
-            <Text className="p-1 inline-block">
+            <Text className="p-1 inline-block text-lg">
               Would you like to display a tip once every few days?
             </Text>
           </View>
@@ -122,17 +134,38 @@ const Footer = (props) => {
           >
             <RadioButtonItem
               value={0}
-              label={<Text className="pb-3">A day</Text>}
+              label={
+                <Text
+                  className="text-lg pb-4"
+                  style={styles.radioButtonItemText}
+                >
+                  A day
+                </Text>
+              }
               style={styles.radioMarginB}
             />
             <RadioButtonItem
               value={1}
-              label={<Text className="pb-3">A week</Text>}
+              label={
+                <Text
+                  className="text-lg pb-4"
+                  style={styles.radioButtonItemText}
+                >
+                  A week
+                </Text>
+              }
               style={styles.radioMarginB}
             />
             <RadioButtonItem
               value={2}
-              label={<Text className="pb-3">A month</Text>}
+              label={
+                <Text
+                  className="text-lg pb-4"
+                  style={styles.radioButtonItemText}
+                >
+                  A month
+                </Text>
+              }
               style={styles.radioMarginB}
             />
           </RadioButtonGroup>
@@ -147,7 +180,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   radioMarginB: {
-    marginBottom: "10px",
+    marginBottom: 10,
+  },
+  radioButtonItemText: {
+    marginLeft: 12,
   },
 });
 

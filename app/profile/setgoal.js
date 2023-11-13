@@ -63,7 +63,7 @@ const SetGoal = () => {
 
   return (
     <View className="flex-1 bg-neutral-900">
-      <View className="p-4">
+      <View className="p-6">
         <View className="w-full flex justify-center pb-6 pt-6">
           <Link href="/profile">
             <Ionicons name="arrow-back" size={32} color="white" />
@@ -75,14 +75,16 @@ const SetGoal = () => {
             textSize={16}
           />
         </View> */}
-        <Select
-          dropdownHeight={"225px"}
-          data={domains}
-          defaultValue={domains[0]}
-          onSelect={(value, index) => {
-            setGoal((prev) => ({ ...prev, domain: domainIds[index] }));
-          }}
-        />
+        <View className="mb-5 mt-12">
+          <Select
+            dropdownHeight={"225px"}
+            data={domains}
+            defaultValue={domains[0]}
+            onSelect={(value, index) => {
+              setGoal((prev) => ({ ...prev, domain: domainIds[index] }));
+            }}
+          />
+        </View>
 
         <Input
           multiline={true}
@@ -92,9 +94,7 @@ const SetGoal = () => {
             setGoal((prev) => ({ ...prev, content: value }));
           }}
         />
-        <View
-          className="flex items-center justify-center flex-row"
-        >
+        <View className="flex items-center justify-center flex-row">
           <CustomButton title="Set goal" color={buttonColor} onPress={create} />
         </View>
       </View>

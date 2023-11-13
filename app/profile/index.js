@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Text, View, Pressable } from "react-native";
+import { Text, View, Pressable, ScrollView } from "react-native";
 import axios from "axios";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
@@ -177,34 +177,107 @@ const Profile = () => {
   };
 
   return (
-    <View className="flex-1 bg-neutral-900 relative">
-      <UserInfo user={user} />
-      <View className="p-4 pb-20 relative">
-        {goals.map((item, index) => (
-          <View key={index}>
-            <Text className="text-white text-center text-2xl">
-              {item.domain_id.content}
-            </Text>
-            <Text className="text-white text-center text-lg mb-3">
-              {item.content}
-            </Text>
-            <Pressable
-              title="Delete"
-              className="absolute top-3 right-0"
-              onPress={(e) => openProgressPopup(item._id)}
-            >
-              <FontAwesome name="pencil" size={15} color={"#fff"} />
-            </Pressable>
-            <Pressable
-              title="Delete"
-              className="absolute bottom-3 right-0"
-              onPress={(e) => openConfimrPopup(item._id)}
-            >
-              <FontAwesome name="trash" size={15} color={"#fff"} />
-            </Pressable>
+    <View className="flex-1">
+      <ScrollView className="bg-neutral-900 ">
+        <UserInfo user={user} />
+        <View className="p-4 pb-20 relative">
+          {goals.map((item, index) => (
+            <View key={index}>
+              <Text className="text-white text-center text-2xl">
+                {item.domain_id.content}
+              </Text>
+              <Text className="text-white text-center text-lg mb-3">
+                {item.content}
+              </Text>
+              <Pressable
+                title="Delete"
+                className="absolute top-3 right-0"
+                onPress={(e) => openProgressPopup(item._id)}
+              >
+                <FontAwesome name="pencil" size={15} color={"#fff"} />
+              </Pressable>
+              <Pressable
+                title="Delete"
+                className="absolute bottom-3 right-0"
+                onPress={(e) => openConfimrPopup(item._id)}
+              >
+                <FontAwesome name="trash" size={15} color={"#fff"} />
+              </Pressable>
+            </View>
+          ))}
+        </View>
+
+        <Popup
+          visible={visibleConfirmPopup}
+          dismiss={closeConfimrPopup}
+          viewContainerClassName={
+            "bg-white border-gray-950 h-[200] pt-5 pl-5 pr-5 rounded-lg"
+          }
+        >
+          <View>
+            <Text className="text-2xl mb-8">Are you sure to delete?</Text>
+            <View className="flex-row justify-center gap-3">
+              <View>
+                <CustomButton
+                  color={"red"}
+                  title={"delete"}
+                  onPress={deleteGoal}
+                />
+              </View>
+              <View>
+                <CustomButton
+                  color={"grey"}
+                  title={"cancel"}
+                  onPress={closeConfimrPopup}
+                />
+              </View>
+            </View>
           </View>
-        ))}
-      </View>
+        </Popup>
+        <Popup
+          visible={visibleProgressPopup}
+          dismiss={closeProgressPopup}
+          viewContainerClassName={
+            "bg-white border-gray-950 h-[310] pt-5 pl-5 pr-5 rounded-lg"
+          }
+        >
+          <View>
+            <Text className="text-2xl mb-8 text-center">
+              Which level of this goal are you in 1-10?
+            </Text>
+            <View className="flex-row justify-center">
+              <InputNumber
+                separatorWidth={0}
+                minValue={0}
+                maxValue={10}
+                totalWidth={250}
+                value={progress}
+                textColor="#000"
+                containerStyle={{ border: "none" }}
+                onChange={(value) => {
+                  setProgress(value);
+                }}
+              />
+            </View>
+            <View className="flex-row justify-center gap-3 mt-3">
+              <View>
+                <CustomButton
+                  color={"#d9ab3c"}
+                  title={"save"}
+                  onPress={saveGoalProgress}
+                />
+              </View>
+              <View>
+                <CustomButton
+                  color={"grey"}
+                  title={"cancel"}
+                  onPress={closeProgressPopup}
+                />
+              </View>
+            </View>
+          </View>
+        </Popup>
+      </ScrollView>
       <Footer
         openPopupSettingTip={openPopupSettingTip}
         openPopupSettingQuestion={openPopupSettingQuestion}
@@ -217,74 +290,6 @@ const Profile = () => {
         tipDisplayInterval={tipDisplayInterval}
         setTipInterval={setTipInterval}
       />
-      <Popup
-        visible={visibleConfirmPopup}
-        transparent={true}
-        dismiss={closeConfimrPopup}
-        margin={"10%"}
-        marginTop={"25%"}
-      >
-        <View className="bg-white border-gray-950 h-[150] pt-5 pl-5 pr-5 rounded-lg">
-          <Text className="text-2xl mb-8">Are you sure to delete?</Text>
-          <View className="flex-row justify-center gap-3">
-            <View>
-              <CustomButton
-                color={"red"}
-                title={"delete"}
-                onPress={deleteGoal}
-              />
-            </View>
-            <View>
-              <CustomButton
-                color={"grey"}
-                title={"cancel"}
-                onPress={closeConfimrPopup}
-              />
-            </View>
-          </View>
-        </View>
-      </Popup>
-      <Popup
-        visible={visibleProgressPopup}
-        transparent={true}
-        dismiss={closeProgressPopup}
-        margin={"10%"}
-        marginTop={"25%"}
-      >
-        <View className="bg-white border-gray-950 h-[280] pt-10 pl-5 pr-5 rounded-lg">
-          <Text className="text-2xl mb-8 text-center">
-            Which level of this goal are you in 1-10?
-          </Text>
-          <InputNumber
-            separatorWidth={0}
-            minValue={0}
-            maxValue={10}
-            totalWidth={250}
-            value={progress}
-            textColor="#000"
-            containerStyle={{ border: "none" }}
-            onChange={(value) => {
-              setProgress(value);
-            }}
-          />
-          <View className="flex-row justify-center gap-3 mt-3">
-            <View>
-              <CustomButton
-                color={"#d9ab3c"}
-                title={"save"}
-                onPress={saveGoalProgress}
-              />
-            </View>
-            <View>
-              <CustomButton
-                color={"grey"}
-                title={"cancel"}
-                onPress={closeProgressPopup}
-              />
-            </View>
-          </View>
-        </View>
-      </Popup>
     </View>
   );
 };

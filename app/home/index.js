@@ -1,18 +1,28 @@
 import React, { useState, useContext, useEffect } from "react";
-import { View, Image, Text, SafeAreaView, Pressable } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  SafeAreaView,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { Link } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import TypingText from "react-native-typing-text";
 
 import CustomButton from "../components/CustomButton";
 import Popup from "../components/Popup";
 import { AuthContext } from "../contexts/auth";
 import UserQeustionPopup from "./UserQuestionPopup";
 import GoalQeustionPopup from "./GoalQuestionPopup";
+import TipsPopup from "./TipsPopup";
+import Progress from "./Progress.js";
 import Input from "../components/Input";
 import { getUrl } from "../util/asyncStorage";
-import Progress from "./Progress.js";
 
 const Home = () => {
   const buttonColor = "#d9ab3c";
@@ -29,12 +39,14 @@ const Home = () => {
     useState(false);
   const [visibleGoalQuestionPopup, setVisibleGoalQuestionPopup] =
     useState(false);
-  const [userAnswer, setUserAnswer] = useState("");
+  const [visibleTipsPopup, setVisibleTipsPopup] = useState(false);
   const [userQuestion, setUserQuestion] = useState({
     id: "",
     content: "",
     displayInterval: -1,
   });
+  const [userAnswer, setUserAnswer] = useState("");
+  const [isSkipUserAnswer, setIsSkipUserAnswer] = useState(false);
   const [goal, setGoal] = useState({
     id: "",
     content: "",
@@ -42,7 +54,6 @@ const Home = () => {
     Question: "",
   });
   const [goalAnswer, setGoalAnswer] = useState("");
-  const [isSkipUserAnswer, setIsSkipUserAnswer] = useState(false);
   const [isSkipGoalAnswer, setIsSkipGoalAnswer] = useState(false);
   const [progresses, setProgresses] = useState({
     health: 0,
@@ -51,8 +62,10 @@ const Home = () => {
     romantic: 0,
     family: 0,
   });
+  const [tips, setTips] = useState([]);
 
   useEffect(() => {
+    openTipsPopup();
     if (!authToken) return;
     getProgress();
     const now = new Date();
@@ -92,6 +105,14 @@ const Home = () => {
 
   const closeGoalQuestionPopup = () => {
     setVisibleGoalQuestionPopup(false);
+  };
+
+  const openTipsPopup = () => {
+    setVisibleTipsPopup(true);
+  };
+
+  const closeTipsPopup = () => {
+    setVisibleTipsPopup(false);
   };
 
   const getProgress = async () => {
@@ -249,6 +270,8 @@ const Home = () => {
       });
   };
 
+  const saveChat = () => {};
+
   return (
     <SafeAreaView className="h-full">
       <View className="flex-1 bg-neutral-900 pt-5">
@@ -308,25 +331,108 @@ const Home = () => {
         )}
         <Popup
           visible={visible}
-          transparent={true}
           dismiss={closePopup}
-          margin={"2%"}
-          marginTop={"5%"}
+          viewContainerClassName={
+            "bg-white border-gray-950 h-[570] pt-5 pl-5 pr-5 rounded-md"
+          }
         >
-          <View className="bg-white border-gray-950 h-[500] pt-5 pl-5 pr-5">
-            <View className="flex-row">
-              <Image
-                source={require("../../assets/chatbot.png")}
-                className="w-10 h-10"
-              ></Image>
-              <Text className="bg-slate-300 p-1 inline-block">hello</Text>
-            </View>
-            <View className="absolute bottom-2 w-full ml-2">
+          <View>
+            <ScrollView className="mb-24 pr-4">
+              <View>
+                <View className="flex-row mb-3">
+                  <Image
+                    source={require("../../assets/chatbot.png")}
+                    className="w-10 h-10 mr-3"
+                  ></Image>
+                  <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
+                    hello. Can I assist you?
+                  </Text>
+                </View>
+                <View className="flex-row mb-3 justify-end">
+                  <Text className="bg-slate-300 p-2 inline-block rounded-l-md rounded-br-lg mr-3">
+                    Help me, what are you doing?
+                  </Text>
+                  <Image
+                    source={require("../../assets/male_avatar.png")}
+                    className="w-10 h-10"
+                  ></Image>
+                </View>
+                <View className="flex-row mb-3">
+                  <Image
+                    source={require("../../assets/chatbot.png")}
+                    className="w-10 h-10 mr-3"
+                  ></Image>
+                  <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
+                    hello. Can I assist you?
+                  </Text>
+                </View>
+                <View className="flex-row mb-3 justify-end">
+                  <Text className="bg-slate-300 p-2 inline-block rounded-l-md rounded-br-lg mr-3">
+                    Help me, what are you doing?
+                  </Text>
+                  <Image
+                    source={require("../../assets/male_avatar.png")}
+                    className="w-10 h-10"
+                  ></Image>
+                </View>
+                <View className="flex-row mb-3">
+                  <Image
+                    source={require("../../assets/chatbot.png")}
+                    className="w-10 h-10 mr-3"
+                  ></Image>
+                  <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
+                    hello. Can I assist you?
+                  </Text>
+                </View>
+                <View className="flex-row mb-3 justify-end">
+                  <Text className="bg-slate-300 p-2 inline-block rounded-l-md rounded-br-lg mr-3">
+                    Help me, what are you doing?
+                  </Text>
+                  <Image
+                    source={require("../../assets/male_avatar.png")}
+                    className="w-10 h-10"
+                  ></Image>
+                </View>
+                <View className="flex-row mb-3">
+                  <Image
+                    source={require("../../assets/chatbot.png")}
+                    className="w-10 h-10 mr-3"
+                  ></Image>
+                  <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
+                    hello. Can I assist you?
+                  </Text>
+                </View>
+                <View className="flex-row mb-3 justify-end">
+                  <Text className="bg-slate-300 p-2 inline-block rounded-l-md rounded-br-lg mr-3">
+                    Help me, what are you doing?
+                  </Text>
+                  <Image
+                    source={require("../../assets/male_avatar.png")}
+                    className="w-10 h-10"
+                  ></Image>
+                </View>
+              </View>
+            </ScrollView>
+            <View className="absolute bottom-2 w-11/12 ml-6 flex-row items-center">
               <Input
                 multiline={true}
-                numberOfLines={5}
+                className="flex-1"
+                numberOfLines={4}
                 style={{ backgroundColor: "#f1f1f1" }}
               />
+              <Pressable onPress={saveChat}>
+                <View
+                  className="flex items-center justify-center w-11 rounded-full h-12 ml-3"
+                  style={styles.buttonColor}
+                >
+                  <FontAwesome
+                    name="send-o"
+                    size={18}
+                    color="white"
+                    style={{ textAlign: "center" }}
+                  />
+                </View>
+              </Pressable>
             </View>
           </View>
         </Popup>
@@ -338,7 +444,7 @@ const Home = () => {
           saveAnswer={saveUserAnswer}
           skipAnswer={skipUserAnswer}
           closeQuestionPopup={closeUserQuestionPopup}
-        ></UserQeustionPopup>
+        />
         <GoalQeustionPopup
           visibleQuestionPopup={visibleGoalQuestionPopup}
           goal={goal.content}
@@ -348,10 +454,21 @@ const Home = () => {
           saveAnswer={saveGoalAnswer}
           skipAnswer={skipGoalAnswer}
           closeQuestionPopup={closeGoalQuestionPopup}
-        ></GoalQeustionPopup>
+        />
+        <TipsPopup
+          visibleTipsPopup={visibleTipsPopup}
+          tips={tips}
+          closeTipsPopup={closeTipsPopup}
+        />
       </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  buttonColor: {
+    backgroundColor: "#d9ab3c",
+  },
+});
 
 export default Home;

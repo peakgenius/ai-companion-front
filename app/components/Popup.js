@@ -1,52 +1,24 @@
-import {
-  StyleSheet,
-  View,
-  Modal,
-  Text,
-  Image,
-  TouchableWithoutFeedback,
-} from "react-native";
+import Modal from "react-native-modal";
+import { View, Pressable } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function Popup({
   children,
   visible,
-  transparent,
+  viewContainerClassName,
   dismiss,
-  margin,
-  marginTop,
   ...rest
 }) {
   return (
-    <Modal visible={visible} transparent={transparent} onRequestClose={dismiss} style={{borderRadius: 20}} >
-      <TouchableWithoutFeedback onPress={dismiss}>
-        <View style={styles.modalOverlay} />
-      </TouchableWithoutFeedback>
-
-      <View
-        style={{
-          ...styles.modalContent,
-          margin: margin,
-          marginTop: marginTop,
-          borderRadius: 20
-        }}
-        {...rest}
-      >
+    <Modal isVisible={visible}>
+      <View className={viewContainerClassName}>
+        <View className="ml-auto mb-3">
+          <Pressable onPress={dismiss}>
+            <FontAwesome name="close" size={22} color="black" />
+          </Pressable>
+        </View>
         {children}
       </View>
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  modalContent: {
-    justifyContent: "center",
-  },
-  modalOverlay: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-});
