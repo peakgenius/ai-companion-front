@@ -5,6 +5,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 const UserInfo = (props) => {
   const { user } = props;
+  const gender = ["female", "male"];
+  const marial_status = ["single", "married", "divorced"];
   return (
     <View className="w-full flex justify-center p-4 pt-6">
       <Link href="/" className="mb-4">
@@ -25,9 +27,9 @@ const UserInfo = (props) => {
         <Text className="basis-1/2 text-white">Weight: {user.weight}</Text>
       </View>
       <View className="flex flex-row pl-12">
-        <Text className="basis-1/2 text-white">Gender: {user.gender}</Text>
+        <Text className="basis-1/2 text-white">Gender: {gender[user.gender]}</Text>
         <Text className="basis-1/2 text-white">
-          Marial_status: {user.marial_status}
+          Marial_status: {marial_status[user.marial_status]}
         </Text>
       </View>
     </View>

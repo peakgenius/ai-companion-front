@@ -1,27 +1,17 @@
-import React, { useState, useContext, useEffect } from "react";
-import {
-  View,
-  Image,
-  Text,
-  SafeAreaView,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { View, Image, Text, SafeAreaView, Pressable } from "react-native";
 import { Link } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import TypingText from "react-native-typing-text";
 
 import CustomButton from "../components/CustomButton";
-import Popup from "../components/Popup";
 import { AuthContext } from "../contexts/auth";
 import UserQeustionPopup from "./UserQuestionPopup";
 import GoalQeustionPopup from "./GoalQuestionPopup";
 import TipsPopup from "./TipsPopup";
+import ChatPopup from "./ChatPopup";
 import Progress from "./Progress.js";
-import Input from "../components/Input";
 import { getUrl } from "../util/asyncStorage";
 
 const Home = () => {
@@ -68,6 +58,8 @@ const Home = () => {
   const [messages, setMessages] = useState([]);
   const [tips, setTips] = useState([]);
 
+  const chatScrollViewRef = useRef();
+
   useEffect(() => {
     openTipsPopup();
     if (!authToken) return;
@@ -89,6 +81,11 @@ const Home = () => {
 
   const openPopup = async () => {
     getMessages();
+    setTimeout(() => {
+      if (chatScrollViewRef.current) {
+        chatScrollViewRef.current.scrollToEnd();
+      }
+    }, 200);
     setVisible(true);
   };
 
@@ -370,74 +367,17 @@ const Home = () => {
             </Pressable>
           </View>
         )}
-        <Popup
+        <ChatPopup
+          chatScrollViewRef={chatScrollViewRef}
+          isLoading={isLoading}
+          messages={messages}
           visible={visible}
-          dismiss={closePopup}
-          viewContainerClassName={
-            "bg-white border-gray-950 h-[570] pt-5 pl-5 pr-5 rounded-md relative"
-          }
-        >
-          <ScrollView className="pr-4 flex-1">
-            <View className="flex-row mb-3">
-              <Image
-                source={require("../../assets/chatbot.png")}
-                className="w-10 h-10 mr-3"
-              ></Image>
-              <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
-                hello. How can I assist you?
-              </Text>
-            </View>
-            {messages.map((item, index) => (
-              <View key={index}>
-                <View className="flex-row mb-3">
-                  <Text className="ml-auto flex-1 bg-slate-300 inline-block rounded-l-md rounded-br-lg whitespace-nowrap mr-3 p-2">
-                    {item.user_message}
-                  </Text>
-                  <Image
-                    source={require("../../assets/male_avatar.png")}
-                    className="w-10 h-10"
-                  ></Image>
-                </View>
-                {item.ai_message && (
-                  <View className="flex-row mb-3 justify-start">
-                    <Image
-                      source={require("../../assets/chatbot.png")}
-                      className="w-10 h-10 mr-3"
-                    ></Image>
-                    <Text className="bg-slate-300 flex-1 p-2 rounded-r-md rounded-bl-lg mr-auto inline-block whitespace-nowrap">
-                      {item.ai_message}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            ))}
-          </ScrollView>
-          <View className="pt-2 w-11/12 ml-6 flex-row items-center">
-            <Input
-              className="flex-1"
-              style={{ backgroundColor: "#f1f1f1" }}
-              multiline={true}
-              numberOfLines={4}
-              defaultValue={userMessage}
-              setText={(value) => {
-                setUserMessage(value);
-              }}
-            />
-            <Pressable onPress={saveChat} disabled={isSaving}>
-              <View
-                className="flex items-center justify-center w-11 rounded-full h-12 ml-3"
-                style={styles.buttonColor}
-              >
-                <FontAwesome
-                  name="send-o"
-                  size={18}
-                  color="white"
-                  style={{ textAlign: "center" }}
-                />
-              </View>
-            </Pressable>
-          </View>
-        </Popup>
+          closePopup={closePopup}
+          userMessage={userMessage}
+          setUserMessage={setUserMessage}
+          isSaving={isSaving}
+          saveChat={saveChat}
+        />
         <UserQeustionPopup
           visibleQuestionPopup={visibleUserQuestionPopup}
           question={userQuestion.content}
@@ -466,11 +406,5 @@ const Home = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  buttonColor: {
-    backgroundColor: "#d9ab3c",
-  },
-});
 
 export default Home;
