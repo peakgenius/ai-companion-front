@@ -8,6 +8,7 @@ import { getUrl } from "../util/asyncStorage";
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authToken, setAuthToken] = useState("");
+  const [dayToGetTips, setDayToGetTips] = useState(0);
   const [dayToGetQuestions, setDayToGetQuestions] = useState(0);
   const pathname = usePathname();
   const [user, setUser] = useState({
@@ -34,6 +35,8 @@ const AuthProvider = ({ children }) => {
         const currentTimestamp = Math.floor(Date.now() / 1000);
         if (currentTimestamp >= ParsedToken?.expiryTime) {
           AsyncStorage.removeItem("auth-token");
+          setDayToGetQuestions(0);
+          setDayToGetTips(0);
           router.replace("/");
           return; 
         }
@@ -71,6 +74,8 @@ const AuthProvider = ({ children }) => {
         setAuthToken,
         dayToGetQuestions,
         setDayToGetQuestions,
+        dayToGetTips,
+        setDayToGetTips,
       }}
     >
       {children}

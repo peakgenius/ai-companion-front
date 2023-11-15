@@ -6,16 +6,19 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { AuthContext } from "../contexts/auth";
 import Footer from "./Footer";
 import UserInfo from "./UserInfo";
+import TipsPopup from "./TipsPopup";
 import Popup from "../components/Popup";
 import CustomButton from "../components/CustomButton";
 import { getUrl } from "../util/asyncStorage";
 import InputNumber from "../components/InputNumber";
 
 const Profile = () => {
-  const { user, getUser, authToken } = useContext(AuthContext);
+  const { user, getUser, authToken, dayToGetTips, setDayToGetTips } =
+    useContext(AuthContext);
   const [visibleConfirmPopup, setVisibleConfirmPopup] = useState(false);
   const [visibleProgressPopup, setVisibleProgressPopup] = useState(false);
   const [visibleSettingQuestion, setVisibleSettingQuestion] = useState(false);
+  const [visibleTipsPopup, setVisibleTipsPopup] = useState(false);
   const [visibleSettingTip, setVisibleSettingTip] = useState(false);
   const [goalId, setGoalId] = useState("1");
   const [progress, setProgress] = useState(0);
@@ -26,12 +29,16 @@ const Profile = () => {
     user.tip_display_interval
   );
   const [goals, setGoals] = useState([]);
+  const [tips, setTips] = useState([]);
 
   useEffect(() => {
     if (!authToken) return;
     setQuestionDisplayInterval(user.question_display_interval);
     setTipDisplayInterval(user.tip_display_interval);
     getGoals();
+    const now = new Date();
+    if (dayToGetTips === now.getDate()) return; //to call getTips funtion once per day
+    getTips();
   }, [authToken]);
 
   const getGoals = () => {
@@ -73,6 +80,35 @@ const Profile = () => {
     setVisibleConfirmPopup(false);
   };
 
+  const openTipsPopup = () => {
+    setVisibleTipsPopup(true);
+  };
+
+  const closeTipsPopup = () => {
+    setVisibleTipsPopup(false);
+  };
+
+  const nodisplayAnymore = () => {
+    const now = new Date();
+    setDayToGetTips(now.getDate());
+    closeTipsPopup();
+  };
+
+  const getTips = async () => {
+    if (tips.length !== 0) {
+      openTipsPopup();
+      return;
+    }
+    const resTips = await axios.get(`${getUrl()}/profile/tips`, {
+      headers: {
+        Authorization: `${authToken}`,
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+    console.log(resTips.data);
+    openTipsPopup();
+  };
+  
   const openProgressPopup = (id) => {
     setGoalId(id);
     const goalsLength = goals.length;
@@ -277,6 +313,12 @@ const Profile = () => {
             </View>
           </View>
         </Popup>
+        <TipsPopup
+          visibleTipsPopup={visibleTipsPopup}
+          tips={tips}
+          nodisplayAnymore={nodisplayAnymore}
+          closeTipsPopup={closeTipsPopup}
+        />
       </ScrollView>
       <Footer
         openPopupSettingTip={openPopupSettingTip}

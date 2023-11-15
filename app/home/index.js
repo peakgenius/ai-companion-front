@@ -9,7 +9,6 @@ import CustomButton from "../components/CustomButton";
 import { AuthContext } from "../contexts/auth";
 import UserQeustionPopup from "./UserQuestionPopup";
 import GoalQeustionPopup from "./GoalQuestionPopup";
-import TipsPopup from "./TipsPopup";
 import ChatPopup from "./ChatPopup";
 import Progress from "./Progress.js";
 import { getUrl } from "../util/asyncStorage";
@@ -31,7 +30,6 @@ const Home = () => {
     useState(false);
   const [visibleGoalQuestionPopup, setVisibleGoalQuestionPopup] =
     useState(false);
-  const [visibleTipsPopup, setVisibleTipsPopup] = useState(false);
   const [userQuestion, setUserQuestion] = useState({
     id: "",
     content: "",
@@ -56,12 +54,10 @@ const Home = () => {
   });
   const [userMessage, setUserMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [tips, setTips] = useState([]);
 
   const chatScrollViewRef = useRef();
 
   useEffect(() => {
-    openTipsPopup();
     if (!authToken) return;
     getProgress();
     const now = new Date();
@@ -107,14 +103,6 @@ const Home = () => {
 
   const closeGoalQuestionPopup = () => {
     setVisibleGoalQuestionPopup(false);
-  };
-
-  const openTipsPopup = () => {
-    setVisibleTipsPopup(true);
-  };
-
-  const closeTipsPopup = () => {
-    setVisibleTipsPopup(false);
   };
 
   const getProgress = async () => {
@@ -238,6 +226,7 @@ const Home = () => {
       )
       .then((res) => {
         closeGoalQuestionPopup();
+        updateTips();
         if (userQuestion.displayInterval * 1 === 0) {
           updateQuestionDate();
         }
@@ -259,15 +248,16 @@ const Home = () => {
     setUser(user);
     try {
       await AsyncStorage.removeItem("auth-token");
+      setDayToGetQuestions(0);
+      setDayToGetTips(0);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const updateQuestionDate = () => {
-    console.log(authToken);
-    axios
-      .patch(
+  const updateQuestionDate = async () => {
+    try {
+      await axios.patch(
         `${getUrl()}/question/question-date`,
         {},
         {
@@ -276,13 +266,29 @@ const Home = () => {
             "Access-Control-Allow-Origin": "*",
           },
         }
-      )
-      .then((res) => {
-        console.log("date updating success!");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      );
+      console.log("date updating success!");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const updateTips = async () => {
+    try {
+      if (isSkipGoalAnswer) return;
+      await axios.patch(
+        `${getUrl()}/question/tips`,
+        { goalId: goal.id },
+        {
+          headers: {
+            Authorization: `${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const saveChat = async () => {
@@ -396,11 +402,6 @@ const Home = () => {
           saveAnswer={saveGoalAnswer}
           skipAnswer={skipGoalAnswer}
           closeQuestionPopup={closeGoalQuestionPopup}
-        />
-        <TipsPopup
-          visibleTipsPopup={visibleTipsPopup}
-          tips={tips}
-          closeTipsPopup={closeTipsPopup}
         />
       </View>
     </SafeAreaView>

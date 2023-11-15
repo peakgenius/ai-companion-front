@@ -16,31 +16,31 @@ const ProgressRings = (props) => {
   const totalText = () => {
     return (
       <Text className="text-white">
-        {(progresses.health +
+        {Math.ceil((progresses.health +
           progresses.income +
           progresses.happiness +
           progresses.family +
           progresses.romantic) /
-          5}
+          5)}
       </Text>
     );
   };
 
   const healthText = () => {
-    return <Text className="text-white">{progresses.health}</Text>;
+    return <Text className="text-white">{Math.ceil(progresses.health)}</Text>;
   };
 
   const incomeText = () => {
-    return <Text className="text-white">{progresses.income}</Text>;
+    return <Text className="text-white">{Math.ceil(progresses.income)}</Text>;
   };
   const happinessText = () => {
-    return <Text className="text-white">{progresses.happiness}</Text>;
+    return <Text className="text-white">{Math.ceil(progresses.happiness)}</Text>;
   };
   const familyText = () => {
-    return <Text className="text-white">{progresses.family}</Text>;
+    return <Text className="text-white">{Math.ceil(progresses.family)}</Text>;
   };
   const romanticText = () => {
-    return <Text className="text-white">{progresses.romantic}</Text>;
+    return <Text className="text-white">{Math.ceil(progresses.romantic)}</Text>;
   };
 
   return (

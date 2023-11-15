@@ -6,7 +6,7 @@ import Popup from "../components/Popup";
 import CustomButton from "../components/CustomButton";
 
 const TipsPopup = (props) => {
-  const { visibleTipsPopup, closeTipsPopup, tips } = props;
+  const { visibleTipsPopup, closeTipsPopup, tips, nodisplayAnymore } = props;
 
   return (
     <Popup
@@ -36,11 +36,11 @@ const TipsPopup = (props) => {
           </Text>
         </View>
       </ScrollView>
-      <View className="position bottom-2 ml-auto w-2/5 pt-6">
+      <View className="position bottom-2 ml-auto w-3/5 pt-6">
         <CustomButton
-          title="close"
+          title="Don't display today"
           color={"#d9ab3c"}
-          onPress={closeTipsPopup}
+          onPress={nodisplayAnymore}
         />
       </View>
     </Popup>
