@@ -1,6 +1,11 @@
 import Modal from "react-native-modal";
 import { View, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { NativeWindStyleSheet } from "nativewind";
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
 
 export default function Popup({
   children,

@@ -2,11 +2,12 @@ import React from "react";
 import { View, ScrollView, Text, Pressable, StyleSheet } from "react-native";
 import TypingText from "react-native-typing-text";
 
-import Popup from "../components/Popup";
-import CustomButton from "../components/CustomButton";
+import Popup from "../../components/Popup";
+import CustomButton from "../../components/CustomButton";
 
 const TipsPopup = (props) => {
-  const { visibleTipsPopup, closeTipsPopup, tips, nodisplayAnymore } = props;
+  const { visibleTipsPopup, closeTipsPopup, tips, nodisplayAnymore, isSaving } =
+    props;
 
   return (
     <Popup
@@ -18,28 +19,19 @@ const TipsPopup = (props) => {
     >
       <ScrollView>
         <View className="pt-2 mb-2">
-          <Text className="text-xl mb-4">
-            asdfasd fsdfas dfasd asdf asdfasdf asdfasd fsdfas dfasd asdf asdfasd
-            fsdfas dfasd asdfasd fsdfas dfasd asdfasd fsdfas dfasd
-          </Text>
-          <Text className="text-lg">
-            asdfasd fsdfas dfasd asdf asdfasdf asdfasd fsdfas dfasd asdf asdfasd
-            fsdfas dfasd asdfasd fsdfas dfasd asdfasd fsdfas dfasd asdf asdfasdf
-            asdfas dfasdfasd asdfasdf sdasdf asdf asdf asdf asdf
-            asdfwerqwetrasdffasdfasdfasdfasdfsadfsadfasdfasdfasdfasdfasdfa
-            sdfasdfa asdf asdfasdf asdfas dfasdfasd asdfasdf sdasdf asdf asdf
-            asdfasd fsdfas dfasd asdf asdfasdf asdfasd fsdfas dfasd asdf asdfasd
-            fsdfas dfasd asdfasd fsdfas dfasd asdfasd fsdfas dfasd asdf asdfasdf
-            asdfas dfasdfasd asdfasdf sdasdf asdf asdf asdf asdf
-            asdfwerqwetrasdffasdfasdfasdfasdfsadfsadfasdfasdfasdfasdfasdfa
-            sdfasdfa asdf asdfasdf asdfas dfasdfasd asdfasdf sdasdf asdf asdf
-          </Text>
+          <Text className="text-xl mb-4">{tips.goal}</Text>
+          {tips.tips?.map((item, index) => (
+            <Text className="text-lg" key={index}>
+              {`${index + 1}. ${item}`}
+            </Text>
+          ))}
         </View>
       </ScrollView>
       <View className="position bottom-2 ml-auto w-3/5 pt-6">
         <CustomButton
-          title="Don't display today"
+          title="Continue next tips"
           color={"#d9ab3c"}
+          disabled={isSaving}
           onPress={nodisplayAnymore}
         />
       </View>

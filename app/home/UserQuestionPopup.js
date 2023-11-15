@@ -2,10 +2,11 @@ import React from "react";
 import { View, Image, Text, Pressable, StyleSheet } from "react-native";
 import TypingText from "react-native-typing-text";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Feather } from "@expo/vector-icons";
 
-import Popup from "../components/Popup";
-import Input from "../components/Input";
-import CustomButton from "../components/CustomButton";
+import Popup from "../../components/Popup";
+import Input from "../../components/Input";
+import CustomButton from "../../components/CustomButton";
 
 const QuestionPopup = (props) => {
   const {
@@ -16,6 +17,7 @@ const QuestionPopup = (props) => {
     setAnswer,
     saveAnswer,
     skipAnswer,
+    isSaving,
   } = props;
 
   return (
@@ -37,7 +39,8 @@ const QuestionPopup = (props) => {
       </View>
       <View className="ml-auto w-3/5">
         <CustomButton
-          title="Skip a question"
+          title={isSaving ? "Skipping..." : "Skip a question"}
+          disabled={isSaving}
           color={"#d9ab3c"}
           onPress={skipAnswer}
         />
@@ -53,17 +56,26 @@ const QuestionPopup = (props) => {
             setAnswer(value);
           }}
         />
-        <Pressable onPress={saveAnswer}>
+        <Pressable onPress={saveAnswer} disabled={isSaving}>
           <View
             className="flex items-center justify-center w-11 rounded-full h-12 ml-3"
             style={styles.buttonColor}
           >
-            <FontAwesome
-              name="send-o"
-              size={18}
-              color="white"
-              style={{ textAlign: "center" }}
-            />
+            {isSaving ? (
+              <Feather
+                name="loader"
+                size={18}
+                color="white"
+                style={styles.textAlignCenter}
+              />
+            ) : (
+              <FontAwesome
+                name="send-o"
+                size={18}
+                color="white"
+                style={styles.textAlignCenter}
+              />
+            )}
           </View>
         </Pressable>
       </View>
@@ -74,6 +86,9 @@ const QuestionPopup = (props) => {
 const styles = StyleSheet.create({
   buttonColor: {
     backgroundColor: "#d9ab3c",
+  },
+  textAlignCenter: {
+    textAlign: "center",
   },
 });
 

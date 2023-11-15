@@ -4,22 +4,18 @@ import {
   AnimatedCircularProgress,
   CircularProgress,
 } from "react-native-circular-progress";
-import { Link } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 
 // console.error = () => {}
 const ProgressRings = (props) => {
   const { progresses } = props;
-  const [total] = useState(
-    Math.ceil(
-      (progresses.health +
-        progresses.income +
-        progresses.happiness +
-        progresses.family +
-        progresses.romantic) /
-        5
-    )
-  );
+  const { health, income, happiness, family, romantic } = progresses;
+  const [total, setTotal] = useState(0);
+  useEffect(() => {
+    setTotal(
+      (health * 1 + income * 1 + happiness * 1 + family * 1 + romantic * 1) / 5
+    );
+  }, [health, income, happiness, family, romantic]);
+
   const [screenWidth] = useState(Dimensions.get("window").width);
 
   const totalText = () => {
@@ -27,22 +23,20 @@ const ProgressRings = (props) => {
   };
 
   const healthText = () => {
-    return <Text className="text-white">{Math.ceil(progresses.health)}</Text>;
+    return <Text className="text-white">{Math.ceil(health)}</Text>;
   };
 
   const incomeText = () => {
-    return <Text className="text-white">{Math.ceil(progresses.income)}</Text>;
+    return <Text className="text-white">{Math.ceil(income)}</Text>;
   };
   const happinessText = () => {
-    return (
-      <Text className="text-white">{Math.ceil(progresses.happiness)}</Text>
-    );
+    return <Text className="text-white">{Math.ceil(happiness)}</Text>;
   };
   const familyText = () => {
-    return <Text className="text-white">{Math.ceil(progresses.family)}</Text>;
+    return <Text className="text-white">{Math.ceil(family)}</Text>;
   };
   const romanticText = () => {
-    return <Text className="text-white">{Math.ceil(progresses.romantic)}</Text>;
+    return <Text className="text-white">{Math.ceil(romantic)}</Text>;
   };
 
   return (
@@ -59,7 +53,7 @@ const ProgressRings = (props) => {
             width={19}
             lineCap="round"
             backgroundWidth={20}
-            fill={progresses.health}
+            fill={health}
             tintColor="#bf873d"
             backgroundColor="#3d5875"
           />
@@ -76,7 +70,7 @@ const ProgressRings = (props) => {
             width={19}
             lineCap="round"
             backgroundWidth={20}
-            fill={progresses.income}
+            fill={income}
             tintColor="#d9ab3c"
             backgroundColor="#3d5875"
           />
@@ -110,7 +104,7 @@ const ProgressRings = (props) => {
             width={19}
             lineCap="round"
             backgroundWidth={20}
-            fill={progresses.happiness}
+            fill={happiness}
             tintColor="#d9ab3c"
             backgroundColor="#3d5875"
           />
@@ -127,7 +121,7 @@ const ProgressRings = (props) => {
             width={19}
             lineCap="round"
             backgroundWidth={20}
-            fill={progresses.family}
+            fill={family}
             tintColor="#d05253"
             backgroundColor="#3d5875"
           />
@@ -144,7 +138,7 @@ const ProgressRings = (props) => {
             width={19}
             lineCap="round"
             backgroundWidth={20}
-            fill={progresses.romantic}
+            fill={romantic}
             tintColor="#ff1b1d"
             backgroundColor="#3d5875"
           />

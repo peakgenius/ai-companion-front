@@ -8,9 +8,10 @@ import {
   StyleSheet,
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Feather } from "@expo/vector-icons";
 
-import Popup from "../components/Popup";
-import Input from "../components/Input";
+import Popup from "../../components/Popup";
+import Input from "../../components/Input";
 
 const ChatPopup = (props) => {
   const {
@@ -44,7 +45,7 @@ const ChatPopup = (props) => {
               className="w-10 h-10 mr-3"
             ></Image>
             <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
-              hello. How can I assist you?
+              Hello. How can I assist you?
             </Text>
           </View>
           {messages.map((item, index) => (
@@ -89,12 +90,21 @@ const ChatPopup = (props) => {
             className="flex items-center justify-center w-11 rounded-full h-12 ml-3"
             style={styles.buttonColor}
           >
-            <FontAwesome
-              name="send-o"
-              size={18}
-              color="white"
-              style={{ textAlign: "center" }}
-            />
+            {isSaving ? (
+              <Feather
+                name="loader"
+                size={18}
+                color="white"
+                style={styles.textAlignCenter}
+              />
+            ) : (
+              <FontAwesome
+                name="send-o"
+                size={18}
+                color="white"
+                style={styles.textAlignCenter}
+              />
+            )}
           </View>
         </Pressable>
       </View>
@@ -105,6 +115,9 @@ const ChatPopup = (props) => {
 const styles = StyleSheet.create({
   buttonColor: {
     backgroundColor: "#d9ab3c",
+  },
+  textAlignCenter: {
+    textAlign: "center",
   },
 });
 

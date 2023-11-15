@@ -4,11 +4,11 @@ import { Link, router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import axios from "axios";
 
-import CustomButton from "../components/CustomButton";
-import Input from "../components/Input";
-import InputNumber from "../components/InputNumber";
-import Select from "../components/Select";
-import { getUrl } from "../util/asyncStorage";
+import CustomButton from "../../components/CustomButton";
+import Input from "../../components/Input";
+import InputNumber from "../../components/InputNumber";
+import Select from "../../components/Select";
+import { getUrl } from "../../util/asyncStorage";
 
 const SignUp = () => {
   const buttonColor = "#d9ab3c";
@@ -24,22 +24,22 @@ const SignUp = () => {
     weight: 0,
     marial_status: 0,
   });
+  const [isSaving, setIsSaving] = useState(false);
 
-  const signUp = () => {
-    console.log("signup", getUrl(), profile);
-    axios
-      .post(getUrl() + "/auth/signup", profile, {
+  const signUp = async () => {
+    setIsSaving(true);
+    try {
+      await axios.post(getUrl() + "/auth/signup", profile, {
         headers: {
           "Access-Control-Allow-Origin": "*",
         },
-      })
-      .then((res) => {
-        router.replace("/signin");
-      })
-      .catch((err) => {
-        // console.log(err.message, '->', err.response.data.message);
-        console.log(err.message, "->");
       });
+      setIsSaving(false);
+      router.replace("/signin");
+    } catch (err) {
+      setIsSaving(false);
+      console.log(err.message, "->");
+    }
   };
 
   return (
@@ -98,7 +98,7 @@ const SignUp = () => {
             separatorWidth={0}
             totalWidth={250}
             maxValue={150}
-            containerStyle={{border: "none"}}
+            containerStyle={{ border: "none" }}
             value={profile.age}
             onChange={(value) => {
               setProfile((prev) => ({
@@ -113,7 +113,7 @@ const SignUp = () => {
           <InputNumber
             separatorWidth={0}
             maxValue={300}
-            containerStyle={{border: "none"}}
+            containerStyle={{ border: "none" }}
             totalWidth={250}
             value={profile.height}
             onChange={(value) => {
@@ -129,7 +129,7 @@ const SignUp = () => {
           <InputNumber
             separatorWidth={0}
             maxValue={300}
-            containerStyle={{border: "none"}}
+            containerStyle={{ border: "none" }}
             totalWidth={250}
             value={profile.weight}
             onChange={(value) => {
@@ -141,7 +141,12 @@ const SignUp = () => {
           />
         </View>
 
-        <CustomButton title="Sign Up" color={buttonColor} onPress={signUp} />
+        <CustomButton
+          title={isSaving ? "Signing Up..." : "Sign Up"}
+          color={buttonColor}
+          onPress={signUp}
+          disabled={isSaving}
+        />
       </View>
     </ScrollView>
   );

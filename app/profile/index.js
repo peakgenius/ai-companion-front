@@ -3,18 +3,20 @@ import { Text, View, Pressable, ScrollView } from "react-native";
 import axios from "axios";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-import { AuthContext } from "../contexts/auth";
+import { AuthContext } from "../../contexts/user";
+import Popup from "../../components/Popup";
+import CustomButton from "../../components/CustomButton";
+import { getUrl } from "../../util/asyncStorage";
+import InputNumber from "../../components/InputNumber";
 import Footer from "./Footer";
 import UserInfo from "./UserInfo";
 import TipsPopup from "./TipsPopup";
-import Popup from "../components/Popup";
-import CustomButton from "../components/CustomButton";
-import { getUrl } from "../util/asyncStorage";
-import InputNumber from "../components/InputNumber";
 
 const Profile = () => {
   const { user, getUser, authToken, dayToGetTips, setDayToGetTips } =
     useContext(AuthContext);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [visibleConfirmPopup, setVisibleConfirmPopup] = useState(false);
   const [visibleProgressPopup, setVisibleProgressPopup] = useState(false);
   const [visibleSettingQuestion, setVisibleSettingQuestion] = useState(false);
@@ -22,14 +24,10 @@ const Profile = () => {
   const [visibleSettingTip, setVisibleSettingTip] = useState(false);
   const [goalId, setGoalId] = useState("1");
   const [progress, setProgress] = useState(0);
-  const [questionDisplayInterval, setQuestionDisplayInterval] = useState(
-    user.question_display_interval
-  );
-  const [tipDisplayInterval, setTipDisplayInterval] = useState(
-    user.tip_display_interval
-  );
+  const [questionDisplayInterval, setQuestionDisplayInterval] = useState(0);
+  const [tipDisplayInterval, setTipDisplayInterval] = useState(0);
   const [goals, setGoals] = useState([]);
-  const [tips, setTips] = useState([]);
+  const [tips, setTips] = useState({});
 
   useEffect(() => {
     if (!authToken) return;
@@ -39,20 +37,22 @@ const Profile = () => {
     const now = new Date();
     if (dayToGetTips === now.getDate()) return; //to call getTips funtion once per day
     getTips();
-  }, [authToken]);
+  }, [authToken, user.question_display_interval, user.tip_display_interval]);
 
-  const getGoals = () => {
-    axios
-      .get(getUrl() + "/profile/goal", {
+  const getGoals = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axios.get(getUrl() + "/profile/goal", {
         headers: {
           Authorization: `${authToken}`,
           "Access-Control-Allow-Origin": "*",
         },
-      })
-      .then((res) => {
-        setGoals(res.data);
-      })
-      .catch((err) => {});
+      });
+      setGoals(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+    setIsLoading(false);
   };
 
   const openPopupSettingQuestion = () => {
@@ -88,27 +88,6 @@ const Profile = () => {
     setVisibleTipsPopup(false);
   };
 
-  const nodisplayAnymore = () => {
-    const now = new Date();
-    setDayToGetTips(now.getDate());
-    closeTipsPopup();
-  };
-
-  const getTips = async () => {
-    if (tips.length !== 0) {
-      openTipsPopup();
-      return;
-    }
-    const resTips = await axios.get(`${getUrl()}/profile/tips`, {
-      headers: {
-        Authorization: `${authToken}`,
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-    console.log(resTips.data);
-    openTipsPopup();
-  };
-  
   const openProgressPopup = (id) => {
     setGoalId(id);
     const goalsLength = goals.length;
@@ -120,9 +99,51 @@ const Profile = () => {
     }
     setVisibleProgressPopup(true);
   };
-
   const closeProgressPopup = () => {
     setVisibleProgressPopup(false);
+  };
+
+  const nodisplayAnymore = async () => {
+    setIsSaving(true);
+    const now = new Date();
+    setDayToGetTips(now.getDate());
+    closeTipsPopup();
+    try {
+      await axios.patch(
+        `${getUrl()}/profile/tips-date`,
+        {},
+        {
+          headers: {
+            Authorization: `${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+      closeTipsPopup();
+    } catch (err) {
+      console.log(err);
+    }
+    setIsSaving(false);
+  };
+
+  const getTips = async () => {
+    setIsLoading(true);
+    try {
+      const resTips = await axios.get(`${getUrl()}/profile/tips`, {
+        headers: {
+          Authorization: `${authToken}`,
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+      const resTipsData = resTips.data;
+      setTips(resTipsData);
+      if (!resTipsData.message) {
+        openTipsPopup();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    setIsLoading(false);
   };
 
   const setQuestionInterval = async (value) => {
@@ -175,9 +196,11 @@ const Profile = () => {
       });
   };
 
-  const saveGoalProgress = () => {
-    axios
-      .post(
+  const saveGoalProgress = async () => {
+    setIsSaving(true);
+    if (progress > 10 || progress < 0) return;
+    try {
+      await axios.post(
         `${getUrl()}/profile/goal-progress`,
         { goalId, progress },
         {
@@ -186,36 +209,36 @@ const Profile = () => {
             "Access-Control-Allow-Origin": "*",
           },
         }
-      )
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      );
+      closeProgressPopup();
+    } catch (err) {
+      console.log(err);
+    }
+    setIsSaving(false);
   };
 
-  const deleteGoal = () => {
-    axios
-      .delete(`${getUrl()}/profile/goal?id=${goalId}`, {
+  const deleteGoal = async () => {
+    setIsSaving(true);
+    try {
+      await axios.delete(`${getUrl()}/profile/goal?id=${goalId}`, {
         headers: {
           Authorization: `${authToken}`,
           "Access-Control-Allow-Origin": "*",
         },
-      })
-      .then((res) => {
-        getGoals();
-        closeConfimrPopup();
-      })
-      .catch((err) => {
-        console.log(err);
       });
+
+      getGoals();
+      closeConfimrPopup();
+    } catch (err) {
+      console.log(err);
+    }
+    setIsSaving(false);
   };
 
   return (
     <View className="flex-1">
       <ScrollView className="bg-neutral-900 ">
-        <UserInfo user={user} />
+        <UserInfo user={user} isLoading={isLoading} />
         <View className="p-4 pb-20 relative">
           {goals.map((item, index) => (
             <View key={index}>
@@ -226,14 +249,12 @@ const Profile = () => {
                 {item.content}
               </Text>
               <Pressable
-                title="Delete"
                 className="absolute top-3 right-0"
                 onPress={(e) => openProgressPopup(item._id)}
               >
                 <FontAwesome name="pencil" size={15} color={"#fff"} />
               </Pressable>
               <Pressable
-                title="Delete"
                 className="absolute bottom-3 right-0"
                 onPress={(e) => openConfimrPopup(item._id)}
               >
@@ -255,15 +276,16 @@ const Profile = () => {
             <View className="flex-row justify-center gap-3">
               <View>
                 <CustomButton
+                  title={isSaving ? "Deleting..." : "Delete"}
+                  disabled={isSaving}
                   color={"red"}
-                  title={"delete"}
                   onPress={deleteGoal}
                 />
               </View>
               <View>
                 <CustomButton
                   color={"grey"}
-                  title={"cancel"}
+                  title={"Cancel"}
                   onPress={closeConfimrPopup}
                 />
               </View>
@@ -299,14 +321,15 @@ const Profile = () => {
               <View>
                 <CustomButton
                   color={"#d9ab3c"}
-                  title={"save"}
+                  title={isSaving ? "Saving..." : "Save"}
+                  disabled={isSaving}
                   onPress={saveGoalProgress}
                 />
               </View>
               <View>
                 <CustomButton
                   color={"grey"}
-                  title={"cancel"}
+                  title={"Cancel"}
                   onPress={closeProgressPopup}
                 />
               </View>
@@ -316,6 +339,7 @@ const Profile = () => {
         <TipsPopup
           visibleTipsPopup={visibleTipsPopup}
           tips={tips}
+          isSaving={isSaving}
           nodisplayAnymore={nodisplayAnymore}
           closeTipsPopup={closeTipsPopup}
         />
@@ -331,6 +355,7 @@ const Profile = () => {
         closePopupSettingTip={closePopupSettingTip}
         tipDisplayInterval={tipDisplayInterval}
         setTipInterval={setTipInterval}
+        isLoading={isLoading}
       />
     </View>
   );

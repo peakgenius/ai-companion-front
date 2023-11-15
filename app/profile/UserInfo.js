@@ -1,17 +1,23 @@
 import React from "react";
-import {View, Text, Image} from "react-native";
-import { Link } from "expo-router";
+import { View, Text, Image, Pressable } from "react-native";
+import { Link, router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const UserInfo = (props) => {
-  const { user } = props;
+  const { user, isLoading } = props;
   const gender = ["female", "male"];
   const marial_status = ["single", "married", "divorced"];
+
+  const goToHome = () => {
+    if (isLoading) return;
+    router.replace("/");
+  };
+
   return (
     <View className="w-full flex justify-center p-4 pt-6">
-      <Link href="/" className="mb-4">
+      <Pressable className="mb-4" onPress={goToHome}>
         <Ionicons name="arrow-back" size={32} color="white" />
-      </Link>
+      </Pressable>
       <Image
         resizeMode="contain"
         borderRadius={6}
@@ -27,7 +33,9 @@ const UserInfo = (props) => {
         <Text className="basis-1/2 text-white">Weight: {user.weight}</Text>
       </View>
       <View className="flex flex-row pl-12">
-        <Text className="basis-1/2 text-white">Gender: {gender[user.gender]}</Text>
+        <Text className="basis-1/2 text-white">
+          Gender: {gender[user.gender]}
+        </Text>
         <Text className="basis-1/2 text-white">
           Marial_status: {marial_status[user.marial_status]}
         </Text>

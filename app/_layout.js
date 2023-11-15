@@ -1,6 +1,6 @@
 import { Slot } from "expo-router";
 import { NativeWindStyleSheet } from "nativewind";
-import AuthProvider from "./contexts/auth";
+import AuthProvider from "../contexts/user";
 import * as Notifications from "expo-notifications";
 
 NativeWindStyleSheet.setOutput({

@@ -1,17 +1,17 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { View, Image, Text, SafeAreaView, Pressable } from "react-native";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-import CustomButton from "../components/CustomButton";
-import { AuthContext } from "../contexts/auth";
+import CustomButton from "../../components/CustomButton";
+import { AuthContext } from "../../contexts/user";
+import { getUrl } from "../../util/asyncStorage";
 import UserQeustionPopup from "./UserQuestionPopup";
 import GoalQeustionPopup from "./GoalQuestionPopup";
 import ChatPopup from "./ChatPopup";
 import Progress from "./Progress.js";
-import { getUrl } from "../util/asyncStorage";
 
 const Home = () => {
   const buttonColor = "#d9ab3c";
@@ -106,6 +106,7 @@ const Home = () => {
   };
 
   const getProgress = async () => {
+    setIsLoading(true);
     try {
       const progress = await axios.get(getUrl() + "/profile/progress", {
         headers: {
@@ -124,9 +125,11 @@ const Home = () => {
     } catch (err) {
       console.log(err);
     }
+    setIsLoading(false);
   };
 
   const getQuestions = async () => {
+    setIsLoading(true);
     try {
       const res = await axios.get(getUrl() + "/question/questions", {
         headers: {
@@ -134,7 +137,6 @@ const Home = () => {
           "Access-Control-Allow-Origin": "*",
         },
       });
-      console.log("res", res.data);
       const data = res.data;
       const now = new Date();
       setDayToGetQuestions(now.getDate());
@@ -147,7 +149,6 @@ const Home = () => {
 
       openUserQuestionPopup();
       if (data.goal_id) {
-        console.log('goal_id', data.goal_id);
         setGoal({
           id: data.goal_id._id,
           content: data.goal_id.content,
@@ -158,6 +159,7 @@ const Home = () => {
     } catch (err) {
       console.log(err);
     }
+    setIsLoading(false);
   };
 
   const getMessages = async () => {
@@ -181,9 +183,10 @@ const Home = () => {
     setIsSkipGoalAnswer(true);
   };
 
-  const saveUserAnswer = () => {
-    axios
-      .post(
+  const saveUserAnswer = async () => {
+    setIsSaving(true);
+    try {
+      await axios.post(
         `${getUrl()}/question/user-question-answer`,
         { userQuestionId: userQuestion.id, isSkipUserAnswer, userAnswer },
         {
@@ -192,25 +195,26 @@ const Home = () => {
             "Access-Control-Allow-Origin": "*",
           },
         }
-      )
-      .then((res) => {
-        closeUserQuestionPopup();
-        if (goal.questionId !== "") {
-          openGoalQuestionPopup();
-          return;
-        }
-        if (userQuestion.displayInterval * 1 === 0) {
-          updateQuestionDate();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      );
+      closeUserQuestionPopup();
+      setIsSaving(false);
+      if (goal.questionId !== "") {
+        openGoalQuestionPopup();
+        return;
+      }
+      if (userQuestion.displayInterval * 1 === 0) {
+        updateQuestionDate();
+      }
+    } catch (err) {
+      console.log(err);
+      setIsSaving(false);
+    }
   };
 
-  const saveGoalAnswer = () => {
-    axios
-      .post(
+  const saveGoalAnswer = async () => {
+    setIsSaving(true);
+    try {
+      await axios.post(
         `${getUrl()}/question/goal-question-answer`,
         {
           goalQuestionId: goal.questionId,
@@ -224,17 +228,16 @@ const Home = () => {
             "Access-Control-Allow-Origin": "*",
           },
         }
-      )
-      .then((res) => {
-        closeGoalQuestionPopup();
-        updateTips();
-        if (userQuestion.displayInterval * 1 === 0) {
-          updateQuestionDate();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      );
+      closeGoalQuestionPopup();
+      updateTips();
+      if (userQuestion.displayInterval * 1 === 0) {
+        updateQuestionDate();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    setIsSaving(false);
   };
 
   const logout = async () => {
@@ -317,6 +320,11 @@ const Home = () => {
     setIsSaving(false);
   };
 
+  const goToProfile = () => {
+    if (isLoading) return;
+    router.replace("/profile");
+  };
+
   return (
     <SafeAreaView className="h-full">
       <View className="flex-1 bg-neutral-900 pt-5">
@@ -350,7 +358,7 @@ const Home = () => {
         </View>
         {isAuthenticated && (
           <View className="flex-row justify-around p-2 bg-slate-700 border-t-slate-300 ">
-            <Link href="/profile">
+            <Pressable onPress={goToProfile}>
               <View className="flex-col">
                 <FontAwesome
                   name="user"
@@ -360,7 +368,7 @@ const Home = () => {
                 />
                 <Text className="text-white text-xs">Profile</Text>
               </View>
-            </Link>
+            </Pressable>
             <Pressable onPress={openPopup}>
               <View className="flex-col">
                 <FontAwesome
@@ -393,6 +401,7 @@ const Home = () => {
           saveAnswer={saveUserAnswer}
           skipAnswer={skipUserAnswer}
           closeQuestionPopup={closeUserQuestionPopup}
+          isSaving={isSaving}
         />
         <GoalQeustionPopup
           visibleQuestionPopup={visibleGoalQuestionPopup}
@@ -403,6 +412,7 @@ const Home = () => {
           saveAnswer={saveGoalAnswer}
           skipAnswer={skipGoalAnswer}
           closeQuestionPopup={closeGoalQuestionPopup}
+          isSaving={isSaving}
         />
       </View>
     </SafeAreaView>

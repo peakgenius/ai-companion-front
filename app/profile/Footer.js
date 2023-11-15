@@ -1,10 +1,10 @@
 import React from "react";
 import { Text, View, Image, Pressable, StyleSheet } from "react-native";
 import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-import Popup from "../components/Popup";
+import Popup from "../../components/Popup";
 
 const Footer = (props) => {
   const {
@@ -18,11 +18,17 @@ const Footer = (props) => {
     closePopupSettingTip,
     tipDisplayInterval,
     setTipInterval,
+    isLoading,
   } = props;
+
+  const goToSetgoal = () => {
+    if (isLoading) return;
+    router.replace("/profile/setgoal");
+  };
   return (
     <>
       <View className="flex-row justify-around p-2 bg-slate-700 border-t-slate-300 bottom-0 left-0 right-0 fixed">
-        <Link href="/profile/setgoal">
+        <Pressable onPress={goToSetgoal}>
           <View className="flex-col">
             <FontAwesome
               name="user"
@@ -32,7 +38,7 @@ const Footer = (props) => {
             />
             <Text className="text-white text-xs">create goal</Text>
           </View>
-        </Link>
+        </Pressable>
         <Pressable onPress={openPopupSettingTip}>
           <View className="flex-col">
             <FontAwesome
@@ -82,7 +88,10 @@ const Footer = (props) => {
             <RadioButtonItem
               value={0}
               label={
-                <Text className="text-lg pb-4" style={styles.radioButtonItemText}>
+                <Text
+                  className="text-lg pb-4"
+                  style={styles.radioButtonItemText}
+                >
                   A day
                 </Text>
               }
@@ -91,7 +100,10 @@ const Footer = (props) => {
             <RadioButtonItem
               value={1}
               label={
-                <Text className="text-lg pb-4" style={styles.radioButtonItemText}>
+                <Text
+                  className="text-lg pb-4"
+                  style={styles.radioButtonItemText}
+                >
                   A week
                 </Text>
               }
@@ -100,7 +112,10 @@ const Footer = (props) => {
             <RadioButtonItem
               value={2}
               label={
-                <Text className="text-lg pb-4" style={styles.radioButtonItemText}>
+                <Text
+                  className="text-lg pb-4"
+                  style={styles.radioButtonItemText}
+                >
                   A month
                 </Text>
               }

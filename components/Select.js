@@ -1,6 +1,11 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
+import { NativeWindStyleSheet } from "nativewind";
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
 
 const Select = (props) => {
   const { dropdownHeight, data, onSelect, defaultValue } = props;

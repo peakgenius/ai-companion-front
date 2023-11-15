@@ -1,5 +1,10 @@
 import React from "react";
 import { TextInput } from "react-native";
+import { NativeWindStyleSheet } from "nativewind";
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
 
 const Input = (props) => {
   const {

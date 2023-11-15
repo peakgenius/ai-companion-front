@@ -1,21 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
-import { TextInput, Text, View, Image } from "react-native";
+import { TextInput, Text, View, Image, Pressable } from "react-native";
 import { Link, router, Redirect } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import TypingText from "react-native-typing-text";
 import axios from "axios";
 
-import CustomButton from "../components/CustomButton";
-import Input from "../components/Input";
-import Select from "../components/Select";
-import { AuthContext } from "../contexts/auth";
-import { getUrl } from "../util/asyncStorage";
+import CustomButton from "../../components/CustomButton";
+import Input from "../../components/Input";
+import Select from "../../components/Select";
+import { AuthContext } from "../../contexts/user";
+import { getUrl } from "../../util/asyncStorage";
 
 const SetGoal = () => {
   const buttonColor = "#d9ab3c";
   const [goal, setGoal] = useState({ domain: "", content: "" });
   const [domains, setDomains] = useState([]);
   const [domainIds, setDomainIds] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
   const { authToken } = useContext(AuthContext);
 
   useEffect(() => {
@@ -45,29 +46,34 @@ const SetGoal = () => {
       .catch((err) => {});
   };
 
-  const create = () => {
-    axios
-      .post(getUrl() + "/profile/set-goal", goal, {
+  const create = async () => {
+    setIsSaving(true);
+    try {
+      await axios.post(getUrl() + "/profile/set-goal", goal, {
         headers: {
           Authorization: `${authToken}`,
           "Access-Control-Allow-Origin": "*",
         },
-      })
-      .then((res) => {
-        router.replace("/profile");
-      })
-      .catch((err) => {
-        console.log(err);
       });
+      router.replace("/profile");
+    } catch (err) {
+      console.log(err);
+    }
+    setIsSaving(false);
+  };
+
+  const back = () => {
+    if (isSaving) return;
+    router.replace("/profile");
   };
 
   return (
     <View className="flex-1 bg-neutral-900">
       <View className="p-6">
         <View className="w-full flex justify-center pb-6 pt-6">
-          <Link href="/profile">
+          <Pressable onPress={back}>
             <Ionicons name="arrow-back" size={32} color="white" />
-          </Link>
+          </Pressable>
         </View>
         {/* <View className="h-20">
           <TypingText
@@ -95,7 +101,12 @@ const SetGoal = () => {
           }}
         />
         <View className="flex items-center justify-center flex-row">
-          <CustomButton title="Set goal" color={buttonColor} onPress={create} />
+          <CustomButton
+            title={isSaving ? "Setting..." : "Set goal"}
+            color={buttonColor}
+            onPress={create}
+            disabled={isSaving}
+          />
         </View>
       </View>
     </View>

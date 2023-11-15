@@ -1,4 +1,9 @@
 import NumericInput from "react-native-numeric-input";
+import { NativeWindStyleSheet } from "nativewind";
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
 
 const InputNumber = (props) => {
   const { value, onChange, inputWidth, totalWidth, ...rest } = props;

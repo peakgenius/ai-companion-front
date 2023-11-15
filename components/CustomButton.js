@@ -1,5 +1,10 @@
 import React from "react";
 import { Text, View, StyleSheet, Pressable, Image, width } from "react-native";
+import { NativeWindStyleSheet } from "nativewind";
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
 
 const styles = StyleSheet.create({
   btnClickContain: {
