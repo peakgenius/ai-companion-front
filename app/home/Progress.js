@@ -10,20 +10,20 @@ import { Ionicons } from "@expo/vector-icons";
 // console.error = () => {}
 const ProgressRings = (props) => {
   const { progresses } = props;
-  const [fill, setFill] = useState(60);
+  const [total] = useState(
+    Math.ceil(
+      (progresses.health +
+        progresses.income +
+        progresses.happiness +
+        progresses.family +
+        progresses.romantic) /
+        5
+    )
+  );
   const [screenWidth] = useState(Dimensions.get("window").width);
 
   const totalText = () => {
-    return (
-      <Text className="text-white">
-        {Math.ceil((progresses.health +
-          progresses.income +
-          progresses.happiness +
-          progresses.family +
-          progresses.romantic) /
-          5)}
-      </Text>
-    );
+    return <Text className="text-white">{total}</Text>;
   };
 
   const healthText = () => {
@@ -34,7 +34,9 @@ const ProgressRings = (props) => {
     return <Text className="text-white">{Math.ceil(progresses.income)}</Text>;
   };
   const happinessText = () => {
-    return <Text className="text-white">{Math.ceil(progresses.happiness)}</Text>;
+    return (
+      <Text className="text-white">{Math.ceil(progresses.happiness)}</Text>
+    );
   };
   const familyText = () => {
     return <Text className="text-white">{Math.ceil(progresses.family)}</Text>;
@@ -91,7 +93,7 @@ const ProgressRings = (props) => {
             width={29}
             lineCap="round"
             backgroundWidth={30}
-            fill={fill}
+            fill={total}
             tintColor="#00e0ff"
             backgroundColor="#3d5875"
           />

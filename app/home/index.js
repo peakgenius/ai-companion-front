@@ -40,8 +40,8 @@ const Home = () => {
   const [goal, setGoal] = useState({
     id: "",
     content: "",
-    QuestionId: "",
-    Question: "",
+    questionId: "",
+    question: "",
   });
   const [goalAnswer, setGoalAnswer] = useState("");
   const [isSkipGoalAnswer, setIsSkipGoalAnswer] = useState(false);
@@ -147,6 +147,7 @@ const Home = () => {
 
       openUserQuestionPopup();
       if (data.goal_id) {
+        console.log('goal_id', data.goal_id);
         setGoal({
           id: data.goal_id._id,
           content: data.goal_id.content,
