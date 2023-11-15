@@ -41,7 +41,7 @@ const SignIn = () => {
           setIsSaving(false);
         }
         setIsSaving(false);
-        router.replace("/");
+        router.replace("/loading");
       }
     } catch (err) {
       console.log(err);
