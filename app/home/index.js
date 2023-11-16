@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import { View, Image, Text, SafeAreaView, Pressable } from "react-native";
 import { Link, router } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 import CustomButton from "../../components/CustomButton";
@@ -251,7 +251,7 @@ const Home = () => {
     };
     setUser(user);
     try {
-      await AsyncStorage.removeItem("auth-token");
+      // await AsyncStorage.removeItem("auth-token");
       setDayToGetQuestions(0);
       setDayToGetTips(0);
     } catch (e) {

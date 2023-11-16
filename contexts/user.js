@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { router, usePathname } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 export const AuthContext = React.createContext({});
 import { getUrl } from "../util/asyncStorage";
@@ -29,38 +29,38 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const getUser = () => {
-    AsyncStorage.getItem("auth-token")
-      .then((res) => {
-        const ParsedToken = JSON.parse(res);
-        const currentTimestamp = Math.floor(Date.now() / 1000);
-        if (currentTimestamp >= ParsedToken?.expiryTime) {
-          AsyncStorage.removeItem("auth-token");
-          setDayToGetQuestions(0);
-          setDayToGetTips(0);
-          router.replace("/");
-          return; 
-        }
-        if (ParsedToken.token === null) {
-          if (
-            pathname !== "/" &&
-            pathname !== "/signup" &&
-            pathname !== "/signin"
-          )
-            router.replace("/");
-          return;
-        }
-        setIsAuthenticated(true);
-        setAuthToken(ParsedToken.token);
-        axios
-          .get(`${getUrl()}/auth/user?token=${ParsedToken.token}`)
-          .then((response) => {
-            setUser(response.data.user);
-            console.log(response.data.user)
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // AsyncStorage.getItem("auth-token")
+    //   .then((res) => {
+        // const ParsedToken = JSON.parse(res);
+        // const currentTimestamp = Math.floor(Date.now() / 1000);
+        // if (currentTimestamp >= ParsedToken?.expiryTime) {
+        //   AsyncStorage.removeItem("auth-token");
+        //   setDayToGetQuestions(0);
+        //   setDayToGetTips(0);
+        //   router.replace("/");
+        //   return; 
+        // }
+        // if (ParsedToken.token === null) {
+        //   if (
+        //     pathname !== "/" &&
+        //     pathname !== "/signup" &&
+        //     pathname !== "/signin"
+        //   )
+        //     router.replace("/");
+        //   return;
+        // }
+        // setIsAuthenticated(true);
+        // setAuthToken(ParsedToken.token);
+        // axios
+        //   .get(`${getUrl()}/auth/user?token=${ParsedToken.token}`)
+        //   .then((response) => {
+        //     setUser(response.data.user);
+        //     console.log(response.data.user)
+        //   });
+      // })
+      // .catch((err) => {
+      //   console.log(err);
+      // });
   };
 
   return (
