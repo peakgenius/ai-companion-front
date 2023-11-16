@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import { View, Image, Text, SafeAreaView, Pressable } from "react-native";
 import { Link, router } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 import CustomButton from "../../components/CustomButton";
@@ -251,7 +251,7 @@ const Home = () => {
     };
     setUser(user);
     try {
-      // await AsyncStorage.removeItem("auth-token");
+      await AsyncStorage.removeItem("auth-token");
       setDayToGetQuestions(0);
       setDayToGetTips(0);
     } catch (e) {
@@ -318,6 +318,9 @@ const Home = () => {
       return prev;
     });
     setIsSaving(false);
+    if (chatScrollViewRef.current) {
+      chatScrollViewRef.current.scrollToEnd();
+    }
   };
 
   const goToProfile = () => {
@@ -400,9 +403,10 @@ const Home = () => {
           setAnswer={setUserAnswer}
           saveAnswer={saveUserAnswer}
           skipAnswer={skipUserAnswer}
+          isSkipUserAnswer={isSkipUserAnswer}
           closeQuestionPopup={closeUserQuestionPopup}
           isSaving={isSaving}
-        />
+          />
         <GoalQeustionPopup
           visibleQuestionPopup={visibleGoalQuestionPopup}
           goal={goal.content}
@@ -412,6 +416,7 @@ const Home = () => {
           saveAnswer={saveGoalAnswer}
           skipAnswer={skipGoalAnswer}
           closeQuestionPopup={closeGoalQuestionPopup}
+          isSkipGoalAnswer={isSkipGoalAnswer}
           isSaving={isSaving}
         />
       </View>

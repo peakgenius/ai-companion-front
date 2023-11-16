@@ -17,6 +17,7 @@ const QuestionPopup = (props) => {
     setAnswer,
     saveAnswer,
     skipAnswer,
+    isSkipUserAnswer,
     isSaving,
   } = props;
 
@@ -39,7 +40,7 @@ const QuestionPopup = (props) => {
       </View>
       <View className="ml-auto w-3/5">
         <CustomButton
-          title={isSaving ? "Skipping..." : "Skip a question"}
+          title={isSkipUserAnswer ? "Skipping..." : "Skip a question"}
           disabled={isSaving}
           color={"#d9ab3c"}
           onPress={skipAnswer}

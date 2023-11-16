@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { Text, View, Image } from "react-native";
 import { Link, router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 import { AuthContext } from "../../contexts/user";
@@ -26,16 +26,16 @@ const SignIn = () => {
         setUser(user);
         try {
           setAuthToken(token);
-          // const storageExpirationTimeInMinutes = 60;
-          // const now = new Date();
-          // now.setMinutes(now.getMinutes() + storageExpirationTimeInMinutes); // add the expiration time to the current Date time
-          // const expiryTimeInTimestamp = Math.floor(now.getTime() / 1000);
-          // const authTokenData = {
-          //   token: token,
-          //   expiryTime: expiryTimeInTimestamp,
-          // };
-          // const authTokenJson = JSON.stringify(authTokenData);
-          // await AsyncStorage.setItem("auth-token", authTokenJson);
+          const storageExpirationTimeInMinutes = 60;
+          const now = new Date();
+          now.setMinutes(now.getMinutes() + storageExpirationTimeInMinutes); // add the expiration time to the current Date time
+          const expiryTimeInTimestamp = Math.floor(now.getTime() / 1000);
+          const authTokenData = {
+            token: token,
+            expiryTime: expiryTimeInTimestamp,
+          };
+          const authTokenJson = JSON.stringify(authTokenData);
+          await AsyncStorage.setItem("auth-token", authTokenJson);
         } catch (e) {
           console.log(e);
           setIsSaving(false);

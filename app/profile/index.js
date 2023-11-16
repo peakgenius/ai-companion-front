@@ -100,6 +100,7 @@ const Profile = () => {
     setVisibleProgressPopup(true);
   };
   const closeProgressPopup = () => {
+    setIsSaving(false)
     setVisibleProgressPopup(false);
   };
 

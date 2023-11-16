@@ -18,6 +18,7 @@ const GoalQuestionPopup = (props) => {
     setAnswer,
     saveAnswer,
     skipAnswer,
+    isSkipGoalAnswer,
     isSaving,
   } = props;
 
@@ -43,7 +44,7 @@ const GoalQuestionPopup = (props) => {
         <CustomButton
           color={"#d9ab3c"}
           onPress={skipAnswer}
-          title={isSaving ? "Skipping..." : "Skip a question"}
+          title={isSkipGoalAnswer ? "Skipping..." : "Skip a question"}
           disabled={isSaving}
         />
       </View>

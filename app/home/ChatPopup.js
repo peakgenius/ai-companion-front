@@ -55,7 +55,7 @@ const ChatPopup = (props) => {
                   {item.user_message}
                 </Text>
                 <Image
-                  source={require("../../assets/male_avatar.png")}
+                  source={require("../../assets/female_avatar.png")}
                   className="w-10 h-10"
                 ></Image>
               </View>
