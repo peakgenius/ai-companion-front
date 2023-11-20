@@ -6,11 +6,12 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { AuthContext } from "../../contexts/user";
 import Popup from "../../components/Popup";
 import CustomButton from "../../components/CustomButton";
-import { getUrl } from "../../util/asyncStorage";
+import { getUrl } from "../../util";
 import InputNumber from "../../components/InputNumber";
 import Footer from "./Footer";
 import UserInfo from "./UserInfo";
 import TipsPopup from "./TipsPopup";
+import colors from "../../styles/colors";
 
 const Profile = () => {
   const { user, getUser, authToken, dayToGetTips, setDayToGetTips } =
@@ -71,7 +72,7 @@ const Profile = () => {
     setVisibleSettingTip(false);
   };
 
-  const openConfimrPopup = (id) => {
+  const openConfirmPopup = (id) => {
     setGoalId(id);
     setVisibleConfirmPopup(true);
   };
@@ -100,7 +101,7 @@ const Profile = () => {
     setVisibleProgressPopup(true);
   };
   const closeProgressPopup = () => {
-    setIsSaving(false)
+    setIsSaving(false);
     setVisibleProgressPopup(false);
   };
 
@@ -241,26 +242,33 @@ const Profile = () => {
       <ScrollView className="bg-neutral-900 ">
         <UserInfo user={user} isLoading={isLoading} />
         <View className="p-4 pb-20 relative">
+          <Text
+            className="text-3xl font-bold mb-3"
+            style={{ color: colors.buttonColor }}
+          >
+            Goals
+          </Text>
+
           {goals.map((item, index) => (
             <View key={index}>
-              <Text className="text-white text-center text-2xl">
-                {item.domain_id.content}
+              <Text className="text-white text-xl">
+                - {item.domain_id.content}
               </Text>
-              <Text className="text-white text-center text-lg mb-3">
-                {item.content}
-              </Text>
-              <Pressable
-                className="absolute top-3 right-0"
-                onPress={(e) => openProgressPopup(item._id)}
-              >
-                <FontAwesome name="pencil" size={15} color={"#fff"} />
-              </Pressable>
-              <Pressable
-                className="absolute bottom-3 right-0"
-                onPress={(e) => openConfimrPopup(item._id)}
-              >
-                <FontAwesome name="trash" size={15} color={"#fff"} />
-              </Pressable>
+              <View className="relative">
+                <Text className="text-white text-lg mb-3 pr-7 pl-3">{item.content}</Text>
+                <Pressable
+                  className="absolute bottom-3 right-6"
+                  onPress={(e) => openProgressPopup(item._id)}
+                >
+                  <FontAwesome name="pencil" size={15} color={"#fff"} />
+                </Pressable>
+                <Pressable
+                  className="absolute bottom-3 right-0"
+                  onPress={(e) => openConfirmPopup(item._id)}
+                >
+                  <FontAwesome name="trash" size={15} color={"#fff"} />
+                </Pressable>
+              </View>
             </View>
           ))}
         </View>
@@ -273,7 +281,9 @@ const Profile = () => {
           }
         >
           <View>
-            <Text className="text-2xl mb-8">Are you sure to delete?</Text>
+            <Text className="text-2xl mb-8 text-center text-white">
+              Are you sure to delete?
+            </Text>
             <View className="flex-row justify-center gap-3">
               <View>
                 <CustomButton
@@ -301,7 +311,7 @@ const Profile = () => {
           }
         >
           <View>
-            <Text className="text-2xl mb-8 text-center">
+            <Text className="text-2xl mb-8 text-center text-white">
               Which level of this goal are you in 1-10?
             </Text>
             <View className="flex-row justify-center">
@@ -311,7 +321,7 @@ const Profile = () => {
                 maxValue={10}
                 totalWidth={250}
                 value={progress}
-                textColor="#000"
+                textColor="white"
                 containerStyle={{ border: "none" }}
                 onChange={(value) => {
                   setProgress(value);
@@ -321,7 +331,7 @@ const Profile = () => {
             <View className="flex-row justify-center gap-3 mt-3">
               <View>
                 <CustomButton
-                  color={"#d9ab3c"}
+                  color={colors.buttonColor}
                   title={isSaving ? "Saving..." : "Save"}
                   disabled={isSaving}
                   onPress={saveGoalProgress}

@@ -7,14 +7,14 @@ import axios from "axios";
 
 import CustomButton from "../../components/CustomButton";
 import { AuthContext } from "../../contexts/user";
-import { getUrl } from "../../util/asyncStorage";
+import { getUrl } from "../../util";
 import UserQeustionPopup from "./UserQuestionPopup";
 import GoalQeustionPopup from "./GoalQuestionPopup";
 import ChatPopup from "./ChatPopup";
 import Progress from "./Progress.js";
+import colors from "../../styles/colors";
 
 const Home = () => {
-  const buttonColor = "#d9ab3c";
   const {
     authToken,
     isAuthenticated,
@@ -254,6 +254,12 @@ const Home = () => {
       await AsyncStorage.removeItem("auth-token");
       setDayToGetQuestions(0);
       setDayToGetTips(0);
+      await axios.post(getUrl() + "/auth/logout", {}, {
+        headers: {
+          Authorization: `${authToken}`,
+          "Access-Control-Allow-Origin": "*",
+        },
+      }); 
     } catch (e) {
       console.log(e);
     }
@@ -301,10 +307,11 @@ const Home = () => {
     setMessages((prev) => {
       return [...prev, ...messageRow];
     });
+    setUserMessage("");
     const res = await axios.post(
       `${getUrl()}/chat/message`,
       {
-        userMessage,
+        userMessage: messageRow[0].user_message,
       },
       {
         headers: {
@@ -330,7 +337,7 @@ const Home = () => {
 
   return (
     <SafeAreaView className="h-full">
-      <View className="flex-1 bg-neutral-900 pt-5">
+      <View className="flex-1 pt-5" style={colors.mainBackground}>
         <Text className="text-2xl text-center text-white">AI companion</Text>
         {!isAuthenticated && (
           <Image
@@ -344,23 +351,23 @@ const Home = () => {
           {!isAuthenticated && (
             <>
               <Link href="/signup" asChild>
-                <CustomButton title="Sign Up" color={buttonColor} />
+                <CustomButton title="Sign Up" color={colors.buttonColor} />
               </Link>
               <Link href="/signin" asChild>
-                <CustomButton title="Sign In" color={buttonColor} />
+                <CustomButton title="Sign In" color={colors.buttonColor} />
               </Link>
             </>
           )}
           {isAuthenticated && (
             <CustomButton
               title="Log out"
-              color={buttonColor}
+              color={colors.buttonColor}
               onPress={logout}
             />
           )}
         </View>
         {isAuthenticated && (
-          <View className="flex-row justify-around p-2 bg-slate-700 border-t-slate-300 ">
+          <View className="flex-row justify-around p-2" style={colors.navBarBackground}>
             <Pressable onPress={goToProfile}>
               <View className="flex-col">
                 <FontAwesome
@@ -406,7 +413,7 @@ const Home = () => {
           isSkipUserAnswer={isSkipUserAnswer}
           closeQuestionPopup={closeUserQuestionPopup}
           isSaving={isSaving}
-          />
+        />
         <GoalQeustionPopup
           visibleQuestionPopup={visibleGoalQuestionPopup}
           goal={goal.content}

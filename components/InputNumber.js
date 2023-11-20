@@ -1,6 +1,8 @@
 import NumericInput from "react-native-numeric-input";
 import { NativeWindStyleSheet } from "nativewind";
 
+import colors from "../styles/colors";
+
 NativeWindStyleSheet.setOutput({
   default: "native",
 });
@@ -21,8 +23,8 @@ const InputNumber = (props) => {
       rounded
       textColor="white"
       iconStyle={{ color: "white" }}
-      rightButtonBackgroundColor="#d9ab3c"
-      leftButtonBackgroundColor="#d9ab3c"
+      rightButtonBackgroundColor={colors.buttonColor}
+      leftButtonBackgroundColor={colors.buttonColor}
       {...rest}
     />
   );

@@ -4,7 +4,7 @@ import {
   AnimatedCircularProgress,
   CircularProgress,
 } from "react-native-circular-progress";
-
+import colors from "../../styles/colors"
 // console.error = () => {}
 const ProgressRings = (props) => {
   const { progresses } = props;
@@ -40,7 +40,7 @@ const ProgressRings = (props) => {
   };
 
   return (
-    <View className="flex-1 bg-neutral-900">
+    <View className="flex-1" style={colors.mainBackground}>
       <View className="relative flex items-center" style={{ padding: "35%" }}>
         {/* top progressring */}
         <View className="absolute top-4 items-center">
@@ -55,7 +55,7 @@ const ProgressRings = (props) => {
             backgroundWidth={20}
             fill={health}
             tintColor="#bf873d"
-            backgroundColor="#3d5875"
+            backgroundColor={colors.progressCircleBackgroundColor}
           />
           <Text className="text-white mt-2">Health</Text>
         </View>
@@ -72,7 +72,7 @@ const ProgressRings = (props) => {
             backgroundWidth={20}
             fill={income}
             tintColor="#d9ab3c"
-            backgroundColor="#3d5875"
+            backgroundColor={colors.progressCircleBackgroundColor}
           />
           <Text className="text-white text-center mt-3">Income</Text>
         </View>
@@ -89,7 +89,7 @@ const ProgressRings = (props) => {
             backgroundWidth={30}
             fill={total}
             tintColor="#00e0ff"
-            backgroundColor="#3d5875"
+            backgroundColor={colors.progressCircleBackgroundColor}
           />
         </View>
         <Text className="text-white text-center mt-7 text-lg">Total</Text>
@@ -106,7 +106,7 @@ const ProgressRings = (props) => {
             backgroundWidth={20}
             fill={happiness}
             tintColor="#d9ab3c"
-            backgroundColor="#3d5875"
+            backgroundColor={colors.progressCircleBackgroundColor}
           />
           <Text className="text-white text-center mt-3">Happiness</Text>
         </View>
@@ -123,7 +123,7 @@ const ProgressRings = (props) => {
             backgroundWidth={20}
             fill={family}
             tintColor="#d05253"
-            backgroundColor="#3d5875"
+            backgroundColor={colors.progressCircleBackgroundColor}
           />
           <Text className="text-white text-center mt-3">Family</Text>
         </View>
@@ -140,7 +140,7 @@ const ProgressRings = (props) => {
             backgroundWidth={20}
             fill={romantic}
             tintColor="#ff1b1d"
-            backgroundColor="#3d5875"
+            backgroundColor={colors.progressCircleBackgroundColor}
           />
           <Text className="text-white text-center mt-3">Romantic</Text>
         </View>

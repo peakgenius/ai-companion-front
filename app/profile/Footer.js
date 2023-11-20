@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import Popup from "../../components/Popup";
+import colors from "../../styles/colors";
 
 const Footer = (props) => {
   const {
@@ -27,7 +28,7 @@ const Footer = (props) => {
   };
   return (
     <>
-      <View className="flex-row justify-around p-2 bg-slate-700 border-t-slate-300 bottom-0 left-0 right-0 fixed">
+      <View className="flex-row justify-around p-2 bottom-0 left-0 right-0 fixed" style={colors.navBarBackground}>
         <Pressable onPress={goToSetgoal}>
           <View className="flex-col">
             <FontAwesome
@@ -66,16 +67,12 @@ const Footer = (props) => {
         visible={visibleSettingQuestion}
         dismiss={closePopupSettingQuestion}
         viewContainerClassName={
-          "bg-white border-gray-950 h-[370] pt-5 pl-5 pr-5 rounded-md"
+          "bg-white border-gray-950 h-[330] pt-5 pl-5 pr-5 rounded-md"
         }
       >
         <View>
           <View className=" mb-5">
-            <Image
-              source={require("../../assets/chatbot.png")}
-              className="w-20 h-20 rounded-full"
-            ></Image>
-            <Text className="p-1 inline-block text-lg">
+            <Text className="p-1 inline-block text-2xl text-white">
               Would you like to display a question once every few days?
             </Text>
           </View>
@@ -83,13 +80,13 @@ const Footer = (props) => {
             containerStyle={styles.radioMarginB}
             selected={questionDisplayInterval}
             onSelected={setQuestionInterval}
-            radioBackground="green"
+            radioBackground={colors.buttonColor}
           >
             <RadioButtonItem
               value={0}
               label={
                 <Text
-                  className="text-lg pb-4"
+                  className="text-lg pb-4 text-white"
                   style={styles.radioButtonItemText}
                 >
                   A day
@@ -101,7 +98,7 @@ const Footer = (props) => {
               value={1}
               label={
                 <Text
-                  className="text-lg pb-4"
+                  className="text-lg pb-4 text-white"
                   style={styles.radioButtonItemText}
                 >
                   A week
@@ -113,7 +110,7 @@ const Footer = (props) => {
               value={2}
               label={
                 <Text
-                  className="text-lg pb-4"
+                  className="text-lg pb-4 text-white"
                   style={styles.radioButtonItemText}
                 >
                   A month
@@ -128,16 +125,12 @@ const Footer = (props) => {
         visible={visibleSettingTip}
         dismiss={closePopupSettingTip}
         viewContainerClassName={
-          "bg-white border-gray-950 h-[370] pt-5 pl-5 pr-5 rounded-md"
+          "bg-white border-gray-950 h-[330] pt-5 pl-5 pr-5 rounded-md"
         }
       >
         <View>
           <View className=" mb-5">
-            <Image
-              source={require("../../assets/chatbot.png")}
-              className="w-20 h-20 rounded-full"
-            ></Image>
-            <Text className="p-1 inline-block text-lg">
+            <Text className="p-1 inline-block text-2xl text-white">
               Would you like to display a tip once every few days?
             </Text>
           </View>
@@ -145,13 +138,13 @@ const Footer = (props) => {
             containerStyle={styles.radioMarginB}
             selected={tipDisplayInterval}
             onSelected={setTipInterval}
-            radioBackground="green"
+            radioBackground={colors.buttonColor}
           >
             <RadioButtonItem
               value={0}
               label={
                 <Text
-                  className="text-lg pb-4"
+                  className="text-lg pb-4 text-white"
                   style={styles.radioButtonItemText}
                 >
                   A day
@@ -163,7 +156,7 @@ const Footer = (props) => {
               value={1}
               label={
                 <Text
-                  className="text-lg pb-4"
+                  className="text-lg pb-4 text-white"
                   style={styles.radioButtonItemText}
                 >
                   A week
@@ -175,7 +168,7 @@ const Footer = (props) => {
               value={2}
               label={
                 <Text
-                  className="text-lg pb-4"
+                  className="text-lg pb-4 text-white"
                   style={styles.radioButtonItemText}
                 >
                   A month

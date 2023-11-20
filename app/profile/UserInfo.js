@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import { Link, router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
-
+import colors from "../../styles/colors";
 const UserInfo = (props) => {
   const { user, isLoading } = props;
   const gender = ["female", "male"];
@@ -18,26 +18,27 @@ const UserInfo = (props) => {
       <Pressable className="mb-4" onPress={goToHome}>
         <Ionicons name="arrow-back" size={32} color="white" />
       </Pressable>
-      <Image
+      {/* <Image
         resizeMode="contain"
         borderRadius={6}
         className="w-full h-40 mb-3"
         source={require("../../assets/female_avatar.png")}
-      />
-      <View className="flex flex-row pl-12">
-        <Text className="basis-1/2 text-white">Name: {user.name}</Text>
-        <Text className="basis-1/2 text-white">Age: {user.age}</Text>
+      /> */}
+      <Text className="text-3xl font-bold mb-3" style={{color: colors.buttonColor}}>User info</Text>
+      <View className="flex flex-row">
+        <Text className="basis-1/2 text-white text-lg">Name: {user.name}</Text>
+        <Text className="basis-1/2 text-white text-lg">Age: {user.age}</Text>
       </View>
-      <View className="flex flex-row pl-12">
-        <Text className="basis-1/2 text-white">Height: {user.height}</Text>
-        <Text className="basis-1/2 text-white">Weight: {user.weight}</Text>
+      <View className="flex flex-row">
+        <Text className="basis-1/2 text-white text-lg">Height: {user.height}</Text>
+        <Text className="basis-1/2 text-white text-lg">Weight: {user.weight}</Text>
       </View>
-      <View className="flex flex-row pl-12">
-        <Text className="basis-1/2 text-white">
+      <View className="flex flex-row">
+        <Text className="basis-1/2 text-white text-lg">
           Gender: {gender[user.gender]}
         </Text>
-        <Text className="basis-1/2 text-white">
-          Marial_status: {marial_status[user.marial_status]}
+        <Text className="basis-1/2 text-white text-lg">
+          Marial: {marial_status[user.marial_status]}
         </Text>
       </View>
     </View>

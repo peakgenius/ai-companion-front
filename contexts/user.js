@@ -3,7 +3,7 @@ import { router, usePathname } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 export const AuthContext = React.createContext({});
-import { getUrl } from "../util/asyncStorage";
+import { getUrl } from "../util";
 
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

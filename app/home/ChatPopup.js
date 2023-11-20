@@ -12,6 +12,7 @@ import { Feather } from "@expo/vector-icons";
 
 import Popup from "../../components/Popup";
 import Input from "../../components/Input";
+import colors from "../../styles/colors";
 
 const ChatPopup = (props) => {
   const {
@@ -44,14 +45,14 @@ const ChatPopup = (props) => {
               source={require("../../assets/chatbot.png")}
               className="w-10 h-10 mr-3"
             ></Image>
-            <Text className="bg-slate-300 p-2 inline-block rounded-r-md rounded-bl-lg">
+            <Text className="text-white p-2 inline-block rounded-r-md rounded-bl-lg">
               Hello. How can I assist you?
             </Text>
           </View>
           {messages.map((item, index) => (
             <View key={index}>
               <View className="flex-row mb-3">
-                <Text className="ml-auto flex-1 bg-slate-300 inline-block rounded-l-md rounded-br-lg whitespace-nowrap mr-3 p-2">
+                <Text className="ml-auto flex-1 inline-block rounded-l-md text-white rounded-br-lg whitespace-nowrap mr-3 p-2">
                   {item.user_message}
                 </Text>
                 <Image
@@ -65,7 +66,7 @@ const ChatPopup = (props) => {
                     source={require("../../assets/chatbot.png")}
                     className="w-10 h-10 mr-3"
                   ></Image>
-                  <Text className="bg-slate-300 flex-1 p-2 rounded-r-md rounded-bl-lg mr-auto inline-block whitespace-nowrap">
+                  <Text className="text-white flex-1 p-2 rounded-r-md rounded-bl-lg mr-auto inline-block whitespace-nowrap">
                     {item.ai_message}
                   </Text>
                 </View>
@@ -81,6 +82,7 @@ const ChatPopup = (props) => {
           multiline={true}
           numberOfLines={4}
           defaultValue={userMessage}
+          value={userMessage}
           setText={(value) => {
             setUserMessage(value);
           }}
@@ -88,7 +90,7 @@ const ChatPopup = (props) => {
         <Pressable onPress={saveChat} disabled={isSaving}>
           <View
             className="flex items-center justify-center w-11 rounded-full h-12 ml-3"
-            style={styles.buttonColor}
+            style={{backgroundColor: colors.buttonColor}}
           >
             {isSaving ? (
               <Feather
@@ -113,9 +115,6 @@ const ChatPopup = (props) => {
 };
 
 const styles = StyleSheet.create({
-  buttonColor: {
-    backgroundColor: "#d9ab3c",
-  },
   textAlignCenter: {
     textAlign: "center",
   },

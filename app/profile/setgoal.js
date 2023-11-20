@@ -9,10 +9,10 @@ import CustomButton from "../../components/CustomButton";
 import Input from "../../components/Input";
 import Select from "../../components/Select";
 import { AuthContext } from "../../contexts/user";
-import { getUrl } from "../../util/asyncStorage";
+import { getUrl } from "../../util";
+import colors from "../../styles/colors";
 
 const SetGoal = () => {
-  const buttonColor = "#d9ab3c";
   const [goal, setGoal] = useState({ domain: "", content: "" });
   const [domains, setDomains] = useState([]);
   const [domainIds, setDomainIds] = useState([]);
@@ -82,6 +82,12 @@ const SetGoal = () => {
           />
         </View> */}
         <View className="mb-5 mt-12">
+          <Text
+            className="text-white text-xl mb-3"
+            style={{ color: colors.buttonColor }}
+          >
+            Domain of Goal
+          </Text>
           <Select
             dropdownHeight={"225px"}
             data={domains}
@@ -91,7 +97,12 @@ const SetGoal = () => {
             }}
           />
         </View>
-
+        <Text
+          className="text-white text-xl mb-3"
+          style={{ color: colors.buttonColor }}
+        >
+          Goal
+        </Text>
         <Input
           multiline={true}
           numberOfLines={5}
@@ -103,7 +114,7 @@ const SetGoal = () => {
         <View className="flex items-center justify-center flex-row">
           <CustomButton
             title={isSaving ? "Setting..." : "Set goal"}
-            color={buttonColor}
+            color={colors.buttonColor}
             onPress={create}
             disabled={isSaving}
           />

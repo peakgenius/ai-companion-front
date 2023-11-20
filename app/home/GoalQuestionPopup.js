@@ -7,6 +7,7 @@ import { Feather } from "@expo/vector-icons";
 import Popup from "../../components/Popup";
 import Input from "../../components/Input";
 import CustomButton from "../../components/CustomButton";
+import colors from "../../styles/colors";
 
 const GoalQuestionPopup = (props) => {
   const {
@@ -27,26 +28,36 @@ const GoalQuestionPopup = (props) => {
       visible={visibleQuestionPopup}
       dismiss={closeQuestionPopup}
       viewContainerClassName={
-        "bg-white border-gray-950 h-[350] pt-5 pl-5 pr-5 rounded-md relative"
+        "border-gray-950 h-[350] pt-5 pl-5 pr-5 rounded-md relative"
       }
     >
-      <View className="flex-row">
-        <Image
-          source={require("../../assets/chatbot.png")}
-          className="w-10 h-10"
-        ></Image>
+      <View className="flex-row justify-center text-center">
         <View className="h-auto W-5/6  w-5/6 pt-2">
-          <Text className="mb-3 p-2">{goal}</Text>
-          <TypingText text={question} textSize={16} />
+          <Text
+            className="mb-3 text-center pl-2 text-3xl font-bold"
+            style={{ color: colors.buttonColor }}
+          >
+            {goal.charAt(0).toUpperCase() + goal.slice(1)}
+          </Text>
         </View>
       </View>
-      <View className="ml-auto w-3/5">
-        <CustomButton
-          color={"#d9ab3c"}
+      <TypingText text={question} textSize={16} color="white" />
+      <View className="ml-auto w-3/5 mt-3">
+        <Pressable
+          color={colors.buttonColor}
           onPress={skipAnswer}
-          title={isSkipGoalAnswer ? "Skipping..." : "Skip a question"}
           disabled={isSaving}
-        />
+        >
+          <Text
+            style={{
+              color: colors.buttonColor,
+              textDecorationLine: "underline",
+            }}
+            className="text-right mr-3"
+          >
+            Skip
+          </Text>
+        </Pressable>
       </View>
       <View className="absolute bottom-2 w-11/12 ml-6 flex-row">
         <Input
@@ -62,9 +73,9 @@ const GoalQuestionPopup = (props) => {
         <Pressable onPress={saveAnswer}>
           <View
             className="flex items-center justify-center w-11 rounded-full h-12 ml-3"
-            style={styles.buttonColor}
+            style={{ backgroundColor: colors.buttonColor }}
           >
-            {isSaving ? (
+            {(isSaving && !isSkipGoalAnswer) ? (
               <Feather
                 name="loader"
                 size={18}
@@ -87,9 +98,6 @@ const GoalQuestionPopup = (props) => {
 };
 
 const styles = StyleSheet.create({
-  buttonColor: {
-    backgroundColor: "#d9ab3c",
-  },
   textAlignCenter: {
     textAlign: "center",
   },

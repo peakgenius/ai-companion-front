@@ -8,10 +8,10 @@ import axios from "axios";
 import { AuthContext } from "../../contexts/user";
 import CustomButton from "../../components/CustomButton";
 import Input from "../../components/Input";
-import { getUrl } from "../../util/asyncStorage";
+import { getUrl, getTokenExpiryTime } from "../../util";
+import colors from "../../styles/colors";
 
 const SignIn = () => {
-  const buttonColor = "#d9ab3c";
   const { setIsAuthenticated, setUser, setAuthToken } = useContext(AuthContext);
   const [profile, setProfile] = useState({ email: "", password: "" });
   const [isSaving, setIsSaving] = useState(false);
@@ -26,7 +26,7 @@ const SignIn = () => {
         setUser(user);
         try {
           setAuthToken(token);
-          const storageExpirationTimeInMinutes = 60;
+          const storageExpirationTimeInMinutes = getTokenExpiryTime();
           const now = new Date();
           now.setMinutes(now.getMinutes() + storageExpirationTimeInMinutes); // add the expiration time to the current Date time
           const expiryTimeInTimestamp = Math.floor(now.getTime() / 1000);
@@ -80,7 +80,7 @@ const SignIn = () => {
         />
         <CustomButton
           title={isSaving ? "Signing In..." : "Sign In"}
-          color={buttonColor}
+          color={colors.buttonColor}
           onPress={signIn}
           disabled={isSaving}
         />

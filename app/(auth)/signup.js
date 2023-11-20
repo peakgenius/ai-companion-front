@@ -8,7 +8,8 @@ import CustomButton from "../../components/CustomButton";
 import Input from "../../components/Input";
 import InputNumber from "../../components/InputNumber";
 import Select from "../../components/Select";
-import { getUrl } from "../../util/asyncStorage";
+import { getUrl } from "../../util";
+import colors from "../../styles/colors";
 
 const SignUp = () => {
   const buttonColor = "#d9ab3c";
@@ -143,7 +144,7 @@ const SignUp = () => {
 
         <CustomButton
           title={isSaving ? "Signing Up..." : "Sign Up"}
-          color={buttonColor}
+          color={colors.buttonColor}
           onPress={signUp}
           disabled={isSaving}
         />
