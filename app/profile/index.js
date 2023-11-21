@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Text, View, Pressable, ScrollView } from "react-native";
+import { Text, View, Pressable, ScrollView, Image } from "react-native";
 import axios from "axios";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import { AuthContext } from "../../contexts/user";
 import Popup from "../../components/Popup";
@@ -255,18 +254,26 @@ const Profile = () => {
                 - {item.domain_id.content}
               </Text>
               <View className="relative">
-                <Text className="text-white text-lg mb-3 pr-7 pl-3">{item.content}</Text>
+                <Text className="text-white text-lg mb-3 pr-7 pl-3">
+                  {item.content}
+                </Text>
                 <Pressable
                   className="absolute bottom-3 right-6"
                   onPress={(e) => openProgressPopup(item._id)}
                 >
-                  <FontAwesome name="pencil" size={15} color={"#fff"} />
+                  <Image
+                    resizeMode="cover"
+                    source={require("../../assets/pencil-15.png")}
+                  />
                 </Pressable>
                 <Pressable
                   className="absolute bottom-3 right-0"
                   onPress={(e) => openConfirmPopup(item._id)}
                 >
-                  <FontAwesome name="trash" size={15} color={"#fff"} />
+                  <Image
+                    resizeMode="cover"
+                    source={require("../../assets/trash-15.png")}
+                  />
                 </Pressable>
               </View>
             </View>

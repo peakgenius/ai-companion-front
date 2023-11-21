@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, Text, Pressable, StyleSheet } from "react-native";
+import { View, ScrollView, Text } from "react-native";
 
 import Popup from "../../components/Popup";
 import CustomButton from "../../components/CustomButton";
@@ -20,7 +20,7 @@ const TipsPopup = (props) => {
     >
       <ScrollView>
         <View className="pt-2 mb-2">
-          <Text className="text-2xl mb-4 text-white text-center">
+          <Text className="text-2xl mb-4 text-center font-bold" style={{color: colors.buttonColor}}>
             {tips.goal?.charAt(0).toUpperCase() + tips.goal?.slice(1)}
           </Text>
           {tips.tips?.map((item, index) => (

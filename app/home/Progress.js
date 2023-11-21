@@ -1,7 +1,6 @@
 import { Text, View, Dimensions } from "react-native";
 import { useEffect, useState } from "react";
 import {
-  AnimatedCircularProgress,
   CircularProgress,
 } from "react-native-circular-progress";
 import colors from "../../styles/colors"

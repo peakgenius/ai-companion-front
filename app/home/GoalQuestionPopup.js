@@ -1,12 +1,9 @@
 import React from "react";
 import { View, Image, Text, Pressable, StyleSheet } from "react-native";
 import TypingText from "react-native-typing-text";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Feather } from "@expo/vector-icons";
 
 import Popup from "../../components/Popup";
 import Input from "../../components/Input";
-import CustomButton from "../../components/CustomButton";
 import colors from "../../styles/colors";
 
 const GoalQuestionPopup = (props) => {
@@ -75,21 +72,10 @@ const GoalQuestionPopup = (props) => {
             className="flex items-center justify-center w-11 rounded-full h-12 ml-3"
             style={{ backgroundColor: colors.buttonColor }}
           >
-            {(isSaving && !isSkipGoalAnswer) ? (
-              <Feather
-                name="loader"
-                size={18}
-                color="white"
-                style={styles.textAlignCenter}
-              />
-            ) : (
-              <FontAwesome
-                name="send-o"
-                size={18}
-                color="white"
-                style={styles.textAlignCenter}
-              />
-            )}
+            <Image
+              resizeMode="cover"
+              source={require("../../assets/send-18.png")}
+            />
           </View>
         </Pressable>
       </View>

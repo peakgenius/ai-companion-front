@@ -1,6 +1,5 @@
 import Modal from "react-native-modal";
-import { View, Pressable } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { View, Pressable, Image } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 import colors from "../styles/colors";
 NativeWindStyleSheet.setOutput({
@@ -19,7 +18,10 @@ export default function Popup({
       <View className={viewContainerClassName} style={colors.mainBackground}>
         <View className="ml-auto mb-3">
           <Pressable onPress={dismiss}>
-            <FontAwesome name="close" size={22} color="white" />
+            <Image
+              resizeMode="cover"
+              source={require("../assets/close-24.png")}
+            />
           </Pressable>
         </View>
         {children}

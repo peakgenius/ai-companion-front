@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { TextInput, Text, View, Image, Pressable } from "react-native";
-import { Link, router, Redirect } from "expo-router";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import TypingText from "react-native-typing-text";
+import { Text, View, Image, Pressable } from "react-native";
+import { router } from "expo-router";
 import axios from "axios";
 
 import CustomButton from "../../components/CustomButton";
@@ -55,7 +53,7 @@ const SetGoal = () => {
           "Access-Control-Allow-Origin": "*",
         },
       });
-      router.replace("/profile");
+      router.push("/profile");
     } catch (err) {
       console.log(err);
     }
@@ -64,7 +62,7 @@ const SetGoal = () => {
 
   const back = () => {
     if (isSaving) return;
-    router.replace("/profile");
+    router.push("/profile");
   };
 
   return (
@@ -72,15 +70,12 @@ const SetGoal = () => {
       <View className="p-6">
         <View className="w-full flex justify-center pb-6 pt-6">
           <Pressable onPress={back}>
-            <Ionicons name="arrow-back" size={32} color="white" />
+            <Image
+              resizeMode="cover"
+              source={require("../../assets/left-arrow-24.png")}
+            />
           </Pressable>
         </View>
-        {/* <View className="h-20">
-          <TypingText
-            text="Hi, I’m your friendly AI companion. Please set the goal of the dommains"
-            textSize={16}
-          />
-        </View> */}
         <View className="mb-5 mt-12">
           <Text
             className="text-white text-xl mb-3"

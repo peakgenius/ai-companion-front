@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.peakgenius226.aicompanion"
@@ -32,22 +30,29 @@
     },
     "plugins": [
       "expo-router",
-      "expo-notifications"
+      "expo-notifications",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ],
     "notification": {
       "icon": "./assets/notification-icon.png",
       "color": "#ffffff",
-      "sounds": [
-        "./assets/notification-sound.wav"
-      ]
+      "sounds": ["./assets/notification-sound.wav"]
     },
     "extra": {
       "router": {
         "origin": false
       },
       "eas": {
-        "projectId": "1b8febde-806d-41e4-a90c-c4beef28416c"
+        "projectId": "97d07e24-3553-4c65-a31d-8c4241eb2ca3"
       }
-    }
+    },
+    "owner": "maxym221101"
   }
 }

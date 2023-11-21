@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, Pressable, Image, width } from "react-native";
+import { Text, StyleSheet, Pressable, width } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 
 NativeWindStyleSheet.setOutput({

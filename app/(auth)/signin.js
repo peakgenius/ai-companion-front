@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Text, View, Image } from "react-native";
 import { Link, router } from "expo-router";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
@@ -41,7 +40,7 @@ const SignIn = () => {
           setIsSaving(false);
         }
         setIsSaving(false);
-        router.replace("/loading");
+        router.push("/loading");
       }
     } catch (err) {
       console.log(err);
@@ -53,7 +52,10 @@ const SignIn = () => {
     <View className="flex-1 bg-neutral-900">
       <View className="w-full flex justify-center p-4 pt-6">
         <Link href="/">
-          <Ionicons name="arrow-back" size={32} color="white" />
+          <Image
+            resizeMode="cover"
+            source={require("../../assets/left-arrow-24.png")}
+          />
         </Link>
         <Image
           resizeMode="contain"

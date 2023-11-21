@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { View, Image, Text, SafeAreaView, Pressable } from "react-native";
 import { Link, router } from "expo-router";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
@@ -171,7 +170,6 @@ const Home = () => {
       },
     });
     setMessages(resMessages.data);
-    console.log("resMessages->", resMessages);
     setIsLoading(false);
   };
 
@@ -253,13 +251,16 @@ const Home = () => {
     try {
       await AsyncStorage.removeItem("auth-token");
       setDayToGetQuestions(0);
-      setDayToGetTips(0);
-      await axios.post(getUrl() + "/auth/logout", {}, {
-        headers: {
-          Authorization: `${authToken}`,
-          "Access-Control-Allow-Origin": "*",
-        },
-      }); 
+      await axios.post(
+        getUrl() + "/auth/logout",
+        {},
+        {
+          headers: {
+            Authorization: `${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
     } catch (e) {
       console.log(e);
     }
@@ -332,7 +333,7 @@ const Home = () => {
 
   const goToProfile = () => {
     if (isLoading) return;
-    router.replace("/profile");
+    router.push("/profile");
   };
 
   return (
@@ -367,25 +368,24 @@ const Home = () => {
           )}
         </View>
         {isAuthenticated && (
-          <View className="flex-row justify-around p-2" style={colors.navBarBackground}>
+          <View
+            className="flex-row justify-around p-2"
+            style={colors.navBarBackground}
+          >
             <Pressable onPress={goToProfile}>
               <View className="flex-col">
-                <FontAwesome
-                  name="user"
-                  size={32}
-                  color="white"
-                  style={{ textAlign: "center" }}
+                <Image
+                  resizeMode="contain"
+                  source={require("../../assets/user-32.png")}
                 />
                 <Text className="text-white text-xs">Profile</Text>
               </View>
             </Pressable>
             <Pressable onPress={openPopup}>
-              <View className="flex-col">
-                <FontAwesome
-                  name="inbox"
-                  size={32}
-                  color="white"
-                  style={{ textAlign: "center" }}
+              <View className="flex-col items-center">
+                <Image
+                  resizeMode="cover"
+                  source={require("../../assets/chat-32.png")}
                 />
                 <Text className="text-white text-xs">Chat</Text>
               </View>

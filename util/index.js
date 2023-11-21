@@ -1,5 +1,5 @@
 export const getUrl = () => {
-  return "http://10.0.2.2:5000/api";
+  return "http://143.198.177.68/api";
 };
 
 export const getTokenExpiryTime = () => {

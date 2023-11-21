@@ -7,8 +7,6 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Feather } from "@expo/vector-icons";
 
 import Popup from "../../components/Popup";
 import Input from "../../components/Input";
@@ -90,23 +88,12 @@ const ChatPopup = (props) => {
         <Pressable onPress={saveChat} disabled={isSaving}>
           <View
             className="flex items-center justify-center w-11 rounded-full h-12 ml-3"
-            style={{backgroundColor: colors.buttonColor}}
+            style={{ backgroundColor: colors.buttonColor }}
           >
-            {isSaving ? (
-              <Feather
-                name="loader"
-                size={18}
-                color="white"
-                style={styles.textAlignCenter}
-              />
-            ) : (
-              <FontAwesome
-                name="send-o"
-                size={18}
-                color="white"
-                style={styles.textAlignCenter}
-              />
-            )}
+            <Image
+              resizeMode="cover"
+              source={require("../../assets/send-18.png")}
+            />
           </View>
         </Pressable>
       </View>

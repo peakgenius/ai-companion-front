@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Text, View, Image, ScrollView } from "react-native";
 import { Link, router } from "expo-router";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import axios from "axios";
 
 import CustomButton from "../../components/CustomButton";
@@ -36,7 +35,7 @@ const SignUp = () => {
         },
       });
       setIsSaving(false);
-      router.replace("/signin");
+      router.push("/signin");
     } catch (err) {
       setIsSaving(false);
       console.log(err.message, "->");
@@ -47,7 +46,10 @@ const SignUp = () => {
     <ScrollView className="flex-1 bg-neutral-900">
       <View className="w-full flex justify-center p-4 pt-6">
         <Link href="/">
-          <Ionicons name="arrow-back" size={32} color="white" />
+          <Image
+            resizeMode="cover"
+            source={require("../../assets/left-arrow-24.png")}
+          />
         </Link>
         <Image
           resizeMode="contain"
