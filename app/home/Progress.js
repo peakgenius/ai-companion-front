@@ -6,8 +6,8 @@ import {
 import colors from "../../styles/colors"
 // console.error = () => {}
 const ProgressRings = (props) => {
-  const { progresses } = props;
-  const { health, income, happiness, family, romantic } = progresses;
+  const { user } = props;
+  const { health, income, happiness, family, romantic } = user;
   const [total, setTotal] = useState(0);
   useEffect(() => {
     setTotal(

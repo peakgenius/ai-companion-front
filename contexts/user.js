@@ -22,6 +22,11 @@ const AuthProvider = ({ children }) => {
     marial_status: 0,
     question_display_interval: 0,
     tip_display_interval: 0,
+    health: 0,
+    income: 0,
+    family: 0,
+    romantic: 0,
+    happiness: 0,
   });
 
   useEffect(() => {

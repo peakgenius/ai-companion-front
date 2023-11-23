@@ -11,7 +11,6 @@ import { getUrl } from "../../util";
 import colors from "../../styles/colors";
 
 const SignUp = () => {
-  const buttonColor = "#d9ab3c";
   const marial_status = ["single", "married", "divorced"];
   const gender = ["female", "male"];
   const [profile, setProfile] = useState({
@@ -23,6 +22,11 @@ const SignUp = () => {
     height: 0,
     weight: 0,
     marial_status: 0,
+    health: 0,
+    income: 0,
+    family: 0,
+    romantic: 0,
+    happiness: 0,
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -139,6 +143,90 @@ const SignUp = () => {
               setProfile((prev) => ({
                 ...prev,
                 weight: value,
+              }));
+            }}
+          />
+        </View>
+        <Text className="text-white text-lg mt-3 mb-3">
+          Rank the following areas of your life from 1-10 with 1 being the
+          extremely unsatisfied and 10 being extremely satisfied.
+        </Text>
+        <View className="flex-row mb-3">
+          <Text className="text-white flex-1 text-xl">Health:</Text>
+          <InputNumber
+            separatorWidth={0}
+            maxValue={300}
+            containerStyle={{ border: "none" }}
+            totalWidth={250}
+            value={profile.health}
+            onChange={(value) => {
+              setProfile((prev) => ({
+                ...prev,
+                health: value,
+              }));
+            }}
+          />
+        </View>
+        <View className="flex-row mb-3">
+          <Text className="text-white flex-1 text-xl">Income:</Text>
+          <InputNumber
+            separatorWidth={0}
+            maxValue={300}
+            containerStyle={{ border: "none" }}
+            totalWidth={250}
+            value={profile.income}
+            onChange={(value) => {
+              setProfile((prev) => ({
+                ...prev,
+                income: value,
+              }));
+            }}
+          />
+        </View>
+        <View className="flex-row mb-3">
+          <Text className="text-white flex-1 text-xl">Family:</Text>
+          <InputNumber
+            separatorWidth={0}
+            maxValue={300}
+            containerStyle={{ border: "none" }}
+            totalWidth={250}
+            value={profile.family}
+            onChange={(value) => {
+              setProfile((prev) => ({
+                ...prev,
+                family: value,
+              }));
+            }}
+          />
+        </View>
+        <View className="flex-row mb-3">
+          <Text className="text-white flex-1 text-xl">Romantic:</Text>
+          <InputNumber
+            separatorWidth={0}
+            maxValue={300}
+            containerStyle={{ border: "none" }}
+            totalWidth={250}
+            value={profile.romantic}
+            onChange={(value) => {
+              setProfile((prev) => ({
+                ...prev,
+                romantic: value,
+              }));
+            }}
+          />
+        </View>
+        <View className="flex-row mb-3">
+          <Text className="text-white flex-1 text-xl">Happiness:</Text>
+          <InputNumber
+            separatorWidth={0}
+            maxValue={300}
+            containerStyle={{ border: "none" }}
+            totalWidth={250}
+            value={profile.happiness}
+            onChange={(value) => {
+              setProfile((prev) => ({
+                ...prev,
+                happiness: value,
               }));
             }}
           />

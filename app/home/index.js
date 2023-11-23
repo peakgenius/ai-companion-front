@@ -18,6 +18,7 @@ const Home = () => {
     authToken,
     isAuthenticated,
     setIsAuthenticated,
+    user,
     setUser,
     dayToGetQuestions,
     setDayToGetQuestions,
@@ -240,14 +241,14 @@ const Home = () => {
 
   const logout = async () => {
     setIsAuthenticated(false);
-    const user = {
+    const userData = {
       name: "",
       age: 0,
       height: 0,
       weight: 0,
       gender: "",
     };
-    setUser(user);
+    setUser(userData);
     try {
       await AsyncStorage.removeItem("auth-token");
       setDayToGetQuestions(0);
@@ -347,7 +348,7 @@ const Home = () => {
             source={require("../../assets/home.png")}
           />
         )}
-        {isAuthenticated && <Progress progresses={progresses} />}
+        {isAuthenticated && <Progress user={user} />}
         <View className="p-4 pt-0 items-stretch">
           {!isAuthenticated && (
             <>

@@ -22,7 +22,10 @@ const Profile = () => {
   const [visibleSettingQuestion, setVisibleSettingQuestion] = useState(false);
   const [visibleTipsPopup, setVisibleTipsPopup] = useState(false);
   const [visibleSettingTip, setVisibleSettingTip] = useState(false);
-  const [goalId, setGoalId] = useState("1");
+  const [goalId, setGoalId] = useState({
+    id: "1",
+    isDomain: false,
+  });
   const [progress, setProgress] = useState(0);
   const [questionDisplayInterval, setQuestionDisplayInterval] = useState(0);
   const [tipDisplayInterval, setTipDisplayInterval] = useState(0);
@@ -72,7 +75,7 @@ const Profile = () => {
   };
 
   const openConfirmPopup = (id) => {
-    setGoalId(id);
+    setGoalId((prev) => ({ ...prev, id }));
     setVisibleConfirmPopup(true);
   };
 
@@ -88,14 +91,19 @@ const Profile = () => {
     setVisibleTipsPopup(false);
   };
 
-  const openProgressPopup = (id) => {
-    setGoalId(id);
-    const goalsLength = goals.length;
-    for (let i = 0; i < goalsLength; i++) {
-      if (goals[i]._id === id) {
-        setProgress(goals[i].progress);
-        break;
+  const openProgressPopup = (id, isDomain) => {
+    if (!isDomain) {
+      setGoalId({ id, isDomain });
+      const goalsLength = goals.length;
+      for (let i = 0; i < goalsLength; i++) {
+        if (goals[i]._id === id) {
+          setProgress(goals[i].progress);
+          break;
+        }
       }
+    } else {
+      setGoalId({ id, isDomain });
+      setProgress(user[id]);
     }
     setVisibleProgressPopup(true);
   };
@@ -200,20 +208,38 @@ const Profile = () => {
   const saveGoalProgress = async () => {
     setIsSaving(true);
     if (progress > 10 || progress < 0) return;
-    try {
-      await axios.post(
-        `${getUrl()}/profile/goal-progress`,
-        { goalId, progress },
-        {
-          headers: {
-            Authorization: `${authToken}`,
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      );
-      closeProgressPopup();
-    } catch (err) {
-      console.log(err);
+    if (!goalId.isDomain) {
+      try {
+        await axios.post(
+          `${getUrl()}/profile/goal-progress`,
+          { goalId: goalId.id, isDomain: goalId.isDomain, progress },
+          {
+            headers: {
+              Authorization: `${authToken}`,
+              "Access-Control-Allow-Origin": "*",
+            },
+          }
+        );
+        closeProgressPopup();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        await axios.post(
+          `${getUrl()}/profile/domain-progress`,
+          { goalId: goalId.id, isDomain: goalId.isDomain, progress },
+          {
+            headers: {
+              Authorization: `${authToken}`,
+              "Access-Control-Allow-Origin": "*",
+            },
+          }
+        );
+        closeProgressPopup();
+      } catch (err) {
+        console.log(err);
+      }
     }
     setIsSaving(false);
   };
@@ -221,7 +247,7 @@ const Profile = () => {
   const deleteGoal = async () => {
     setIsSaving(true);
     try {
-      await axios.delete(`${getUrl()}/profile/goal?id=${goalId}`, {
+      await axios.delete(`${getUrl()}/profile/goal?id=${goalId.id}`, {
         headers: {
           Authorization: `${authToken}`,
           "Access-Control-Allow-Origin": "*",
@@ -239,7 +265,11 @@ const Profile = () => {
   return (
     <View className="flex-1">
       <ScrollView className="bg-neutral-900 ">
-        <UserInfo user={user} isLoading={isLoading} />
+        <UserInfo
+          user={user}
+          isLoading={isLoading}
+          openProgressPopup={openProgressPopup}
+        />
         <View className="p-4 pb-20 relative">
           <Text
             className="text-3xl font-bold mb-3"
@@ -250,16 +280,13 @@ const Profile = () => {
 
           {goals.map((item, index) => (
             <View key={index}>
-              <Text className="text-white text-xl">
-                - {item.domain_id.content}
-              </Text>
               <View className="relative">
                 <Text className="text-white text-lg mb-3 pr-7 pl-3">
                   {item.content}
                 </Text>
                 <Pressable
                   className="absolute bottom-3 right-6"
-                  onPress={(e) => openProgressPopup(item._id)}
+                  onPress={(e) => openProgressPopup(item._id, false)}
                 >
                   <Image
                     resizeMode="cover"
