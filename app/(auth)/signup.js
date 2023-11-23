@@ -104,6 +104,7 @@ const SignUp = () => {
           <InputNumber
             separatorWidth={0}
             totalWidth={250}
+            minValue={0}
             maxValue={150}
             containerStyle={{ border: "none" }}
             value={profile.age}
@@ -119,6 +120,7 @@ const SignUp = () => {
           <Text className="text-white flex-1 text-xl">Height:</Text>
           <InputNumber
             separatorWidth={0}
+            minValue={0}
             maxValue={300}
             containerStyle={{ border: "none" }}
             totalWidth={250}
@@ -136,6 +138,7 @@ const SignUp = () => {
           <InputNumber
             separatorWidth={0}
             maxValue={300}
+            minValue={0}
             containerStyle={{ border: "none" }}
             totalWidth={250}
             value={profile.weight}
@@ -155,7 +158,8 @@ const SignUp = () => {
           <Text className="text-white flex-1 text-xl">Health:</Text>
           <InputNumber
             separatorWidth={0}
-            maxValue={300}
+            maxValue={10}
+            minValue={0}
             containerStyle={{ border: "none" }}
             totalWidth={250}
             value={profile.health}
@@ -171,7 +175,8 @@ const SignUp = () => {
           <Text className="text-white flex-1 text-xl">Income:</Text>
           <InputNumber
             separatorWidth={0}
-            maxValue={300}
+            maxValue={10}
+            minValue={0}
             containerStyle={{ border: "none" }}
             totalWidth={250}
             value={profile.income}
@@ -187,7 +192,8 @@ const SignUp = () => {
           <Text className="text-white flex-1 text-xl">Family:</Text>
           <InputNumber
             separatorWidth={0}
-            maxValue={300}
+            maxValue={10}
+            minValue={0}
             containerStyle={{ border: "none" }}
             totalWidth={250}
             value={profile.family}
@@ -203,7 +209,8 @@ const SignUp = () => {
           <Text className="text-white flex-1 text-xl">Romantic:</Text>
           <InputNumber
             separatorWidth={0}
-            maxValue={300}
+            maxValue={10}
+            minValue={0}
             containerStyle={{ border: "none" }}
             totalWidth={250}
             value={profile.romantic}
@@ -219,7 +226,8 @@ const SignUp = () => {
           <Text className="text-white flex-1 text-xl">Happiness:</Text>
           <InputNumber
             separatorWidth={0}
-            maxValue={300}
+            maxValue={10}
+            minValue={0}
             containerStyle={{ border: "none" }}
             totalWidth={250}
             value={profile.happiness}
