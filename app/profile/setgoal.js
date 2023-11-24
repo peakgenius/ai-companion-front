@@ -12,7 +12,7 @@ import colors from "../../styles/colors";
 const SetGoal = () => {
   const [goal, setGoal] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const { authToken } = useContext(AuthContext);
+  const { authToken, user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
     if (!authToken) return;
@@ -23,7 +23,7 @@ const SetGoal = () => {
     try {
       await axios.post(
         getUrl() + "/profile/set-goal",
-        { goalContent: goal },
+        { goalContent: goal, pinCount },
         {
           headers: {
             Authorization: `${authToken}`,
@@ -44,7 +44,7 @@ const SetGoal = () => {
   };
 
   return (
-    <View className="flex-1 bg-neutral-900">
+    <View className="bg-neutral-900 h-screen">
       <View className="p-6">
         <View className="w-full flex justify-center pb-6 pt-6">
           <Pressable onPress={back}>

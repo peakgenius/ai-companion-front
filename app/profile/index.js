@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Text, View, Pressable, ScrollView, Image } from "react-native";
 import axios from "axios";
 
+import Chat from "../home/Chat";
 import { AuthContext } from "../../contexts/user";
 import Popup from "../../components/Popup";
 import CustomButton from "../../components/CustomButton";
@@ -13,7 +14,7 @@ import TipsPopup from "./TipsPopup";
 import colors from "../../styles/colors";
 
 const Profile = () => {
-  const { user, getUser, authToken, dayToGetTips, setDayToGetTips } =
+  const { user, setUser, getUser, authToken, dayToGetTips, setDayToGetTips } =
     useContext(AuthContext);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,6 +23,7 @@ const Profile = () => {
   const [visibleSettingQuestion, setVisibleSettingQuestion] = useState(false);
   const [visibleTipsPopup, setVisibleTipsPopup] = useState(false);
   const [visibleSettingTip, setVisibleSettingTip] = useState(false);
+  const [visibleWarningPopup, setVisibleWarningPopup] = useState(false);
   const [goalId, setGoalId] = useState({
     id: "1",
     isDomain: false,
@@ -89,6 +91,14 @@ const Profile = () => {
 
   const closeTipsPopup = () => {
     setVisibleTipsPopup(false);
+  };
+
+  const openWarningPopup = () => {
+    setVisibleWarningPopup(true);
+  };
+
+  const closeWarningPopup = () => {
+    setVisibleWarningPopup(false);
   };
 
   const openProgressPopup = (id, isDomain) => {
@@ -205,6 +215,40 @@ const Profile = () => {
       });
   };
 
+  const pin = async (id, isPin) => {
+    let pinCount = user.pin_count;
+    if (isPin && pinCount * 1 > 2) {
+      console.log(pinCount, user)
+      openWarningPopup();
+      return;
+    }
+    setIsSaving(true);
+    try {
+      await axios.post(
+        getUrl() + "/profile/pin-goal",
+        {
+          goalId: id,
+          isPin,
+        },
+        {
+          headers: {
+            Authorization: `${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+      if (isPin) {
+        setUser((prev) => ({ ...prev, pin_count: pinCount + 1 }));
+      } else {
+        setUser((prev) => ({ ...prev, pin_count: pinCount - 1 }));
+      }
+      getGoals();
+    } catch (err) {
+      console.log(err);
+    }
+    setIsSaving(false);
+  };
+
   const saveGoalProgress = async () => {
     setIsSaving(true);
     if (progress > 10 || progress < 0) return;
@@ -225,10 +269,11 @@ const Profile = () => {
         console.log(err);
       }
     } else {
+      console.log("doamin-progress->", goalId, progress);
       try {
         await axios.post(
           `${getUrl()}/profile/domain-progress`,
-          { goalId: goalId.id, isDomain: goalId.isDomain, progress },
+          { domain: goalId.id, progress },
           {
             headers: {
               Authorization: `${authToken}`,
@@ -237,6 +282,7 @@ const Profile = () => {
           }
         );
         closeProgressPopup();
+        getUser();
       } catch (err) {
         console.log(err);
       }
@@ -281,11 +327,34 @@ const Profile = () => {
           {goals.map((item, index) => (
             <View key={index}>
               <View className="relative">
-                <Text className="text-white text-lg mb-3 pr-7 pl-3">
+                <Text className="text-white text-lg mb-3 w-4/5 pl-3">
                   {item.content}
                 </Text>
+                {!item.is_pin ? (
+                  <Pressable
+                    disabled={isSaving}
+                    className="absolute top-3 right-12"
+                    onPress={(e) => pin(item._id, true)}
+                  >
+                    <Image
+                      resizeMode="cover"
+                      source={require("../../assets/pin-unfill-15.png")}
+                    />
+                  </Pressable>
+                ) : (
+                  <Pressable
+                    disabled={isSaving}
+                    className="absolute top-3 right-12"
+                    onPress={(e) => pin(item._id, false)}
+                  >
+                    <Image
+                      resizeMode="cover"
+                      source={require("../../assets/pin-fill-15.png")}
+                    />
+                  </Pressable>
+                )}
                 <Pressable
-                  className="absolute bottom-3 right-6"
+                  className="absolute top-3 right-6"
                   onPress={(e) => openProgressPopup(item._id, false)}
                 >
                   <Image
@@ -294,7 +363,7 @@ const Profile = () => {
                   />
                 </Pressable>
                 <Pressable
-                  className="absolute bottom-3 right-0"
+                  className="absolute top-3 right-0"
                   onPress={(e) => openConfirmPopup(item._id)}
                 >
                   <Image
@@ -306,89 +375,112 @@ const Profile = () => {
             </View>
           ))}
         </View>
-
-        <Popup
-          visible={visibleConfirmPopup}
-          dismiss={closeConfimrPopup}
-          viewContainerClassName={
-            "bg-white border-gray-950 h-[200] pt-5 pl-5 pr-5 rounded-lg"
-          }
-        >
-          <View>
-            <Text className="text-2xl mb-8 text-center text-white">
-              Are you sure to delete?
-            </Text>
-            <View className="flex-row justify-center gap-3">
-              <View>
-                <CustomButton
-                  title={isSaving ? "Deleting..." : "Delete"}
-                  disabled={isSaving}
-                  color={"red"}
-                  onPress={deleteGoal}
-                />
-              </View>
-              <View>
-                <CustomButton
-                  color={"grey"}
-                  title={"Cancel"}
-                  onPress={closeConfimrPopup}
-                />
-              </View>
-            </View>
-          </View>
-        </Popup>
-        <Popup
-          visible={visibleProgressPopup}
-          dismiss={closeProgressPopup}
-          viewContainerClassName={
-            "bg-white border-gray-950 h-[310] pt-5 pl-5 pr-5 rounded-lg"
-          }
-        >
-          <View>
-            <Text className="text-2xl mb-8 text-center text-white">
-              Which level of this goal are you in 1-10?
-            </Text>
-            <View className="flex-row justify-center">
-              <InputNumber
-                separatorWidth={0}
-                minValue={0}
-                maxValue={10}
-                totalWidth={250}
-                value={progress}
-                textColor="white"
-                containerStyle={{ border: "none" }}
-                onChange={(value) => {
-                  setProgress(value);
-                }}
+      </ScrollView>
+      <Popup
+        visible={visibleConfirmPopup}
+        dismiss={closeConfimrPopup}
+        viewContainerClassName={
+          "bg-white border-gray-950 h-[200] pt-5 pl-5 pr-5 rounded-lg"
+        }
+      >
+        <View>
+          <Text className="text-2xl mb-8 text-center text-white">
+            Are you sure to delete?
+          </Text>
+          <View className="flex-row justify-center gap-3">
+            <View>
+              <CustomButton
+                title={isSaving ? "Deleting..." : "Delete"}
+                disabled={isSaving}
+                color={"red"}
+                onPress={deleteGoal}
               />
             </View>
-            <View className="flex-row justify-center gap-3 mt-3">
-              <View>
-                <CustomButton
-                  color={colors.buttonColor}
-                  title={isSaving ? "Saving..." : "Save"}
-                  disabled={isSaving}
-                  onPress={saveGoalProgress}
-                />
-              </View>
-              <View>
-                <CustomButton
-                  color={"grey"}
-                  title={"Cancel"}
-                  onPress={closeProgressPopup}
-                />
-              </View>
+            <View>
+              <CustomButton
+                color={"grey"}
+                title={"Cancel"}
+                onPress={closeConfimrPopup}
+              />
             </View>
           </View>
-        </Popup>
-        <TipsPopup
-          visibleTipsPopup={visibleTipsPopup}
-          tips={tips}
-          isSaving={isSaving}
-          nodisplayAnymore={nodisplayAnymore}
-          closeTipsPopup={closeTipsPopup}
-        />
-      </ScrollView>
+        </View>
+      </Popup>
+      <Popup
+        visible={visibleProgressPopup}
+        dismiss={closeProgressPopup}
+        viewContainerClassName={
+          "bg-white border-gray-950 h-[310] pt-5 pl-5 pr-5 rounded-lg"
+        }
+      >
+        <View>
+          {!goalId.isDomain && (
+            <Text className="text-2xl mb-8 text-center text-white">
+              How does this goal rank on a scale of 1-10?
+            </Text>
+          )}
+          {goalId.isDomain && (
+            <Text className="text-2xl mb-8 text-center text-white">
+              How does your {goalId.id} rank on a scale of 1-10?
+            </Text>
+          )}
+          <View className="flex-row justify-center">
+            <InputNumber
+              separatorWidth={0}
+              minValue={0}
+              maxValue={10}
+              totalWidth={250}
+              value={progress}
+              textColor="white"
+              containerStyle={{ border: "none" }}
+              onChange={(value) => {
+                setProgress(value);
+              }}
+            />
+          </View>
+          <View className="flex-row justify-center gap-3 mt-3">
+            <View>
+              <CustomButton
+                color={colors.buttonColor}
+                title={isSaving ? "Saving..." : "Save"}
+                disabled={isSaving}
+                onPress={saveGoalProgress}
+              />
+            </View>
+            <View>
+              <CustomButton
+                color={"grey"}
+                title={"Cancel"}
+                onPress={closeProgressPopup}
+              />
+            </View>
+          </View>
+        </View>
+      </Popup>
+      <TipsPopup
+        visibleTipsPopup={visibleTipsPopup}
+        tips={tips}
+        isSaving={isSaving}
+        nodisplayAnymore={nodisplayAnymore}
+        closeTipsPopup={closeTipsPopup}
+      />
+      <Popup
+        visible={visibleWarningPopup}
+        dismiss={closeWarningPopup}
+        viewContainerClassName={
+          "border-gray-950 h-[220] pt-5 pl-5 pr-5 rounded-lg"
+        }
+      >
+        <View className=" flex-row justify-center mb-3">
+          <Image
+            resizeMode="cover"
+            source={require("../../assets/warning-64.png")}
+          />
+        </View>
+        <Text className="text-white text-xl text-center">
+          You cannot pin more than 3!
+        </Text>
+      </Popup>
       <Footer
         openPopupSettingTip={openPopupSettingTip}
         openPopupSettingQuestion={openPopupSettingQuestion}
@@ -402,6 +494,7 @@ const Profile = () => {
         setTipInterval={setTipInterval}
         isLoading={isLoading}
       />
+      <Chat />
     </View>
   );
 };

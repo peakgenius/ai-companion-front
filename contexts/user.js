@@ -27,6 +27,7 @@ const AuthProvider = ({ children }) => {
     family: 0,
     romantic: 0,
     happiness: 0,
+    pin_count: 0
   });
 
   useEffect(() => {

@@ -38,7 +38,7 @@ const Loading = () => {
       style={colors.mainBackground}
     >
       <Text
-        className="text-center text-2xl mb-5"
+        className="text-center text-2xl mb-5 mr-1"
         style={{ color: colors.buttonColor }}
       >
         Loading

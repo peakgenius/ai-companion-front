@@ -9,13 +9,14 @@ import { AuthContext } from "../../contexts/user";
 import { getUrl } from "../../util";
 import UserQeustionPopup from "./UserQuestionPopup";
 import GoalQeustionPopup from "./GoalQuestionPopup";
-import ChatPopup from "./ChatPopup";
+import Chat from "./Chat";
 import Progress from "./Progress.js";
 import colors from "../../styles/colors";
 
 const Home = () => {
   const {
     authToken,
+    setAuthToken,
     isAuthenticated,
     setIsAuthenticated,
     user,
@@ -25,7 +26,6 @@ const Home = () => {
   } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [visible, setVisible] = useState(false);
   const [visibleUserQuestionPopup, setVisibleUserQuestionPopup] =
     useState(false);
   const [visibleGoalQuestionPopup, setVisibleGoalQuestionPopup] =
@@ -45,17 +45,7 @@ const Home = () => {
   });
   const [goalAnswer, setGoalAnswer] = useState("");
   const [isSkipGoalAnswer, setIsSkipGoalAnswer] = useState(false);
-  const [progresses, setProgresses] = useState({
-    health: 0,
-    income: 0,
-    happiness: 0,
-    romantic: 0,
-    family: 0,
-  });
-  const [userMessage, setUserMessage] = useState("");
-  const [messages, setMessages] = useState([]);
-
-  const chatScrollViewRef = useRef();
+  const [progresses, setProgresses] = useState([]);
 
   useEffect(() => {
     if (!authToken) return;
@@ -74,20 +64,6 @@ const Home = () => {
     if (!isSkipGoalAnswer) return;
     saveGoalAnswer();
   }, [isSkipGoalAnswer]);
-
-  const openPopup = async () => {
-    getMessages();
-    setTimeout(() => {
-      if (chatScrollViewRef.current) {
-        chatScrollViewRef.current.scrollToEnd();
-      }
-    }, 200);
-    setVisible(true);
-  };
-
-  const closePopup = () => {
-    setVisible(false);
-  };
 
   const openUserQuestionPopup = () => {
     setVisibleUserQuestionPopup(true);
@@ -108,20 +84,13 @@ const Home = () => {
   const getProgress = async () => {
     setIsLoading(true);
     try {
-      const progress = await axios.get(getUrl() + "/profile/progress", {
+      const res = await axios.get(getUrl() + "/profile/goal-progress", {
         headers: {
           Authorization: `${authToken}`,
           "Access-Control-Allow-Origin": "*",
         },
       });
-      const domains = progress.data.domains;
-      setProgresses({
-        health: (domains[0].avg_progress || 0) * 10,
-        income: (domains[1].avg_progress || 0) * 10,
-        happiness: (domains[2].avg_progress || 0) * 10,
-        family: (domains[3].avg_progress || 0) * 10,
-        romantic: (domains[4].avg_progress || 0) * 10,
-      });
+      setProgresses(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -159,18 +128,6 @@ const Home = () => {
     } catch (err) {
       console.log(err);
     }
-    setIsLoading(false);
-  };
-
-  const getMessages = async () => {
-    setIsLoading(true);
-    const resMessages = await axios.get(getUrl() + "/chat/messages", {
-      headers: {
-        Authorization: `${authToken}`,
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-    setMessages(resMessages.data);
     setIsLoading(false);
   };
 
@@ -243,15 +200,28 @@ const Home = () => {
     setIsAuthenticated(false);
     const userData = {
       name: "",
+      avatar: "",
       age: 0,
+      userEmail: "",
       height: 0,
       weight: 0,
-      gender: "",
+      gender: 0,
+      marial_status: 0,
+      question_display_interval: 0,
+      tip_display_interval: 0,
+      health: 0,
+      income: 0,
+      family: 0,
+      romantic: 0,
+      happiness: 0,
+      pin_count: 0,
     };
     setUser(userData);
     try {
       await AsyncStorage.removeItem("auth-token");
       setDayToGetQuestions(0);
+      setIsAuthenticated(false);
+      setAuthToken("");
       await axios.post(
         getUrl() + "/auth/logout",
         {},
@@ -303,35 +273,6 @@ const Home = () => {
     }
   };
 
-  const saveChat = async () => {
-    setIsSaving(true);
-    const messageRow = [{ user_message: userMessage }];
-    setMessages((prev) => {
-      return [...prev, ...messageRow];
-    });
-    setUserMessage("");
-    const res = await axios.post(
-      `${getUrl()}/chat/message`,
-      {
-        userMessage: messageRow[0].user_message,
-      },
-      {
-        headers: {
-          Authorization: `${authToken}`,
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
-    );
-    setMessages((prev) => {
-      prev[prev.length - 1].ai_message = res.data;
-      return prev;
-    });
-    setIsSaving(false);
-    if (chatScrollViewRef.current) {
-      chatScrollViewRef.current.scrollToEnd();
-    }
-  };
-
   const goToProfile = () => {
     if (isLoading) return;
     router.push("/profile");
@@ -348,7 +289,7 @@ const Home = () => {
             source={require("../../assets/home.png")}
           />
         )}
-        {isAuthenticated && <Progress user={user} />}
+        {isAuthenticated && <Progress user={user} progresses={progresses} isLoading={isLoading}/>}
         <View className="p-4 pt-0 items-stretch">
           {!isAuthenticated && (
             <>
@@ -360,13 +301,6 @@ const Home = () => {
               </Link>
             </>
           )}
-          {isAuthenticated && (
-            <CustomButton
-              title="Log out"
-              color={colors.buttonColor}
-              onPress={logout}
-            />
-          )}
         </View>
         {isAuthenticated && (
           <View
@@ -374,7 +308,7 @@ const Home = () => {
             style={colors.navBarBackground}
           >
             <Pressable onPress={goToProfile}>
-              <View className="flex-col">
+              <View className="flex-col items-center">
                 <Image
                   resizeMode="contain"
                   source={require("../../assets/user-32.png")}
@@ -382,28 +316,18 @@ const Home = () => {
                 <Text className="text-white text-xs">Profile</Text>
               </View>
             </Pressable>
-            <Pressable onPress={openPopup}>
+            <Pressable onPress={logout}>
               <View className="flex-col items-center">
                 <Image
-                  resizeMode="cover"
-                  source={require("../../assets/chat-32.png")}
+                  resizeMode="contain"
+                  source={require("../../assets/logout-32.png")}
                 />
-                <Text className="text-white text-xs">Chat</Text>
+                <Text className="text-white text-xs">log out</Text>
               </View>
             </Pressable>
           </View>
         )}
-        <ChatPopup
-          chatScrollViewRef={chatScrollViewRef}
-          isLoading={isLoading}
-          messages={messages}
-          visible={visible}
-          closePopup={closePopup}
-          userMessage={userMessage}
-          setUserMessage={setUserMessage}
-          isSaving={isSaving}
-          saveChat={saveChat}
-        />
+        {isAuthenticated && <Chat />}
         <UserQeustionPopup
           visibleQuestionPopup={visibleUserQuestionPopup}
           question={userQuestion.content}
