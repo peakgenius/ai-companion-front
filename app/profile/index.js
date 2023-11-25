@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import { Text, View, Pressable, ScrollView, Image } from "react-native";
 import axios from "axios";
 
-import Chat from "../home/Chat";
 import { AuthContext } from "../../contexts/user";
 import Popup from "../../components/Popup";
 import CustomButton from "../../components/CustomButton";
@@ -12,6 +11,7 @@ import Footer from "./Footer";
 import UserInfo from "./UserInfo";
 import TipsPopup from "./TipsPopup";
 import colors from "../../styles/colors";
+import ChatIcon from "../../components/ChatIcon";
 
 const Profile = () => {
   const { user, setUser, getUser, authToken, dayToGetTips, setDayToGetTips } =
@@ -218,7 +218,7 @@ const Profile = () => {
   const pin = async (id, isPin) => {
     let pinCount = user.pin_count;
     if (isPin && pinCount * 1 > 2) {
-      console.log(pinCount, user)
+      console.log(pinCount, user);
       openWarningPopup();
       return;
     }
@@ -410,18 +410,27 @@ const Profile = () => {
         visible={visibleProgressPopup}
         dismiss={closeProgressPopup}
         viewContainerClassName={
-          "bg-white border-gray-950 h-[310] pt-5 pl-5 pr-5 rounded-lg"
+          "bg-white border-gray-950 h-[340] pt-5 pl-5 pr-5 rounded-lg"
         }
       >
         <View>
           {!goalId.isDomain && (
             <Text className="text-2xl mb-8 text-center text-white">
-              How does this goal rank on a scale of 1-10?
+              How would you rank your progress of this goal between 1-10?
             </Text>
           )}
           {goalId.isDomain && (
             <Text className="text-2xl mb-8 text-center text-white">
-              How does your {goalId.id} rank on a scale of 1-10?
+              {goalId.id === "health" &&
+                "How healthy are you at this current time?"}
+              {goalId.id === "income" &&
+                "How satisfied are you with your current income?"}
+              {goalId.id === "romantic" &&
+                "How satisfied are you with your current romantic life?"}
+              {goalId.id === "family" &&
+                "How would you rank your overall immediate family life?"}
+              {goalId.id === "happiness" &&
+                "How would you rank your overall happiness right now?"}
             </Text>
           )}
           <View className="flex-row justify-center">
@@ -494,7 +503,7 @@ const Profile = () => {
         setTipInterval={setTipInterval}
         isLoading={isLoading}
       />
-      <Chat />
+      <ChatIcon isLoading={isLoading} />
     </View>
   );
 };

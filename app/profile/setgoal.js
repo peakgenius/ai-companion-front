@@ -23,7 +23,7 @@ const SetGoal = () => {
     try {
       await axios.post(
         getUrl() + "/profile/set-goal",
-        { goalContent: goal, pinCount },
+        { goalContent: goal },
         {
           headers: {
             Authorization: `${authToken}`,

@@ -63,13 +63,14 @@ const Footer = (props) => {
         visible={visibleSettingQuestion}
         dismiss={closePopupSettingQuestion}
         viewContainerClassName={
-          "bg-white border-gray-950 h-[330] pt-5 pl-5 pr-5 rounded-md"
+          "bg-white border-gray-950 h-[400] pt-5 pl-5 pr-5 rounded-md"
         }
       >
         <View>
           <View className=" mb-5">
             <Text className="p-1 inline-block text-2xl text-white">
-              Would you like to display a question once every few days?
+              In order to get to know you better, I can occasionally ask you
+              questions about yourself - how often would you like this?
             </Text>
           </View>
           <RadioButtonGroup
@@ -121,13 +122,14 @@ const Footer = (props) => {
         visible={visibleSettingTip}
         dismiss={closePopupSettingTip}
         viewContainerClassName={
-          "bg-white border-gray-950 h-[330] pt-5 pl-5 pr-5 rounded-md"
+          "bg-white border-gray-950 h-[380] pt-5 pl-5 pr-5 rounded-md"
         }
       >
         <View>
           <View className=" mb-5">
             <Text className="p-1 inline-block text-2xl text-white">
-              Would you like to display a tip once every few days?
+              How frequently would you like to receive tips or advice to assist
+              you in achieving your goals?
             </Text>
           </View>
           <RadioButtonGroup

@@ -1,17 +1,30 @@
 import { Text, View, Dimensions, Pressable } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { CircularProgress } from "react-native-circular-progress";
+import axios from "axios";
 
 import colors from "../../styles/colors";
 import Popup from "../../components/Popup";
+import InputNumber from "../../components/InputNumber";
+import CustomButton from "../../components/CustomButton";
+import { getUrl } from "../../util";
+import { AuthContext } from "../../contexts/user";
 
 const ProgressRings = (props) => {
+  const { user, goalProgresses, isLoading, getGoalProgress } = props;
   const goalColors = ["#bf873d", "#d05253", "#ff1b1d"];
-  const { user, progresses, isLoading } = props;
   const { health, income, happiness, family, romantic } = user;
   const [total, setTotal] = useState(0);
-  const [visibleGoalPopup, setVisibleGoalPopup] = useState(false);
-  const [goal, setGoal] = useState("");
+  const [visibleProgressPopup, setVisibleProgressPopup] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [progress, setProgress] = useState({
+    goalId: "",
+    title: "",
+    content: "",
+    isDomain: false,
+    number: 0,
+  });
+  const { authToken, getUser } = useContext(AuthContext);
 
   useEffect(() => {
     setTotal(
@@ -19,13 +32,53 @@ const ProgressRings = (props) => {
     );
   }, [health, income, happiness, family, romantic]);
 
-  const openGoalPopup = (content) => {
-    setGoal(content);
-    setVisibleGoalPopup(true);
+  const openProgressPopup = (goalId, title, content, number, isDomain) => {
+    setProgress({ goalId, title, content, number, isDomain });
+    setVisibleProgressPopup(true);
   };
 
-  const closeGoalPopup = () => {
-    setVisibleGoalPopup(false);
+  const closeProgressPopup = () => {
+    setVisibleProgressPopup(false);
+  };
+
+  const saveProgress = async () => {
+    setIsSaving(true);
+    if (progress.isDomain) {
+      try {
+        await axios.post(
+          `${getUrl()}/profile/domain-progress`,
+          { domain: progress.title.toLowerCase(), progress: progress.number },
+          {
+            headers: {
+              Authorization: `${authToken}`,
+              "Access-Control-Allow-Origin": "*",
+            },
+          }
+        );
+        closeProgressPopup();
+        getUser();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        await axios.post(
+          `${getUrl()}/profile/goal-progress`,
+          { goalId: progress.goalId, progress: progress.number },
+          {
+            headers: {
+              Authorization: `${authToken}`,
+              "Access-Control-Allow-Origin": "*",
+            },
+          }
+        );
+        getGoalProgress();
+        closeProgressPopup();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    setIsSaving(false);
   };
 
   const [screenWidth] = useState(Dimensions.get("window").width);
@@ -55,38 +108,64 @@ const ProgressRings = (props) => {
     <View className="flex-1" style={colors.mainBackground}>
       <View className="relative flex items-center" style={{ padding: "35%" }}>
         {/* top progressring */}
-        <View className="absolute top-4 items-center">
-          <CircularProgress
-            children={healthText}
-            childrenContainerStyle={{}}
-            linecap="round"
-            rotation={0}
-            size={screenWidth * 0.2}
-            width={19}
-            lineCap="round"
-            backgroundWidth={20}
-            fill={health * 10}
-            tintColor="#bf873d"
-            backgroundColor={colors.progressCircleBackgroundColor}
-          />
-          <Text className="text-white mt-2">Health</Text>
+        <View className="absolute top-4">
+          <Pressable
+            className="items-center"
+            onPress={() =>
+              openProgressPopup(
+                "nogoal",
+                "Health",
+                "How healthy are you at this current time?",
+                health,
+                true
+              )
+            }
+          >
+            <CircularProgress
+              children={healthText}
+              childrenContainerStyle={{}}
+              linecap="round"
+              rotation={0}
+              size={screenWidth * 0.2}
+              width={19}
+              lineCap="round"
+              backgroundWidth={20}
+              fill={health * 10}
+              tintColor="#bf873d"
+              backgroundColor={colors.progressCircleBackgroundColor}
+            />
+            <Text className="text-white mt-2">Health</Text>
+          </Pressable>
         </View>
         {/* top-left prgress ring */}
         <View className="absolute bottom-full left-4">
-          <CircularProgress
-            children={incomeText}
-            childrenContainerStyle={{}}
-            linecap="round"
-            rotation={0}
-            size={screenWidth * 0.2}
-            width={19}
-            lineCap="round"
-            backgroundWidth={20}
-            fill={income * 10}
-            tintColor="#d9ab3c"
-            backgroundColor={colors.progressCircleBackgroundColor}
-          />
-          <Text className="text-white text-center mt-3">Income</Text>
+          <Pressable
+            className="items-center"
+            onPress={() =>
+              openProgressPopup(
+                "nogoal",
+                "Income",
+                "How satisfied are you with your current income?",
+                income,
+                true
+              )
+            }
+          >
+            <CircularProgress
+              children={incomeText}
+              childrenContainerStyle={{}}
+              linecap="round"
+              rotation={0}
+              size={screenWidth * 0.2}
+              width={19}
+              lineCap="round"
+              backgroundWidth={20}
+              fill={income * 10}
+              tintColor="#d9ab3c"
+              backgroundColor={colors.progressCircleBackgroundColor}
+            />
+            <Text className="text-white text-center mt-3">Income</Text>
+          </Pressable>
         </View>
         {/* center progressring */}
         <View className="relative -bottom-6">
@@ -104,66 +183,116 @@ const ProgressRings = (props) => {
             backgroundColor={colors.progressCircleBackgroundColor}
           />
         </View>
-        <Text className="text-white text-center mt-7 text-lg">Total</Text>
+        <Text className="text-white text-center mt-7 text-lg">Life</Text>
         {/* bottom-left progress ring */}
         <View className="absolute bottom-3 left-12">
-          <CircularProgress
-            children={happinessText}
-            childrenContainerStyle={{}}
-            linecap="round"
-            rotation={0}
-            size={screenWidth * 0.2}
-            width={19}
-            lineCap="round"
-            backgroundWidth={20}
-            fill={happiness * 10}
-            tintColor="#d9ab3c"
-            backgroundColor={colors.progressCircleBackgroundColor}
-          />
-          <Text className="text-white text-center mt-3">Happiness</Text>
+          <Pressable
+            className="items-center"
+            onPress={() =>
+              openProgressPopup(
+                "nogoal",
+                "Happiness",
+                "How would you rank your overall happiness right now?",
+                happiness,
+                true
+              )
+            }
+          >
+            <CircularProgress
+              children={happinessText}
+              childrenContainerStyle={{}}
+              linecap="round"
+              rotation={0}
+              size={screenWidth * 0.2}
+              width={19}
+              lineCap="round"
+              backgroundWidth={20}
+              fill={happiness * 10}
+              tintColor="#d9ab3c"
+              backgroundColor={colors.progressCircleBackgroundColor}
+            />
+            <Text className="text-white text-center mt-3">Happiness</Text>
+          </Pressable>
         </View>
         {/* bottom-right progress ring */}
         <View className="absolute bottom-3 right-12">
-          <CircularProgress
-            children={familyText}
-            childrenContainerStyle={{}}
-            linecap="round"
-            rotation={0}
-            size={screenWidth * 0.2}
-            width={19}
-            lineCap="round"
-            backgroundWidth={20}
-            fill={family * 10}
-            tintColor="#d05253"
-            backgroundColor={colors.progressCircleBackgroundColor}
-          />
-          <Text className="text-white text-center mt-3">Family</Text>
+          <Pressable
+            className="items-center"
+            onPress={() =>
+              openProgressPopup(
+                "nogoal",
+                "Family",
+                "How would you rank your overall immediate family life?",
+                family,
+                true
+              )
+            }
+          >
+            <CircularProgress
+              children={familyText}
+              childrenContainerStyle={{}}
+              linecap="round"
+              rotation={0}
+              size={screenWidth * 0.2}
+              width={19}
+              lineCap="round"
+              backgroundWidth={20}
+              fill={family * 10}
+              tintColor="#d05253"
+              backgroundColor={colors.progressCircleBackgroundColor}
+            />
+            <Text className="text-white text-center mt-3">Family</Text>
+          </Pressable>
         </View>
         {/* top-right progress ring */}
         <View className="absolute bottom-full right-4">
-          <CircularProgress
-            children={romanticText}
-            childrenContainerStyle={{}}
-            linecap="round"
-            rotation={0}
-            size={screenWidth * 0.2}
-            width={19}
-            lineCap="round"
-            backgroundWidth={20}
-            fill={romantic * 10}
-            tintColor="#ff1b1d"
-            backgroundColor={colors.progressCircleBackgroundColor}
-          />
-          <Text className="text-white text-center mt-3">Romantic</Text>
+          <Pressable
+            className="items-center"
+            onPress={() =>
+              openProgressPopup(
+                "nogoal",
+                "Romantic/Partner",
+                "How satisfied are you with your current romantic life?",
+                romantic,
+                true
+              )
+            }
+          >
+            <CircularProgress
+              children={romanticText}
+              childrenContainerStyle={{}}
+              linecap="round"
+              rotation={0}
+              size={screenWidth * 0.2}
+              width={19}
+              lineCap="round"
+              backgroundWidth={20}
+              fill={romantic * 10}
+              tintColor="#ff1b1d"
+              backgroundColor={colors.progressCircleBackgroundColor}
+            />
+            <Text className="text-white text-center mt-3">Romantic</Text>
+          </Pressable>
         </View>
       </View>
       <Text className="text-white text-2xl text-center"> Goals</Text>
       <View className="flex-row p-4 justify-around">
-        {progresses.length === 0 && !isLoading && (
+        {goalProgresses.length === 0 && !isLoading && (
           <Text className="text-white text-lg">No goals to be shown</Text>
         )}
-        {progresses.map((item, index) => (
-          <Pressable key={index} onPress={() => openGoalPopup(item.content)}>
+        {goalProgresses.map((item, index) => (
+          <Pressable
+            key={index}
+            onPress={() =>
+              openProgressPopup(
+                item._id,
+                "Goal",
+                item.content,
+                item.progress,
+                false
+              )
+            }
+          >
             <View className="flex-col items-center">
               <CircularProgress
                 children={() => {
@@ -190,30 +319,55 @@ const ProgressRings = (props) => {
         ))}
       </View>
       <Popup
-        visible={visibleGoalPopup}
-        dismiss={closeGoalPopup}
+        visible={visibleProgressPopup}
+        dismiss={closeProgressPopup}
         viewContainerClassName={
-          "bg-white border-gray-950 h-[200] pt-5 pl-5 pr-5 rounded-md relative"
+          "bg-white border-gray-950 h-[320] pt-5 pl-5 pr-5 rounded-md relative"
         }
       >
         <Text
           className="text-center text-3xl mb-3"
           style={{ color: colors.buttonColor }}
         >
-          Goal
+          {progress.title}
         </Text>
-        <Text className="text-center text-white text-xl">{goal}</Text>
+        <Text className="text-center text-white text-xl mb-3">
+          {progress.content}
+        </Text>
+        <View className="flex-row justify-center">
+          <InputNumber
+            separatorWidth={0}
+            minValue={0}
+            maxValue={10}
+            totalWidth={250}
+            value={progress.number}
+            textColor="white"
+            containerStyle={{ border: "none" }}
+            onChange={(value) => {
+              setProgress((prev) => ({ ...prev, number: value }));
+            }}
+          />
+        </View>
+        <View className="flex-row justify-center gap-3 mt-3">
+          <View>
+            <CustomButton
+              color={colors.buttonColor}
+              title={isSaving ? "Saving..." : "Save"}
+              disabled={isSaving}
+              onPress={saveProgress}
+            />
+          </View>
+          <View>
+            <CustomButton
+              color={"grey"}
+              title={"Cancel"}
+              onPress={closeProgressPopup}
+            />
+          </View>
+        </View>
       </Popup>
     </View>
   );
 };
-
-// const styles = StyleSheet.create({
-//   ellipsis: {
-//     textOverflow: "ellipsis",
-//     overflow: "hidden",
-//     whiteSpace: "nowrap",
-//   }
-// })
 
 export default ProgressRings;

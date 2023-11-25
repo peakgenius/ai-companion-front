@@ -9,9 +9,9 @@ import { AuthContext } from "../../contexts/user";
 import { getUrl } from "../../util";
 import UserQeustionPopup from "./UserQuestionPopup";
 import GoalQeustionPopup from "./GoalQuestionPopup";
-import Chat from "./Chat";
 import Progress from "./Progress.js";
 import colors from "../../styles/colors";
+import ChatIcon from "../../components/ChatIcon.js";
 
 const Home = () => {
   const {
@@ -281,7 +281,9 @@ const Home = () => {
   return (
     <SafeAreaView className="h-full">
       <View className="flex-1 pt-5" style={colors.mainBackground}>
-        <Text className="text-2xl text-center text-white">AI companion</Text>
+        {isAuthenticated && (
+          <Text className="text-2xl text-center text-white">LifeSync</Text>
+        )}
         {!isAuthenticated && (
           <Image
             resizeMode="contain"
@@ -289,7 +291,14 @@ const Home = () => {
             source={require("../../assets/home.png")}
           />
         )}
-        {isAuthenticated && <Progress user={user} progresses={progresses} isLoading={isLoading}/>}
+        {isAuthenticated && (
+          <Progress
+            user={user}
+            goalProgresses={progresses}
+            isLoading={isLoading}
+            getGoalProgress={getProgress}
+          />
+        )}
         <View className="p-4 pt-0 items-stretch">
           {!isAuthenticated && (
             <>
@@ -327,7 +336,7 @@ const Home = () => {
             </Pressable>
           </View>
         )}
-        {isAuthenticated && <Chat />}
+        {isAuthenticated && <ChatIcon isLoading={isLoading} />}
         <UserQeustionPopup
           visibleQuestionPopup={visibleUserQuestionPopup}
           question={userQuestion.content}

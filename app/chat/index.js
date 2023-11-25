@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import {
   View,
   Image,
@@ -6,11 +6,12 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  SafeAreaView,
 } from "react-native";
 import axios from "axios";
 import Checkbox from "expo-checkbox";
+import { router } from "expo-router";
 
-import Popup from "../../components/Popup";
 import Input from "../../components/Input";
 import colors from "../../styles/colors";
 import { getUrl } from "../../util";
@@ -27,18 +28,16 @@ const ChatPopup = (props) => {
   const [visible, setVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
-  const openPopup = async () => {
+  useEffect(() => {
+    load();
+  }, []);
+  const load = async () => {
     getMessages();
     setTimeout(() => {
       if (chatScrollViewRef.current) {
         chatScrollViewRef.current.scrollToEnd();
       }
     }, 200);
-    setVisible(true);
-  };
-
-  const closePopup = () => {
-    setVisible(false);
   };
 
   const getMessages = async () => {
@@ -87,30 +86,21 @@ const ChatPopup = (props) => {
       chatScrollViewRef.current.scrollToEnd();
     }
   };
-  return (
-    <View>
-      <View
-        className="absolute bottom-4 right-3 p-2 rounded-full z-10"
-        style={{ backgroundColor: colors.buttonColor }}
-      >
-        <Pressable onPress={openPopup}>
-          <View className="flex-col items-center">
-            <Image
-              resizeMode="cover"
-              source={require("../../assets/message-24.png")}
-            />
-          </View>
-        </Pressable>
-      </View>
 
-      <Popup
-        visible={visible}
-        dismiss={closePopup}
-        viewContainerClassName={
-          "bg-white border-gray-950 h-[570] pt-5 pl-5 pr-5 rounded-md relative"
-        }
-      >
-        <View className="absolute top-3 left-3 flex-row">
+  const goToHome = () => {
+    router.push("/");
+  };
+
+  return (
+    <SafeAreaView className="h-full">
+      <View className="flex-1 pt-7 pl-4 pr-4" style={colors.mainBackground}>
+        <Pressable className="mb-12" onPress={goToHome}>
+          <Image
+            resizeMode="cover"
+            source={require("../../assets/left-arrow-24.png")}
+          />
+        </Pressable>
+        <View className="absolute top-14 left-3 flex-row">
           <Checkbox
             style={styles.checkbox}
             value={isChecked}
@@ -183,8 +173,8 @@ const ChatPopup = (props) => {
             </View>
           </Pressable>
         </View>
-      </Popup>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 

@@ -50,7 +50,7 @@ const UserInfo = (props) => {
         className="text-3xl font-bold mb-3"
         style={{ color: colors.buttonColor }}
       >
-        Domains
+        Life Balance Wheel
       </Text>
       <View className="flex-row justify-between ml-3 mr-3 mb-3">
         <Pressable onPress={() => openProgressPopup("health", true)}>
