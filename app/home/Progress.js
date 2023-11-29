@@ -105,7 +105,7 @@ const ProgressRings = (props) => {
   };
 
   return (
-    <View className="flex-1" style={colors.mainBackground}>
+    <View className="flex-1">
       <View className="relative flex items-center" style={{ padding: "35%" }}>
         {/* top progressring */}
         <View className="absolute top-4">

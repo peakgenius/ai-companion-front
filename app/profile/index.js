@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Text, View, Pressable, ScrollView, Image } from "react-native";
+import { Text, View, Pressable, ScrollView, SafeAreaView, Image } from "react-native";
 import axios from "axios";
 
 import { AuthContext } from "../../contexts/user";
@@ -309,8 +309,8 @@ const Profile = () => {
   };
 
   return (
-    <View className="flex-1">
-      <ScrollView className="bg-neutral-900 ">
+    <SafeAreaView className="flex-1">
+      <ScrollView className="bg-neutral-900">
         <UserInfo
           user={user}
           isLoading={isLoading}
@@ -504,7 +504,7 @@ const Profile = () => {
         isLoading={isLoading}
       />
       <ChatIcon isLoading={isLoading} />
-    </View>
+    </SafeAreaView>
   );
 };
 

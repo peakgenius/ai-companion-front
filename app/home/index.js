@@ -3,6 +3,7 @@ import { View, Image, Text, SafeAreaView, Pressable } from "react-native";
 import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { LinearGradient } from "expo-linear-gradient";
 
 import CustomButton from "../../components/CustomButton";
 import { AuthContext } from "../../contexts/user";
@@ -43,6 +44,7 @@ const Home = () => {
     questionId: "",
     question: "",
   });
+  const [questionCount, setQuestionCount] = useState(0);
   const [goalAnswer, setGoalAnswer] = useState("");
   const [isSkipGoalAnswer, setIsSkipGoalAnswer] = useState(false);
   const [progresses, setProgresses] = useState([]);
@@ -67,6 +69,7 @@ const Home = () => {
 
   const openUserQuestionPopup = () => {
     setVisibleUserQuestionPopup(true);
+    setQuestionCount(questionCount - 1);
   };
 
   const closeUserQuestionPopup = () => {
@@ -75,10 +78,20 @@ const Home = () => {
 
   const openGoalQuestionPopup = () => {
     setVisibleGoalQuestionPopup(true);
+    setQuestionCount(questionCount - 1);
   };
 
   const closeGoalQuestionPopup = () => {
     setVisibleGoalQuestionPopup(false);
+  };
+
+  const displayQuestion = () => {
+    if (questionCount === 0) return;
+    //when both user & goal question are exist and user question is exist
+    if (questionCount === 2 || (questionCount === 1 && goal.questionId === ""))
+      openUserQuestionPopup();
+    //when goal question is exist
+    if (questionCount === 1 && goal.questionId !== "") openGoalQuestionPopup();
   };
 
   const getProgress = async () => {
@@ -116,8 +129,9 @@ const Home = () => {
         displayInterval: data.question_display_interval,
       });
 
-      openUserQuestionPopup();
+      setQuestionCount(1);
       if (data.goal_id) {
+        setQuestionCount(2);
         setGoal({
           id: data.goal_id._id,
           content: data.goal_id.content,
@@ -155,7 +169,6 @@ const Home = () => {
       closeUserQuestionPopup();
       setIsSaving(false);
       if (goal.questionId !== "") {
-        openGoalQuestionPopup();
         return;
       }
       if (userQuestion.displayInterval * 1 === 0) {
@@ -280,89 +293,142 @@ const Home = () => {
 
   return (
     <SafeAreaView className="h-full">
-      <View className="flex-1 pt-5" style={colors.mainBackground}>
+      <LinearGradient
+        // Background Linear Gradient
+        colors={[colors.backgroundStartColor, colors.backgroundEndColor]}
+        className="w-full h-full"
+      >
         {isAuthenticated && (
-          <Text className="text-2xl text-center text-white">LifeSync</Text>
+          <>
+            <View className="flex-1 p-5">
+              <View className="p-3">
+                <View className="flex-row mb-3">
+                  <Text className="text-2xl font-bold text-white">
+                    LifeSync
+                  </Text>
+                  <View className="ml-auto mr-3 flex-row items-end">
+                    <Pressable onPress={displayQuestion}>
+                      <View className="relative pb-1">
+                        {questionCount !== 0 && (
+                          <View
+                            className="absolute w-4 h-4 bg-white rounded-full -top-1 right-[-3px] z-10"
+                            style={styles.bellBadge}
+                          >
+                            <Text
+                              style={{
+                                color: colors.backgroundStartColor,
+                              }}
+                              className="text-[10px] text-center"
+                            >
+                              {questionCount}
+                            </Text>
+                          </View>
+                        )}
+                        <Image
+                          resizeMode="contain"
+                          source={require("../../assets/bell-24.png")}
+                        />
+                      </View>
+                    </Pressable>
+                  </View>
+                  <Image
+                    resizeMode="contain"
+                    style={{ width: 36, height: 36 }}
+                    className="rounded-full"
+                    source={require("../../assets/female_avatar.png")}
+                  />
+                </View>
+                <View
+                  className=" w-full bg-white opacity-25"
+                  style={{ height: 1 }}
+                />
+              </View>
+              <Progress
+                user={user}
+                goalProgresses={progresses}
+                isLoading={isLoading}
+                getGoalProgress={getProgress}
+              />
+            </View>
+            <View
+              className="flex-row justify-around p-2"
+              style={colors.navBarBackground}
+            >
+              <Pressable onPress={goToProfile}>
+                <View className="flex-col items-center">
+                  <Image
+                    resizeMode="contain"
+                    source={require("../../assets/user-32.png")}
+                  />
+                  <Text className="text-white text-xs">Profile</Text>
+                </View>
+              </Pressable>
+              <Pressable onPress={logout}>
+                <View className="flex-col items-center">
+                  <Image
+                    resizeMode="contain"
+                    source={require("../../assets/logout-32.png")}
+                  />
+                  <Text className="text-white text-xs">log out</Text>
+                </View>
+              </Pressable>
+            </View>
+            <ChatIcon isLoading={isLoading} />
+          </>
         )}
         {!isAuthenticated && (
-          <Image
-            resizeMode="contain"
-            className="w-full flex-1"
-            source={require("../../assets/home.png")}
-          />
-        )}
-        {isAuthenticated && (
-          <Progress
-            user={user}
-            goalProgresses={progresses}
-            isLoading={isLoading}
-            getGoalProgress={getProgress}
-          />
-        )}
-        <View className="p-4 pt-0 items-stretch">
-          {!isAuthenticated && (
-            <>
+          <>
+            <Image
+              resizeMode="contain"
+              className="w-full flex-1"
+              source={require("../../assets/home.png")}
+            />
+            <View className="p-4 pt-0 items-stretch">
               <Link href="/signup" asChild>
                 <CustomButton title="Sign Up" color={colors.buttonColor} />
               </Link>
               <Link href="/signin" asChild>
                 <CustomButton title="Sign In" color={colors.buttonColor} />
               </Link>
-            </>
-          )}
-        </View>
-        {isAuthenticated && (
-          <View
-            className="flex-row justify-around p-2"
-            style={colors.navBarBackground}
-          >
-            <Pressable onPress={goToProfile}>
-              <View className="flex-col items-center">
-                <Image
-                  resizeMode="contain"
-                  source={require("../../assets/user-32.png")}
-                />
-                <Text className="text-white text-xs">Profile</Text>
-              </View>
-            </Pressable>
-            <Pressable onPress={logout}>
-              <View className="flex-col items-center">
-                <Image
-                  resizeMode="contain"
-                  source={require("../../assets/logout-32.png")}
-                />
-                <Text className="text-white text-xs">log out</Text>
-              </View>
-            </Pressable>
-          </View>
+            </View>
+          </>
         )}
-        {isAuthenticated && <ChatIcon isLoading={isLoading} />}
-        <UserQeustionPopup
-          visibleQuestionPopup={visibleUserQuestionPopup}
-          question={userQuestion.content}
-          answer={userAnswer}
-          setAnswer={setUserAnswer}
-          saveAnswer={saveUserAnswer}
-          skipAnswer={skipUserAnswer}
-          isSkipUserAnswer={isSkipUserAnswer}
-          closeQuestionPopup={closeUserQuestionPopup}
-          isSaving={isSaving}
-        />
-        <GoalQeustionPopup
-          visibleQuestionPopup={visibleGoalQuestionPopup}
-          goal={goal.content}
-          question={goal.question}
-          answer={goalAnswer}
-          setAnswer={setGoalAnswer}
-          saveAnswer={saveGoalAnswer}
-          skipAnswer={skipGoalAnswer}
-          closeQuestionPopup={closeGoalQuestionPopup}
-          isSkipGoalAnswer={isSkipGoalAnswer}
-          isSaving={isSaving}
-        />
-      </View>
+      </LinearGradient>
+      <UserQeustionPopup
+        visibleQuestionPopup={visibleUserQuestionPopup}
+        question={userQuestion.content}
+        answer={userAnswer}
+        setAnswer={setUserAnswer}
+        saveAnswer={saveUserAnswer}
+        skipAnswer={skipUserAnswer}
+        isSkipUserAnswer={isSkipUserAnswer}
+        closeQuestionPopup={closeUserQuestionPopup}
+        isSaving={isSaving}
+      />
+      <GoalQeustionPopup
+        visibleQuestionPopup={visibleGoalQuestionPopup}
+        goal={goal.content}
+        question={goal.question}
+        answer={goalAnswer}
+        setAnswer={setGoalAnswer}
+        saveAnswer={saveGoalAnswer}
+        skipAnswer={skipGoalAnswer}
+        closeQuestionPopup={closeGoalQuestionPopup}
+        isSkipGoalAnswer={isSkipGoalAnswer}
+        isSaving={isSaving}
+      />
     </SafeAreaView>
   );
+};
+
+const styles = {
+  bellBadge: {
+    borderTopColor: colors.backgroundStartColor,
+    borderLeftColor: colors.backgroundStartColor,
+    borderRightColor: colors.backgroundStartColor,
+    borderBottomColor: colors.backgroundStartColor,
+    borderWidth: 1,
+  },
 };
 
 export default Home;
