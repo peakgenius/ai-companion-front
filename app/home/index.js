@@ -3,7 +3,6 @@ import { View, Image, Text, SafeAreaView, Pressable } from "react-native";
 import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { LinearGradient } from "expo-linear-gradient";
 
 import CustomButton from "../../components/CustomButton";
 import { AuthContext } from "../../contexts/user";
@@ -292,108 +291,102 @@ const Home = () => {
   };
 
   return (
-    <SafeAreaView className="h-full">
-      <LinearGradient
-        // Background Linear Gradient
-        colors={[colors.backgroundStartColor, colors.backgroundEndColor]}
-        className="w-full h-full"
-      >
-        {isAuthenticated && (
-          <>
-            <View className="flex-1 p-5">
-              <View className="p-3">
-                <View className="flex-row mb-3">
-                  <Text className="text-2xl font-bold text-white">
-                    LifeSync
-                  </Text>
-                  <View className="ml-auto mr-3 flex-row items-end">
-                    <Pressable onPress={displayQuestion}>
-                      <View className="relative pb-1">
-                        {questionCount !== 0 && (
-                          <View
-                            className="absolute w-4 h-4 bg-white rounded-full -top-1 right-[-3px] z-10"
-                            style={styles.bellBadge}
+    <SafeAreaView className="h-full bg-white">
+      {isAuthenticated && (
+        <>
+          <View className="flex-1 p-5">
+            <View className="p-3">
+              <View className="flex-row mb-3">
+                <Text className="text-2xl font-bold text-black">LifeSync</Text>
+                <View className="ml-auto mr-3 flex-row items-end">
+                  <Pressable onPress={displayQuestion}>
+                    <View className="relative pb-1">
+                      {questionCount !== 0 && (
+                        <View
+                          className="absolute w-4 h-4 bg-white rounded-full -top-1 right-[-3px] z-10"
+                          style={styles.bellBadge}
+                        >
+                          <Text
+                            style={{
+                              color: colors.backgroundStartColor,
+                            }}
+                            className="text-[10px] text-center"
                           >
-                            <Text
-                              style={{
-                                color: colors.backgroundStartColor,
-                              }}
-                              className="text-[10px] text-center"
-                            >
-                              {questionCount}
-                            </Text>
-                          </View>
-                        )}
-                        <Image
-                          resizeMode="contain"
-                          source={require("../../assets/bell-24.png")}
-                        />
-                      </View>
-                    </Pressable>
-                  </View>
-                  <Image
-                    resizeMode="contain"
-                    style={{ width: 36, height: 36 }}
-                    className="rounded-full"
-                    source={require("../../assets/female_avatar.png")}
-                  />
+                            {questionCount}
+                          </Text>
+                        </View>
+                      )}
+                      <Image
+                        resizeMode="contain"
+                        source={require("../../assets/bell-24.png")}
+                      />
+                    </View>
+                  </Pressable>
                 </View>
-                <View
-                  className=" w-full bg-white opacity-25"
-                  style={{ height: 1 }}
+                <Image
+                  resizeMode="contain"
+                  style={{ width: 36, height: 36 }}
+                  className="rounded-full"
+                  source={require("../../assets/female_avatar.png")}
                 />
               </View>
-              <Progress
-                user={user}
-                goalProgresses={progresses}
-                isLoading={isLoading}
-                getGoalProgress={getProgress}
+              <View
+                className=" w-full bg-white opacity-25"
+                style={{ height: 1 }}
               />
             </View>
-            <View
-              className="flex-row justify-around p-2"
-              style={colors.navBarBackground}
-            >
-              <Pressable onPress={goToProfile}>
-                <View className="flex-col items-center">
-                  <Image
-                    resizeMode="contain"
-                    source={require("../../assets/user-32.png")}
-                  />
-                  <Text className="text-white text-xs">Profile</Text>
-                </View>
-              </Pressable>
-              <Pressable onPress={logout}>
-                <View className="flex-col items-center">
-                  <Image
-                    resizeMode="contain"
-                    source={require("../../assets/logout-32.png")}
-                  />
-                  <Text className="text-white text-xs">log out</Text>
-                </View>
-              </Pressable>
-            </View>
-            <ChatIcon isLoading={isLoading} />
-          </>
-        )}
-        {!isAuthenticated && (
-          <>
+            <Progress
+              user={user}
+              goalProgresses={progresses}
+              isLoading={isLoading}
+              getGoalProgress={getProgress}
+            />
+          </View>
+          <View
+            className="flex-row justify-around p-2"
+            style={colors.navBarBackground}
+          >
+            <Pressable onPress={goToProfile}>
+              <View className="flex-col items-center">
+                <Image
+                  resizeMode="contain"
+                  source={require("../../assets/user-32.png")}
+                />
+                <Text className="text-white text-xs">Profile</Text>
+              </View>
+            </Pressable>
+            <Pressable onPress={logout}>
+              <View className="flex-col items-center">
+                <Image
+                  resizeMode="contain"
+                  source={require("../../assets/logout-32.png")}
+                />
+                <Text className="text-white text-xs">log out</Text>
+              </View>
+            </Pressable>
+          </View>
+          <ChatIcon isLoading={isLoading} />
+        </>
+      )}
+      {!isAuthenticated && (
+        <>
+          <View className="flex-1 items-center justify-center">
             <Image
               resizeMode="contain"
-              className="w-full flex-1"
+              className="w-3/4"
               source={require("../../assets/home.png")}
             />
-            <View className="p-4 pt-0 items-stretch">
-              <Link href="/signup" asChild>
-                <CustomButton title="Sign Up" color={colors.buttonColor} />
-              </Link>
-              <Link href="/signin" asChild>
-                <CustomButton title="Sign In" color={colors.buttonColor} />
-              </Link>
-            </View>
-          </>
-        )}
-      </LinearGradient>
+          </View>
+          <View className="p-8 pt-0 items-stretch">
+            <Link href="/signup" asChild>
+              <CustomButton title="Sign Up" color={colors.buttonColor} />
+            </Link>
+            <Link href="/signin" asChild>
+              <CustomButton title="Sign In" color={colors.buttonColor} />
+            </Link>
+          </View>
+        </>
+      )}
       <UserQeustionPopup
         visibleQuestionPopup={visibleUserQuestionPopup}
         question={userQuestion.content}

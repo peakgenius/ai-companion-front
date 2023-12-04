@@ -23,14 +23,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "stretch",
     alignSelf: "stretch",
-    borderRadius: 10,
   },
   btnIcon: {
     height: 25,
     width: 25,
   },
   btnText: {
-    fontSize: 18,
+    fontSize: 14,
     color: "#FAFAFA",
     marginLeft: 10,
     marginRight: 10,
@@ -40,18 +39,19 @@ const styles = StyleSheet.create({
 
 const CustomButton = React.forwardRef(({ title, color, img, ...rest }, ref) => (
   <Pressable
-    style={{ ...styles.btnClickContain, backgroundColor: color, width: width }}
+    className="flex items-center rounded-lg"
+    style={{
+      ...styles.btnClickContain,
+      backgroundColor: color,
+      width: width,
+      height: 50,
+    }}
     {...rest}
     ref={ref}
   >
-    <>
-      {/* <Image resizeMode="contain" source={img}></Image> */}
-      {/* <View style={styles.btnContainer}> */}
-        <Text style={styles.btnText} title={title}>
-          {title}
-        </Text>
-      {/* </View> */}
-    </>
+    <Text style={styles.btnText} title={title} className="font-bold">
+      {title}
+    </Text>
   </Pressable>
 ));
 

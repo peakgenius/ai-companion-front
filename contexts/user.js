@@ -27,8 +27,9 @@ const AuthProvider = ({ children }) => {
     family: 0,
     romantic: 0,
     happiness: 0,
-    pin_count: 0
+    pin_count: 0,
   });
+  const [signupUser, setSignupUser] = useState({});
 
   useEffect(() => {
     getUser();
@@ -44,9 +45,9 @@ const AuthProvider = ({ children }) => {
           setDayToGetQuestions(0);
           setDayToGetTips(0);
           router.replace("/");
-          return; 
+          return;
         }
-        if (ParsedToken.token === null) {
+        if (!ParsedToken) {
           if (
             pathname !== "/" &&
             pathname !== "/signup" &&
@@ -61,7 +62,7 @@ const AuthProvider = ({ children }) => {
           .get(`${getUrl()}/auth/user?token=${ParsedToken.token}`)
           .then((response) => {
             setUser(response.data.user);
-            console.log(response.data.user)
+            console.log(response.data.user);
           });
       })
       .catch((err) => {
@@ -83,6 +84,8 @@ const AuthProvider = ({ children }) => {
         setDayToGetQuestions,
         dayToGetTips,
         setDayToGetTips,
+        signupUser,
+        setSignupUser,
       }}
     >
       {children}

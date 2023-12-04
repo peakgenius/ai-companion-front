@@ -1,18 +1,16 @@
-import React, { useState } from "react";
-import { Text, View, Image, ScrollView } from "react-native";
+import React, { useState, useContext } from "react";
+import { Text, View, Image, SafeAreaView } from "react-native";
 import { Link, router } from "expo-router";
 import axios from "axios";
 
 import CustomButton from "../../components/CustomButton";
 import Input from "../../components/Input";
-import InputNumber from "../../components/InputNumber";
-import Select from "../../components/Select";
 import { getUrl } from "../../util";
 import colors from "../../styles/colors";
+import { AuthContext } from "../../contexts/user";
 
 const SignUp = () => {
-  const marial_status = ["single", "married", "divorced"];
-  const gender = ["female", "male"];
+  const [invisiblePassword, setInvisiblePassword] = useState(true);
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -28,226 +26,72 @@ const SignUp = () => {
     romantic: 0,
     happiness: 0,
   });
-  const [isSaving, setIsSaving] = useState(false);
+  const { signupUser, setSignupUser } = useContext(AuthContext);
 
-  const signUp = async () => {
-    setIsSaving(true);
-    try {
-      await axios.post(getUrl() + "/auth/signup", profile, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
-      setIsSaving(false);
-      router.push("/signin");
-    } catch (err) {
-      setIsSaving(false);
-      console.log(err.message, "->");
-    }
+  const goToAboutme = () => {
+    if (!signupUser.name || !signupUser.email || !signupUser.password) return;
+    router.push("/aboutme");
   };
 
   return (
-    <ScrollView className="flex-1 bg-neutral-900">
-      <View className="w-full flex justify-center p-4 pt-6">
-        <Link href="/">
+    <SafeAreaView className="flex bg-white">
+      <View className="w-full h-2/5 pt-5">
+        <View className="w-full h-full">
           <Image
-            resizeMode="cover"
-            source={require("../../assets/left-arrow-24.png")}
+            resizeMode="contain"
+            className="w-full h-full"
+            source={require("../../assets/signup.png")}
           />
-        </Link>
-        <Image
-          resizeMode="contain"
-          className="w-full h-40"
-          source={require("../../assets/signup.png")}
-        />
+        </View>
       </View>
-      <View className="p-4">
-        <Text className="text-2xl text-white text-center mb-4">Sign Up</Text>
+      <View className="pl-8 pr-8 h-3/5">
+        <Text className="text-[18px] text-black font-bold mb-4">Sign Up</Text>
+        <Text className="text-[14px] text-black mb-10">
+          Enter your credentials to continue
+        </Text>
         <Input
           placeholder="Name"
           setText={(value) => {
-            setProfile((prev) => ({ ...prev, name: value }));
+            setSignupUser((prev) => ({ ...prev, name: value }));
           }}
-          defaultValue={profile.name}
+          iconSrc={require("../../assets/user-32.png")}
+          defaultValue={signupUser.name}
         />
         <Input
           placeholder="Email"
+          iconSrc={require("../../assets/email-32.png")}
           setText={(value) => {
-            setProfile((prev) => ({ ...prev, email: value }));
+            setSignupUser((prev) => ({ ...prev, email: value }));
           }}
-          defaultValue={profile.emal}
+          defaultValue={signupUser.email}
         />
         <Input
           placeholder="Password"
+          iconSrc={require("../../assets/password-32.png")}
           setText={(value) => {
-            setProfile((prev) => ({ ...prev, password: value }));
+            setSignupUser((prev) => ({ ...prev, password: value }));
           }}
-          defaultValue={profile.password}
-          secureTextEntry={true}
+          defaultValue={signupUser.password}
+          secureTextEntry={invisiblePassword}
+          onPressEye={() => setInvisiblePassword(!invisiblePassword)}
         />
-        <Select
-          dropdownHeight={"90px"}
-          data={gender}
-          onSelect={(value, index) => {
-            setProfile((prev) => ({ ...prev, gender: index }));
-          }}
-        />
-        <Select
-          dropdownHeight={"135px"}
-          data={marial_status}
-          onSelect={(value, index) => {
-            setProfile((prev) => ({ ...prev, marial_status: index }));
-          }}
-        />
-        <View className="flex-row mb-3">
-          <Text className="text-white text-xl flex-1">Age:</Text>
-          <InputNumber
-            separatorWidth={0}
-            totalWidth={250}
-            minValue={0}
-            maxValue={150}
-            containerStyle={{ border: "none" }}
-            value={profile.age}
-            onChange={(value) => {
-              setProfile((prev) => ({
-                ...prev,
-                age: value,
-              }));
-            }}
-          />
-        </View>
-        <View className="flex-row mb-3">
-          <Text className="text-white flex-1 text-xl">Height:</Text>
-          <InputNumber
-            separatorWidth={0}
-            minValue={0}
-            maxValue={300}
-            containerStyle={{ border: "none" }}
-            totalWidth={250}
-            value={profile.height}
-            onChange={(value) => {
-              setProfile((prev) => ({
-                ...prev,
-                height: value,
-              }));
-            }}
-          />
-        </View>
-        <View className="flex-row mb-3">
-          <Text className="text-white flex-1 text-xl">Weight:</Text>
-          <InputNumber
-            separatorWidth={0}
-            maxValue={300}
-            minValue={0}
-            containerStyle={{ border: "none" }}
-            totalWidth={250}
-            value={profile.weight}
-            onChange={(value) => {
-              setProfile((prev) => ({
-                ...prev,
-                weight: value,
-              }));
-            }}
-          />
-        </View>
-        <Text className="text-white text-lg mt-3 mb-3">
-          Rank the following areas of your life from 1-10 with 1 being the
-          extremely unsatisfied and 10 being extremely satisfied.
-        </Text>
-        <View className="flex-row mb-3">
-          <Text className="text-white flex-1 text-xl">Health:</Text>
-          <InputNumber
-            separatorWidth={0}
-            maxValue={10}
-            minValue={0}
-            containerStyle={{ border: "none" }}
-            totalWidth={250}
-            value={profile.health}
-            onChange={(value) => {
-              setProfile((prev) => ({
-                ...prev,
-                health: value,
-              }));
-            }}
-          />
-        </View>
-        <View className="flex-row mb-3">
-          <Text className="text-white flex-1 text-xl">Income:</Text>
-          <InputNumber
-            separatorWidth={0}
-            maxValue={10}
-            minValue={0}
-            containerStyle={{ border: "none" }}
-            totalWidth={250}
-            value={profile.income}
-            onChange={(value) => {
-              setProfile((prev) => ({
-                ...prev,
-                income: value,
-              }));
-            }}
-          />
-        </View>
-        <View className="flex-row mb-3">
-          <Text className="text-white flex-1 text-xl">Family:</Text>
-          <InputNumber
-            separatorWidth={0}
-            maxValue={10}
-            minValue={0}
-            containerStyle={{ border: "none" }}
-            totalWidth={250}
-            value={profile.family}
-            onChange={(value) => {
-              setProfile((prev) => ({
-                ...prev,
-                family: value,
-              }));
-            }}
-          />
-        </View>
-        <View className="flex-row mb-3">
-          <Text className="text-white flex-1 text-xl">Romantic:</Text>
-          <InputNumber
-            separatorWidth={0}
-            maxValue={10}
-            minValue={0}
-            containerStyle={{ border: "none" }}
-            totalWidth={250}
-            value={profile.romantic}
-            onChange={(value) => {
-              setProfile((prev) => ({
-                ...prev,
-                romantic: value,
-              }));
-            }}
-          />
-        </View>
-        <View className="flex-row mb-3">
-          <Text className="text-white flex-1 text-xl">Happiness:</Text>
-          <InputNumber
-            separatorWidth={0}
-            maxValue={10}
-            minValue={0}
-            containerStyle={{ border: "none" }}
-            totalWidth={250}
-            value={profile.happiness}
-            onChange={(value) => {
-              setProfile((prev) => ({
-                ...prev,
-                happiness: value,
-              }));
-            }}
-          />
-        </View>
-
         <CustomButton
-          title={isSaving ? "Signing Up..." : "Sign Up"}
+          title={"Sign Up"}
           color={colors.buttonColor}
-          onPress={signUp}
-          disabled={isSaving}
+          onPress={goToAboutme}
         />
+        <View className="flex-row justify-center mt-4">
+          <Text className="text-sm mr-1">Don't have an account?</Text>
+          <Link
+            href="signin"
+            style={{ color: colors.buttonColor }}
+            className="font-bold"
+          >
+            LogIn
+          </Link>
+        </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 

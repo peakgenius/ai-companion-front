@@ -1,12 +1,12 @@
 const colors = {
   mainBackground: {
-    backgroundColor: "#257c8f",
+    backgroundColor: "#fff",
   },
   navBarBackground: {
     backgroundColor: "#204e5d",
   },
   progressCircleBackgroundColor: "#494a4c",
-  buttonColor: "#02b075",
+  buttonColor: "#22798C",
   backgroundStartColor: "#257c8f",
   backgroundEndColor: "#0b3a4e"
 };

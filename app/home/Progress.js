@@ -84,24 +84,24 @@ const ProgressRings = (props) => {
   const [screenWidth] = useState(Dimensions.get("window").width);
 
   const totalText = () => {
-    return <Text className="text-white">{total * 10}</Text>;
+    return <Text className="text-black font-bold text-2xl">{total * 10}</Text>;
   };
 
   const healthText = () => {
-    return <Text className="text-white">{Math.ceil(health * 10)}</Text>;
+    return <Text className="text-black font-bold">{Math.ceil(health * 10)}</Text>;
   };
 
   const incomeText = () => {
-    return <Text className="text-white">{Math.ceil(income * 10)}</Text>;
+    return <Text className="text-black font-bold">{Math.ceil(income * 10)}</Text>;
   };
   const happinessText = () => {
-    return <Text className="text-white">{Math.ceil(happiness * 10)}</Text>;
+    return <Text className="text-black font-bold">{Math.ceil(happiness * 10)}</Text>;
   };
   const familyText = () => {
-    return <Text className="text-white">{Math.ceil(family * 10)}</Text>;
+    return <Text className="text-black font-bold">{Math.ceil(family * 10)}</Text>;
   };
   const romanticText = () => {
-    return <Text className="text-white">{Math.ceil(romantic * 10)}</Text>;
+    return <Text className="text-black font-bold">{Math.ceil(romantic * 10)}</Text>;
   };
 
   return (
@@ -297,7 +297,7 @@ const ProgressRings = (props) => {
               <CircularProgress
                 children={() => {
                   return (
-                    <Text className="text-white">{item.progress * 10}</Text>
+                    <Text className="text-black font-bold">{item.progress * 10}</Text>
                   );
                 }}
                 childrenContainerStyle={{}}
