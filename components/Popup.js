@@ -15,16 +15,25 @@ export default function Popup({
 }) {
   return (
     <Modal isVisible={visible}>
-      <View className={viewContainerClassName} style={colors.mainBackground}>
-        <View className="ml-auto mb-3">
-          <Pressable onPress={dismiss}>
-            <Image
-              resizeMode="cover"
-              source={require("../assets/close-24.png")}
-            />
-          </Pressable>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <View className={viewContainerClassName} style={colors.mainBackground}>
+          <View className="ml-auto mb-3">
+            <Pressable onPress={dismiss}>
+              <Image
+                resizeMode="cover"
+                source={require("../assets/close.png")}
+              />
+            </Pressable>
+          </View>
+          {children}
         </View>
-        {children}
       </View>
     </Modal>
   );

@@ -18,6 +18,7 @@ const Input = (props) => {
     style,
     iconSrc,
     onPressEye,
+    tailwindClass,
   } = props;
 
   return (
@@ -68,8 +69,8 @@ const Input = (props) => {
           multiline={true}
           numberOfLines={numberOfLines}
           maxLength={maxLength}
-          className="bg-slate-300 rounded-md pl-4 mb-3"
-          style={style}
+          placeholder={placeholder}
+          className={`bg-[#f5f5f5] ${tailwindClass}`}
         />
       )}
     </>

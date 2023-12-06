@@ -2,9 +2,15 @@ import React from "react";
 import { View, Pressable, Text, StyleSheet, Image } from "react-native";
 import TypingText from "react-native-typing-text";
 
-import Popup from "../../components/Popup";
-import Input from "../../components/Input";
+import Popup from "../Popup";
+import Input from "../Input";
 import colors from "../../styles/colors";
+//Tailwind CSS
+import { NativeWindStyleSheet } from "nativewind";
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
 
 const QuestionPopup = (props) => {
   const {
@@ -67,7 +73,7 @@ const QuestionPopup = (props) => {
           >
             <Image
               resizeMode="cover"
-              source={require("../../assets/send-18.png")}
+              source={require("../../assets/send-28.png")}
             />
           </View>
         </Pressable>

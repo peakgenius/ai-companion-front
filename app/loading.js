@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
-import { View, Text, Button } from "react-native";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { View, Text, Button, Image } from "react-native";
 import axios from "axios";
 import { router } from "expo-router";
-import Loader from "../components/ThreeDotsLoader";
+import Loader from "../components/AnimatedLoader";
 
 import { AuthContext } from "../contexts/user";
 import { getUrl } from "../util";
@@ -33,17 +33,13 @@ const Loading = () => {
   };
 
   return (
-    <View
-      className="flex-row items-center justify-center flex-1"
-      style={colors.mainBackground}
-    >
-      <Text
-        className="text-center text-2xl mb-5 mr-1"
-        style={{ color: colors.buttonColor }}
-      >
-        Loading
-      </Text>
-      <Loader background={colors.buttonColor} />
+    <View className="flex-1 items-center" style={colors.mainBackground}>
+      <Image
+        resizeMode="contain"
+        className="w-3/4"
+        source={require("../assets/home.png")}
+      />
+      <Loader />
     </View>
   );
 };

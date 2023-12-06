@@ -1,31 +1,14 @@
 import React, { useState, useContext } from "react";
 import { Text, View, Image, SafeAreaView } from "react-native";
 import { Link, router } from "expo-router";
-import axios from "axios";
 
 import CustomButton from "../../components/CustomButton";
 import Input from "../../components/Input";
-import { getUrl } from "../../util";
 import colors from "../../styles/colors";
 import { AuthContext } from "../../contexts/user";
 
 const SignUp = () => {
   const [invisiblePassword, setInvisiblePassword] = useState(true);
-  const [profile, setProfile] = useState({
-    name: "",
-    email: "",
-    password: "",
-    gender: 0,
-    age: 0,
-    height: 0,
-    weight: 0,
-    marial_status: 0,
-    health: 0,
-    income: 0,
-    family: 0,
-    romantic: 0,
-    happiness: 0,
-  });
   const { signupUser, setSignupUser } = useContext(AuthContext);
 
   const goToAboutme = () => {

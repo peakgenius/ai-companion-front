@@ -30,7 +30,18 @@ const AuthProvider = ({ children }) => {
     pin_count: 0,
   });
   const [signupUser, setSignupUser] = useState({});
-
+  const [userQuestion, setUserQuestion] = useState({
+    id: "",
+    content: "",
+    displayInterval: -1,
+  });
+  const [goal, setGoal] = useState({
+    id: "",
+    content: "",
+    questionId: "",
+    question: "",
+  });
+  const [questionCount, setQuestionCount] = useState(0);
   useEffect(() => {
     getUser();
   }, []);
@@ -86,6 +97,12 @@ const AuthProvider = ({ children }) => {
         setDayToGetTips,
         signupUser,
         setSignupUser,
+        userQuestion,
+        setUserQuestion,
+        goal,
+        setGoal,
+        questionCount,
+        setQuestionCount
       }}
     >
       {children}

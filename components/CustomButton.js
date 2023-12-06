@@ -37,22 +37,28 @@ const styles = StyleSheet.create({
   },
 });
 
-const CustomButton = React.forwardRef(({ title, color, img, ...rest }, ref) => (
-  <Pressable
-    className="flex items-center rounded-lg"
-    style={{
-      ...styles.btnClickContain,
-      backgroundColor: color,
-      width: width,
-      height: 50,
-    }}
-    {...rest}
-    ref={ref}
-  >
-    <Text style={styles.btnText} title={title} className="font-bold">
-      {title}
-    </Text>
-  </Pressable>
-));
+const CustomButton = React.forwardRef(
+  ({ title, color, img, textStyle, ...rest }, ref) => (
+    <Pressable
+      className="flex items-center rounded-lg"
+      style={{
+        ...styles.btnClickContain,
+        backgroundColor: color,
+        width: width,
+        height: 50,
+      }}
+      {...rest}
+      ref={ref}
+    >
+      <Text
+        style={{ ...styles.btnText, ...textStyle }}
+        title={title}
+        className="font-bold"
+      >
+        {title}
+      </Text>
+    </Pressable>
+  )
+);
 
 export default CustomButton;

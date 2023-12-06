@@ -10,8 +10,8 @@ const OrderedList = (props) => {
 
   return (
     <View className="flex-row mb-3">
-      <Text className="w-5 text-white text-lg">{number}. </Text>
-      <Text className="flex-1 text-white text-lg">{item}</Text>
+      <Text className="w-5 text-black text-[16px] leading-5">{number}. </Text>
+      <Text className="flex-1 text-black text-[16px] leading-5">{item}</Text>
     </View>
   );
 };

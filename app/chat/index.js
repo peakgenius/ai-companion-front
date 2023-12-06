@@ -9,13 +9,15 @@ import {
   SafeAreaView,
 } from "react-native";
 import axios from "axios";
-import Checkbox from "expo-checkbox";
 import { router } from "expo-router";
+import Toggle from "react-native-toggle-input";
 
 import Input from "../../components/Input";
 import colors from "../../styles/colors";
 import { getUrl } from "../../util";
 import { AuthContext } from "../../contexts/user";
+import AiMessage from "../../components/chat/AiMessage";
+import UserMessage from "../../components/chat/UserMessage";
 
 const ChatPopup = (props) => {
   const { authToken } = useContext(AuthContext);
@@ -66,7 +68,7 @@ const ChatPopup = (props) => {
     const res = await axios.post(
       `${getUrl()}/chat/message`,
       {
-        userMessage: messageRow[0].user_message,
+        userMessage: messageRow[0].user_message.trim(),
         isTrain: isChecked,
       },
       {
@@ -94,19 +96,25 @@ const ChatPopup = (props) => {
   return (
     <SafeAreaView className="h-full">
       <View className="flex-1 pt-7 pl-4 pr-4" style={colors.mainBackground}>
-        <Pressable className="mb-12" onPress={goToHome}>
+        <Pressable className="mb-1" onPress={goToHome}>
           <Image
-            resizeMode="cover"
-            source={require("../../assets/left-arrow-24.png")}
+            resizeMode="contain"
+            className="w-[40px] h-[40px]"
+            source={require("../../assets/back-43.png")}
           />
         </Pressable>
-        <View className="absolute top-14 left-3 flex-row">
-          <Checkbox
-            style={styles.checkbox}
-            value={isChecked}
-            onValueChange={setIsChecked}
+        <View className="flex-row items-end mb-4 ml-4">
+          <Toggle
+            size={12}
+            color={"#efeeee"}
+            circleColor={"black"}
+            filled
+            toggle={isChecked}
+            setToggle={() => setIsChecked(!isChecked)}
           />
-          <Text className="text-lg text-white mt-1 ml-2">check to train</Text>
+          <Text className="text-[16px] text-black mt-1 ml-2">
+            Remember Information
+          </Text>
         </View>
         {!isLoading && (
           <ScrollView
@@ -114,61 +122,35 @@ const ChatPopup = (props) => {
             style={{ height: 350 }}
             ref={chatScrollViewRef}
           >
-            <View className="flex-row mb-3">
-              <Image
-                source={require("../../assets/chatbot.png")}
-                className="w-10 h-10 mr-3"
-              ></Image>
-              <Text className="text-white p-2 inline-block rounded-r-md rounded-bl-lg">
-                Hello. How can I assist you?
-              </Text>
-            </View>
+            <AiMessage message={"Hello. How can I assist you?"} />
             {messages.map((item, index) => (
               <View key={index}>
-                <View className="flex-row mb-3">
-                  <Text className="ml-auto flex-1 inline-block rounded-l-md text-white rounded-br-lg whitespace-nowrap mr-3 p-2">
-                    {item.user_message}
-                  </Text>
-                  <Image
-                    source={require("../../assets/female_avatar.png")}
-                    className="w-10 h-10"
-                  ></Image>
-                </View>
-                {item.ai_message && (
-                  <View className="flex-row mb-3 justify-start">
-                    <Image
-                      source={require("../../assets/chatbot.png")}
-                      className="w-10 h-10 mr-3"
-                    ></Image>
-                    <Text className="text-white flex-1 p-2 rounded-r-md rounded-bl-lg mr-auto inline-block whitespace-nowrap">
-                      {item.ai_message}
-                    </Text>
-                  </View>
-                )}
+                <UserMessage message={item.user_message} />
+                {item.ai_message && <AiMessage message={item.ai_message} />}
               </View>
             ))}
           </ScrollView>
         )}
-        <View className="pt-2 w-11/12 ml-6 flex-row items-center">
+        <View className="pt-2 flex-row items-center">
           <Input
-            className="flex-1"
-            style={{ backgroundColor: "#f1f1f1" }}
+            tailwindClass={"pl-4 mb-3 rounded-[20px] w-10/12"}
             multiline={true}
             numberOfLines={4}
             defaultValue={userMessage}
+            placeholder={"Type here..."}
             value={userMessage}
             setText={(value) => {
-              setUserMessage(value);
+              setUserMessage(value.trim());
             }}
           />
           <Pressable onPress={saveChat} disabled={isSaving}>
             <View
-              className="flex items-center justify-center w-11 rounded-full h-12 ml-3"
+              className="flex items-center justify-center w-14 rounded-full h-14 ml-2"
               style={{ backgroundColor: colors.buttonColor }}
             >
               <Image
                 resizeMode="cover"
-                source={require("../../assets/send-18.png")}
+                source={require("../../assets/send-28.png")}
               />
             </View>
           </Pressable>

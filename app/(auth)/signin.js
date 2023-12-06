@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, SafeAreaView } from "react-native";
 import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -12,6 +12,7 @@ import colors from "../../styles/colors";
 
 const SignIn = () => {
   const { setIsAuthenticated, setUser, setAuthToken } = useContext(AuthContext);
+  const [invisiblePassword, setInvisiblePassword] = useState(true);
   const [profile, setProfile] = useState({ email: "", password: "" });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -49,24 +50,24 @@ const SignIn = () => {
   };
 
   return (
-    <View className="flex-1 bg-neutral-900">
-      <View className="w-full flex justify-center p-4 pt-6">
-        <Link href="/">
+    <SafeAreaView className="flex bg-white">
+      <View className="w-full h-[45%] pt-5">
+        <View className="w-full h-full">
           <Image
-            resizeMode="cover"
-            source={require("../../assets/left-arrow-24.png")}
+            resizeMode="contain"
+            className="w-full h-full"
+            source={require("../../assets/signin.png")}
           />
-        </Link>
-        <Image
-          resizeMode="contain"
-          className="w-full h-40"
-          source={require("../../assets/signin.png")}
-        />
+        </View>
       </View>
-      <View className="p-4">
-        <Text className="text-2xl text-white text-center mb-4">Sign In</Text>
+      <View className="pl-8 pr-8 h-[55%]">
+        <Text className="text-[18px] text-black font-bold mb-4">LOG IN</Text>
+        <Text className="text-[14px] text-black mb-10">
+          Enter your credentials to continue
+        </Text>
         <Input
           placeholder="Email"
+          iconSrc={require("../../assets/email-32.png")}
           setText={(text) => {
             setProfile((prev) => ({ ...prev, email: text }));
           }}
@@ -74,20 +75,35 @@ const SignIn = () => {
         />
         <Input
           placeholder="Password"
+          iconSrc={require("../../assets/password-32.png")}
           setText={(text) => {
             setProfile((prev) => ({ ...prev, password: text }));
           }}
           defaultValue={profile.password}
-          secureTextEntry={true}
+          secureTextEntry={invisiblePassword}
+          onPressEye={() => setInvisiblePassword(!invisiblePassword)}
         />
+        <Link href="/forgotpassword" className="text-right mb-6">
+          <Text style={{ color: colors.buttonColor }}>Forgot Password?</Text>
+        </Link>
         <CustomButton
           title={isSaving ? "Signing In..." : "Sign In"}
           color={colors.buttonColor}
           onPress={signIn}
           disabled={isSaving}
         />
+        <View className="flex-row justify-center mt-4">
+          <Text className="text-sm mr-1">Don't have an account?</Text>
+          <Link
+            href="signup"
+            style={{ color: colors.buttonColor }}
+            className="font-bold"
+          >
+            Sign Up
+          </Link>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

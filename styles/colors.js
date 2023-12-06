@@ -5,7 +5,7 @@ const colors = {
   navBarBackground: {
     backgroundColor: "#204e5d",
   },
-  progressCircleBackgroundColor: "#494a4c",
+  progressCircleBackgroundColor: "#F6EEFF",
   buttonColor: "#22798C",
   backgroundStartColor: "#257c8f",
   backgroundEndColor: "#0b3a4e"

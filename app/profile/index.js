@@ -1,5 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Text, View, Pressable, ScrollView, SafeAreaView, Image } from "react-native";
+import {
+  Text,
+  View,
+  Pressable,
+  ScrollView,
+  SafeAreaView,
+  Image,
+} from "react-native";
 import axios from "axios";
 
 import { AuthContext } from "../../contexts/user";
@@ -7,11 +14,11 @@ import Popup from "../../components/Popup";
 import CustomButton from "../../components/CustomButton";
 import { getUrl } from "../../util";
 import InputNumber from "../../components/InputNumber";
-import Footer from "./Footer";
-import UserInfo from "./UserInfo";
-import TipsPopup from "./TipsPopup";
+import Footer from "../../components/profile/Footer";
+import UserInfo from "../../components/profile/UserInfo";
+import TipsPopup from "../../components/profile/TipsPopup";
 import colors from "../../styles/colors";
-import ChatIcon from "../../components/ChatIcon";
+import Navbar from "../../components/Navbar";
 
 const Profile = () => {
   const { user, setUser, getUser, authToken, dayToGetTips, setDayToGetTips } =
@@ -309,14 +316,17 @@ const Profile = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1">
-      <ScrollView className="bg-neutral-900">
+    <SafeAreaView className="flex-1 pt-5">
+      <View className="pl-6 pr-6">
+        <Navbar setIsLoading={setIsLoading} isLoading={isLoading} />
+      </View>
+      <ScrollView className="bg-white pl-6 pr-6">
         <UserInfo
           user={user}
           isLoading={isLoading}
           openProgressPopup={openProgressPopup}
         />
-        <View className="p-4 pb-20 relative">
+        <View className="pb-20 relative">
           <Text
             className="text-3xl font-bold mb-3"
             style={{ color: colors.buttonColor }}
@@ -327,7 +337,7 @@ const Profile = () => {
           {goals.map((item, index) => (
             <View key={index}>
               <View className="relative">
-                <Text className="text-white text-lg mb-3 w-4/5 pl-3">
+                <Text className="text-black text-lg mb-3 w-4/5 pl-3">
                   {item.content}
                 </Text>
                 {!item.is_pin ? (
@@ -384,7 +394,7 @@ const Profile = () => {
         }
       >
         <View>
-          <Text className="text-2xl mb-8 text-center text-white">
+          <Text className="text-2xl mb-8 text-center text-black">
             Are you sure to delete?
           </Text>
           <View className="flex-row justify-center gap-3">
@@ -415,12 +425,12 @@ const Profile = () => {
       >
         <View>
           {!goalId.isDomain && (
-            <Text className="text-2xl mb-8 text-center text-white">
+            <Text className="text-2xl mb-8 text-center text-black">
               How would you rank your progress of this goal between 1-10?
             </Text>
           )}
           {goalId.isDomain && (
-            <Text className="text-2xl mb-8 text-center text-white">
+            <Text className="text-2xl mb-8 text-center text-black">
               {goalId.id === "health" &&
                 "How healthy are you at this current time?"}
               {goalId.id === "income" &&
@@ -486,7 +496,7 @@ const Profile = () => {
             source={require("../../assets/warning-64.png")}
           />
         </View>
-        <Text className="text-white text-xl text-center">
+        <Text className="text-black text-xl text-center">
           You cannot pin more than 3!
         </Text>
       </Popup>
@@ -503,7 +513,6 @@ const Profile = () => {
         setTipInterval={setTipInterval}
         isLoading={isLoading}
       />
-      <ChatIcon isLoading={isLoading} />
     </SafeAreaView>
   );
 };

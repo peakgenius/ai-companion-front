@@ -3,8 +3,14 @@ import { Text, View, Image, Pressable, StyleSheet } from "react-native";
 import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
 import { router } from "expo-router";
 
-import Popup from "../../components/Popup";
+import Popup from "../Popup";
 import colors from "../../styles/colors";
+//Tailwind CSS
+import { NativeWindStyleSheet } from "nativewind";
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
 
 const Footer = (props) => {
   const {
@@ -28,34 +34,39 @@ const Footer = (props) => {
   return (
     <>
       <View
-        className="flex-row justify-around p-2 bottom-0 left-0 right-0 fixed"
-        style={colors.navBarBackground}
+        className="flex-row justify-around fixed pt-3 pb-2"
+        style={styles.grayBorder}
       >
         <Pressable onPress={goToSetgoal}>
           <View className="flex-col items-center">
             <Image
+              className="mb-1"
               resizeMode="cover"
-              source={require("../../assets/user-32.png")}
+              source={require("../../assets/create-goal.png")}
             />
-            <Text className="text-white text-xs">create goal</Text>
+            <Text className="text-xs" style={{ color: colors.buttonColor }}>
+              create goal
+            </Text>
           </View>
         </Pressable>
         <Pressable onPress={openPopupSettingTip}>
           <View className="flex-col items-center">
             <Image
               resizeMode="contain"
-              source={require("../../assets/tip-32.png")}
+              className="mb-1"
+              source={require("../../assets/tips.png")}
             />
-            <Text className="text-white text-xs text-center">tips</Text>
+            <Text className="text-black text-xs mr-2">tips</Text>
           </View>
         </Pressable>
         <Pressable onPress={openPopupSettingQuestion}>
           <View className="flex-col items-center">
             <Image
               resizeMode="cover"
-              source={require("../../assets/question-32.png")}
+              className="mb-1"
+              source={require("../../assets/questions.png")}
             />
-            <Text className="text-white text-xs">questions</Text>
+            <Text className="text-black text-xs">questions</Text>
           </View>
         </Pressable>
       </View>
@@ -63,12 +74,12 @@ const Footer = (props) => {
         visible={visibleSettingQuestion}
         dismiss={closePopupSettingQuestion}
         viewContainerClassName={
-          "bg-white border-gray-950 h-[400] pt-5 pl-5 pr-5 rounded-md"
+          "bg-white border-gray-950 w-[330px] h-[370] pt-5 pl-5 pr-5 rounded-3xl"
         }
       >
         <View>
           <View className=" mb-5">
-            <Text className="p-1 inline-block text-2xl text-white">
+            <Text className="p-3 pl-5 pr-5 inline-block text-[18px] text-black leading-6">
               In order to get to know you better, I can occasionally ask you
               questions about yourself - how often would you like this?
             </Text>
@@ -83,10 +94,10 @@ const Footer = (props) => {
               value={0}
               label={
                 <Text
-                  className="text-lg pb-4 text-white"
+                  className="text-[20px] pb-4 text-black"
                   style={styles.radioButtonItemText}
                 >
-                  A day
+                  Daily
                 </Text>
               }
               style={styles.radioMarginB}
@@ -95,10 +106,10 @@ const Footer = (props) => {
               value={1}
               label={
                 <Text
-                  className="text-lg pb-4 text-white"
+                  className="text-[20px] pb-4 text-black"
                   style={styles.radioButtonItemText}
                 >
-                  A week
+                  Weekly
                 </Text>
               }
               style={styles.radioMarginB}
@@ -107,10 +118,10 @@ const Footer = (props) => {
               value={2}
               label={
                 <Text
-                  className="text-lg pb-4 text-white"
+                  className="text-[20px] pb-4 text-black"
                   style={styles.radioButtonItemText}
                 >
-                  A month
+                  Monthly
                 </Text>
               }
               style={styles.radioMarginB}
@@ -122,12 +133,12 @@ const Footer = (props) => {
         visible={visibleSettingTip}
         dismiss={closePopupSettingTip}
         viewContainerClassName={
-          "bg-white border-gray-950 h-[380] pt-5 pl-5 pr-5 rounded-md"
+          "bg-white border-gray-950 w-[330px] h-[370] pt-5 pl-5 pr-5 rounded-3xl"
         }
       >
         <View>
-          <View className=" mb-5">
-            <Text className="p-1 inline-block text-2xl text-white">
+          <View className="mb-5">
+            <Text className="p-3 pl-6 pr-6 inline-block text-[18px] text-black leading-6 text-center">
               How frequently would you like to receive tips or advice to assist
               you in achieving your goals?
             </Text>
@@ -142,10 +153,10 @@ const Footer = (props) => {
               value={0}
               label={
                 <Text
-                  className="text-lg pb-4 text-white"
+                  className="text-[20px] pb-4 text-black"
                   style={styles.radioButtonItemText}
                 >
-                  A day
+                  Daily
                 </Text>
               }
               style={styles.radioMarginB}
@@ -154,10 +165,10 @@ const Footer = (props) => {
               value={1}
               label={
                 <Text
-                  className="text-lg pb-4 text-white"
+                  className="text-[20px] pb-4 text-black"
                   style={styles.radioButtonItemText}
                 >
-                  A week
+                  Weekly
                 </Text>
               }
               style={styles.radioMarginB}
@@ -166,10 +177,10 @@ const Footer = (props) => {
               value={2}
               label={
                 <Text
-                  className="text-lg pb-4 text-white"
+                  className="text-[20px] pb-4 text-black"
                   style={styles.radioButtonItemText}
                 >
-                  A month
+                  Monthly
                 </Text>
               }
               style={styles.radioMarginB}
@@ -190,6 +201,10 @@ const styles = StyleSheet.create({
   },
   radioButtonItemText: {
     marginLeft: 12,
+  },
+  grayBorder: {
+    borderTopWidth: 1,
+    borderTopColor: "#efeeee",
   },
 });
 

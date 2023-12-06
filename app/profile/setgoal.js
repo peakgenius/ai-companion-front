@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, View, Image, Pressable } from "react-native";
+import { Text, View, Image, Pressable, SafeAreaView } from "react-native";
 import { router } from "expo-router";
 import axios from "axios";
 
@@ -44,23 +44,31 @@ const SetGoal = () => {
   };
 
   return (
-    <View className="bg-neutral-900 h-screen">
+    <SafeAreaView className="bg-white h-screen">
       <View className="p-6">
-        <View className="w-full flex justify-center pb-6 pt-6">
+        <View className="w-full flex justify-center pt-6">
           <Pressable onPress={back}>
             <Image
-              resizeMode="cover"
-              source={require("../../assets/left-arrow-24.png")}
+              resizeMode="contain"
+              className="w-[40px] h-[40px]"
+              source={require("../../assets/back-43.png")}
             />
           </Pressable>
+          <View className="flex justify-center items-center relative -top-10">
+            <Image
+              resizeMode="contain"
+              source={require("../../assets/goal-amico.png")}
+            />
+          </View>
         </View>
         <Text
-          className="text-white text-xl mb-3"
+          className="text-white text-xl relative -top-6"
           style={{ color: colors.buttonColor }}
         >
           Goal
         </Text>
         <Input
+          tailwindClass={"pl-4 mb-3 rounded-3xl w-full"}
           multiline={true}
           numberOfLines={5}
           defaultValue={goal}
@@ -68,16 +76,22 @@ const SetGoal = () => {
             setGoal(value);
           }}
         />
-        <View className="flex items-center justify-center flex-row">
+        <View className="flex items-center justify-center flex-row mt-4">
           <CustomButton
-            title={isSaving ? "Setting..." : "Set goal"}
+            title={isSaving ? "Setting..." : "Setting"}
             color={colors.buttonColor}
             onPress={create}
             disabled={isSaving}
+            textStyle={{
+              paddingLeft: 40,
+              paddingRight: 40,
+              fontSize: 20,
+              fontWeight: 500,
+            }}
           />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
