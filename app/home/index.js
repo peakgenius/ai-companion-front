@@ -9,7 +9,6 @@ import {
   StyleSheet,
 } from "react-native";
 import { Link, router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 import CustomButton from "../../components/CustomButton";
@@ -54,32 +53,14 @@ const Home = () => {
     setIsLoading(false);
   };
 
-  const logout = async () => {
-    setIsAuthenticated(false);
-    setUser({});
-    try {
-      await AsyncStorage.removeItem("auth-token");
-      setDayToGetQuestions(0);
-      setIsAuthenticated(false);
-      setAuthToken("");
-      await axios.post(
-        getUrl() + "/auth/logout",
-        {},
-        {
-          headers: {
-            Authorization: `${authToken}`,
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      );
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const goToProfile = () => {
     if (isLoading) return;
     router.push("/profile");
+  };
+
+  const goToFeedback = () => {
+    if (isLoading) return;
+    router.push("/feedback");
   };
 
   return (
@@ -140,11 +121,11 @@ const Home = () => {
             </View>
             <Text className="text-black text-xs font-bold">Home</Text>
           </Pressable>
-          <Pressable onPress={logout}>
+          <Pressable onPress={goToFeedback}>
             <View className="flex-col items-center">
               <Image
                 resizeMode="contain"
-                source={require("../../assets/logout.png")}
+                source={require("../../assets/feedback.png")}
               />
               <Text className="text-black text-xs">feedback</Text>
             </View>
