@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, Pressable, Image, StyleSheet } from "react-native";
+import { Text, View, Pressable, Image } from "react-native";
 
 const GoalItem = (props) => {
   const { item, pin, openProgressPopup, openConfirmPopup, isSaving } = props;

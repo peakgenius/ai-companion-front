@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, Pressable, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import UserInfoCard from "./UserInfoCard";
 import colors from "../../styles/colors";
 //Tailwind CSS
@@ -11,7 +11,7 @@ NativeWindStyleSheet.setOutput({
 });
 
 const UserInfo = (props) => {
-  const { user, isLoading, openProgressPopup } = props;
+  const { user, openProgressPopup } = props;
   const gender = ["female", "male"];
   const marial_status = ["single", "married", "divorced"];
 
@@ -36,11 +36,11 @@ const UserInfo = (props) => {
       <View className="flex-row justify-center gap-1 mb-1">
         <UserInfoCard
           src={require("../../assets/height.png")}
-          text={`Height: ${user.height}`}
+          text={`Height: ${user.height} cm`}
         />
         <UserInfoCard
           src={require("../../assets/weight.png")}
-          text={`Weight: ${user.weight}`}
+          text={`Weight: ${user.weight} kg`}
         />
       </View>
       <View className="flex-row justify-center gap-1 mb-1">

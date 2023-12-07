@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
-import { View, Text, Button, Image } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
+import { View, Image } from "react-native";
 import axios from "axios";
 import { router } from "expo-router";
 import Loader from "../components/AnimatedLoader";

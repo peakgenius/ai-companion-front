@@ -193,7 +193,6 @@ const Navbar = ({ isLoading, setIsLoading }) => {
           },
         }
       );
-      console.log("date updating success!");
     } catch (err) {
       console.log(err);
     }

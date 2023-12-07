@@ -73,7 +73,6 @@ const AuthProvider = ({ children }) => {
           .get(`${getUrl()}/auth/user?token=${ParsedToken.token}`)
           .then((response) => {
             setUser(response.data.user);
-            console.log(response.data.user);
           });
       })
       .catch((err) => {

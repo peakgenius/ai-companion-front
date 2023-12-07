@@ -14,7 +14,7 @@ const UserInfoCard = (prop) => {
     <View style={styles.shadowProp}>
       <View
         style={styles.shadowContainer}
-        className="p-6 w-[150px] flex items-center"
+        className="w-[150px] h-[150px] flex items-center justify-center"
       >
         <Image resizeMode="contain" source={src} />
         <Text className="text-center mt-2">{text}</Text>

@@ -14,7 +14,6 @@ const ResetPasswordInput = (props) => {
     secureTextEntry,
     style,
     onPressEye,
-    tailwindClass,
   } = props;
 
   return (

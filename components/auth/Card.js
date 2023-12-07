@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { View, Image, Text, StyleSheet, Pressable } from "react-native";
 //Tailwind CSS
 import { NativeWindStyleSheet } from "nativewind";

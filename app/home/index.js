@@ -22,12 +22,8 @@ import ChatIcon from "../../components/ChatIcon.js";
 const Home = () => {
   const {
     authToken,
-    setAuthToken,
     isAuthenticated,
-    setIsAuthenticated,
     user,
-    setUser,
-    setDayToGetQuestions,
   } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [progresses, setProgresses] = useState([]);

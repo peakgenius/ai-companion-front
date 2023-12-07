@@ -21,7 +21,6 @@ const QuestionPopup = (props) => {
     setAnswer,
     saveAnswer,
     skipAnswer,
-    isSkipUserAnswer,
     isSaving,
   } = props;
 
@@ -30,15 +29,15 @@ const QuestionPopup = (props) => {
       visible={visibleQuestionPopup}
       dismiss={closeQuestionPopup}
       viewContainerClassName={
-        "bg-white border-gray-950 h-[250] pt-5 pl-5 pr-5 rounded-md relative"
+        "bg-white border-gray-950 h-[250] pt-5 pl-5 pr-5 rounded-3xl relative"
       }
     >
       <View className="flex-row mb-3">
         <View className="h-auto W-5/6  w-5/6 pt-2">
-          <TypingText text={question} textSize={16} color="white" />
+          <TypingText text={question} textSize={16} color="black" />
         </View>
       </View>
-      <View className="ml-auto w-3/5">
+      <View className="ml-auto w-3/5 mb-5">
         <Pressable
           color={colors.buttonColor}
           onPress={skipAnswer}
@@ -55,8 +54,9 @@ const QuestionPopup = (props) => {
           </Text>
         </Pressable>
       </View>
-      <View className="absolute bottom-2 w-11/12 ml-6 flex-row">
+      <View className="flex-row justify-center">
         <Input
+          tailwindClass={"pl-4 mb-3 rounded-[14px] w-3/4"}
           multiline={true}
           className="flex-1"
           numberOfLines={3}

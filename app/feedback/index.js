@@ -28,7 +28,6 @@ const Feedback = () => {
   }, [authToken]);
 
   const create = async () => {
-    console.log(feedback);
     if (!feedback) return;
     setIsSaving(true);
     try {

@@ -5,14 +5,12 @@ import {
   Image,
   SafeAreaView,
   Pressable,
-  TextInput,
 } from "react-native";
 import { Link, router } from "expo-router";
 import axios from "axios";
 import OTPTextInput from "react-native-otp-textinput";
 import CustomButton from "../../components/CustomButton";
 import { AuthContext } from "../../contexts/user";
-import Input from "../../components/Input";
 import { getUrl } from "../../util";
 import colors from "../../styles/colors";
 

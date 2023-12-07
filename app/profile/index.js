@@ -13,7 +13,6 @@ import { AuthContext } from "../../contexts/user";
 import Popup from "../../components/Popup";
 import CustomButton from "../../components/CustomButton";
 import { getUrl } from "../../util";
-import InputNumber from "../../components/InputNumber";
 import Footer from "../../components/profile/Footer";
 import UserInfo from "../../components/profile/UserInfo";
 import TipsPopup from "../../components/profile/TipsPopup";
@@ -21,6 +20,7 @@ import colors from "../../styles/colors";
 import Navbar from "../../components/Navbar";
 import GoalItem from "../../components/profile/GoalItem";
 import RangeSlider from "../../components/RangeSlider";
+import NoGoals from "../../components/NoGoals";
 
 const Profile = () => {
   const { user, setUser, getUser, authToken, dayToGetTips, setDayToGetTips } =
@@ -227,7 +227,6 @@ const Profile = () => {
   const pin = async (id, isPin) => {
     let pinCount = user.pin_count;
     if (isPin && pinCount * 1 > 2) {
-      console.log(pinCount, user);
       openWarningPopup();
       return;
     }
@@ -278,7 +277,6 @@ const Profile = () => {
         console.log(err);
       }
     } else {
-      console.log("doamin-progress->", goalId, progress);
       try {
         await axios.post(
           `${getUrl()}/profile/domain-progress`,
@@ -328,27 +326,30 @@ const Profile = () => {
           isLoading={isLoading}
           openProgressPopup={openProgressPopup}
         />
-        <View className="pb-20 relative">
+        <View className="mb-10 relative">
           <Text
             className="text-xl font-bold mb-3"
             style={{ color: colors.buttonColor }}
           >
             Goals
           </Text>
-          <View style={styles.shadowProp}>
-            <View style={styles.shadowContainer} className="p-4">
-              {goals.map((item, index) => (
-                <GoalItem
-                  key={index}
-                  pin={pin}
-                  item={item}
-                  isSaving={isSaving}
-                  openProgressPopup={openProgressPopup}
-                  openConfirmPopup={openConfirmPopup}
-                />
-              ))}
+          {goals.length === 0 && <NoGoals />}
+          {goals.length !== 0 && (
+            <View style={styles.shadowProp}>
+              <View style={styles.shadowContainer} className="p-4">
+                {goals.map((item, index) => (
+                  <GoalItem
+                    key={index}
+                    pin={pin}
+                    item={item}
+                    isSaving={isSaving}
+                    openProgressPopup={openProgressPopup}
+                    openConfirmPopup={openConfirmPopup}
+                  />
+                ))}
+              </View>
             </View>
-          </View>
+          )}
         </View>
       </ScrollView>
       <Popup

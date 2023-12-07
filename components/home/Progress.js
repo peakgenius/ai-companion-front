@@ -4,15 +4,14 @@ import {
   Dimensions,
   Pressable,
   StyleSheet,
-  Image,
 } from "react-native";
-import { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { CircularProgress } from "react-native-circular-progress";
 import axios from "axios";
 
 import colors from "../../styles/colors";
 import Popup from "../Popup";
-import InputNumber from "../InputNumber";
+import NoGoals from "../NoGoals";
 import CustomButton from "../CustomButton";
 import RangeSlider from "../RangeSlider";
 import { getUrl } from "../../util";
@@ -320,17 +319,7 @@ const ProgressRings = (props) => {
         <Text className="text-black text-2xl font-bold text-center">Goals</Text>
       )}
       <View className="flex-row p-4 justify-around">
-        {goalProgresses.length === 0 && !isLoading && (
-          <View className="rounded-lg bg-slate-100 w-full p-3 flex-row">
-            <View className="bg-black p-4 rounded-full">
-              <Image source={require("../../assets/target.png")} />
-            </View>
-            <View className="ml-3">
-              <Text className="text-black text-xl font-bold mb-3">Goals</Text>
-              <Text className="text-black text-sm">No goals to be shown</Text>
-            </View>
-          </View>
-        )}
+        {goalProgresses.length === 0 && !isLoading && <NoGoals />}
         {goalProgresses.map((item, index) => (
           <Pressable
             key={index}
