@@ -2,10 +2,10 @@ import React, { useState, useContext, useEffect } from "react";
 import {
   Text,
   View,
-  Pressable,
   ScrollView,
   SafeAreaView,
   Image,
+  StyleSheet,
 } from "react-native";
 import axios from "axios";
 
@@ -19,6 +19,8 @@ import UserInfo from "../../components/profile/UserInfo";
 import TipsPopup from "../../components/profile/TipsPopup";
 import colors from "../../styles/colors";
 import Navbar from "../../components/Navbar";
+import GoalItem from "../../components/profile/GoalItem";
+import RangeSlider from "../../components/RangeSlider";
 
 const Profile = () => {
   const { user, setUser, getUser, authToken, dayToGetTips, setDayToGetTips } =
@@ -328,73 +330,36 @@ const Profile = () => {
         />
         <View className="pb-20 relative">
           <Text
-            className="text-3xl font-bold mb-3"
+            className="text-xl font-bold mb-3"
             style={{ color: colors.buttonColor }}
           >
             Goals
           </Text>
-
-          {goals.map((item, index) => (
-            <View key={index}>
-              <View className="relative">
-                <Text className="text-black text-lg mb-3 w-4/5 pl-3">
-                  {item.content}
-                </Text>
-                {!item.is_pin ? (
-                  <Pressable
-                    disabled={isSaving}
-                    className="absolute top-3 right-12"
-                    onPress={(e) => pin(item._id, true)}
-                  >
-                    <Image
-                      resizeMode="cover"
-                      source={require("../../assets/pin-unfill-15.png")}
-                    />
-                  </Pressable>
-                ) : (
-                  <Pressable
-                    disabled={isSaving}
-                    className="absolute top-3 right-12"
-                    onPress={(e) => pin(item._id, false)}
-                  >
-                    <Image
-                      resizeMode="cover"
-                      source={require("../../assets/pin-fill-15.png")}
-                    />
-                  </Pressable>
-                )}
-                <Pressable
-                  className="absolute top-3 right-6"
-                  onPress={(e) => openProgressPopup(item._id, false)}
-                >
-                  <Image
-                    resizeMode="cover"
-                    source={require("../../assets/pencil-15.png")}
-                  />
-                </Pressable>
-                <Pressable
-                  className="absolute top-3 right-0"
-                  onPress={(e) => openConfirmPopup(item._id)}
-                >
-                  <Image
-                    resizeMode="cover"
-                    source={require("../../assets/trash-15.png")}
-                  />
-                </Pressable>
-              </View>
+          <View style={styles.shadowProp}>
+            <View style={styles.shadowContainer} className="p-4">
+              {goals.map((item, index) => (
+                <GoalItem
+                  key={index}
+                  pin={pin}
+                  item={item}
+                  isSaving={isSaving}
+                  openProgressPopup={openProgressPopup}
+                  openConfirmPopup={openConfirmPopup}
+                />
+              ))}
             </View>
-          ))}
+          </View>
         </View>
       </ScrollView>
       <Popup
         visible={visibleConfirmPopup}
         dismiss={closeConfimrPopup}
         viewContainerClassName={
-          "bg-white border-gray-950 h-[200] pt-5 pl-5 pr-5 rounded-lg"
+          "bg-white border-gray-950 h-[200] pt-5 pl-5 pr-5 rounded-3xl"
         }
       >
         <View>
-          <Text className="text-2xl mb-8 text-center text-black">
+          <Text className="text-xl mb-8 text-center text-black">
             Are you sure to delete?
           </Text>
           <View className="flex-row justify-center gap-3">
@@ -420,17 +385,17 @@ const Profile = () => {
         visible={visibleProgressPopup}
         dismiss={closeProgressPopup}
         viewContainerClassName={
-          "bg-white border-gray-950 h-[340] pt-5 pl-5 pr-5 rounded-lg"
+          "bg-white border-gray-950 h-[320] pt-5 pl-5 pr-5 rounded-3xl"
         }
       >
         <View>
           {!goalId.isDomain && (
-            <Text className="text-2xl mb-8 text-center text-black">
+            <Text className="text-xl mb-8 text-center text-black">
               How would you rank your progress of this goal between 1-10?
             </Text>
           )}
           {goalId.isDomain && (
-            <Text className="text-2xl mb-8 text-center text-black">
+            <Text className="text-xl mb-2 text-center text-black">
               {goalId.id === "health" &&
                 "How healthy are you at this current time?"}
               {goalId.id === "income" &&
@@ -443,21 +408,18 @@ const Profile = () => {
                 "How would you rank your overall happiness right now?"}
             </Text>
           )}
-          <View className="flex-row justify-center">
-            <InputNumber
-              separatorWidth={0}
-              minValue={0}
-              maxValue={10}
-              totalWidth={250}
+          <View>
+            <Text className="text-center mb-3 text-lg">{progress}</Text>
+            <RangeSlider
+              onValueChanged={(value) => setProgress(value[0])}
+              min={1}
+              max={10}
+              step={1}
               value={progress}
-              textColor="white"
-              containerStyle={{ border: "none" }}
-              onChange={(value) => {
-                setProgress(value);
-              }}
+              width={220}
             />
           </View>
-          <View className="flex-row justify-center gap-3 mt-3">
+          <View className="flex-row justify-center gap-3">
             <View>
               <CustomButton
                 color={colors.buttonColor}
@@ -487,7 +449,7 @@ const Profile = () => {
         visible={visibleWarningPopup}
         dismiss={closeWarningPopup}
         viewContainerClassName={
-          "border-gray-950 h-[220] pt-5 pl-5 pr-5 rounded-lg"
+          "border-gray-950 h-[220] pt-5 pl-5 pr-5 rounded-3xl"
         }
       >
         <View className=" flex-row justify-center mb-3">
@@ -516,5 +478,26 @@ const Profile = () => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  shadowProp: {
+    borderRadius: 16,
+    backgroundColor: "transparent",
+    shadowColor: "#8d898978",
+    padding: 8,
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 20,
+    elevation: 15,
+  },
+  shadowContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    overflow: "hidden",
+  },
+});
 
 export default Profile;

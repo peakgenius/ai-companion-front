@@ -2,7 +2,6 @@ import { View, Text, Pressable, Image, StyleSheet } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { AuthContext } from "../contexts/user";
 import { getUrl } from "../util";
@@ -27,9 +26,6 @@ const Navbar = ({ isLoading, setIsLoading }) => {
     setGoal,
     userQuestion,
     setUserQuestion,
-    setAuthToken,
-    setIsAuthenticated,
-    setUser,
   } = useContext(AuthContext);
 
   const [isSaving, setIsSaving] = useState(false);
@@ -221,29 +217,6 @@ const Navbar = ({ isLoading, setIsLoading }) => {
     }
   };
 
-  const logout = async () => {
-    setIsAuthenticated(false);
-    setUser({});
-    try {
-      await AsyncStorage.removeItem("auth-token");
-      setDayToGetQuestions(0);
-      setIsAuthenticated(false);
-      setAuthToken("");
-      await axios.post(
-        getUrl() + "/auth/logout",
-        {},
-        {
-          headers: {
-            Authorization: `${authToken}`,
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      );
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const goToFirstPage = () => {
     if (isLoading) return;
     router.push("/home");
@@ -280,14 +253,12 @@ const Navbar = ({ isLoading, setIsLoading }) => {
             </View>
           </Pressable>
         </View>
-        <Pressable onPress={logout}>
-          <Image
-            resizeMode="contain"
-            style={{ width: 36, height: 36 }}
-            className="rounded-full"
-            source={require("../assets/female_avatar.png")}
-          />
-        </Pressable>
+        <Image
+          resizeMode="contain"
+          style={{ width: 36, height: 36 }}
+          className="rounded-full"
+          source={require("../assets/female_avatar.png")}
+        />
       </View>
       <View className=" w-full bg-white opacity-25" style={{ height: 1 }} />
       <UserQeustionPopup

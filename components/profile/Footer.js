@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Text, View, Image, Pressable, StyleSheet } from "react-native";
 import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 import Popup from "../Popup";
 import colors from "../../styles/colors";
+import { AuthContext } from "../../contexts/user";
+import { getUrl } from "../../util";
 //Tailwind CSS
 import { NativeWindStyleSheet } from "nativewind";
 
@@ -27,10 +31,43 @@ const Footer = (props) => {
     isLoading,
   } = props;
 
+  const {
+    authToken,
+    setAuthToken,
+    setIsAuthenticated,
+    setUser,
+    setDayToGetQuestions,
+  } = useContext(AuthContext);
+
   const goToSetgoal = () => {
     if (isLoading) return;
     router.push("/profile/setgoal");
   };
+
+  const logout = async () => {
+    setIsAuthenticated(false);
+    setUser({});
+    try {
+      await AsyncStorage.removeItem("auth-token");
+      setDayToGetQuestions(0);
+      setIsAuthenticated(false);
+      setAuthToken("");
+      await axios.post(
+        getUrl() + "/auth/logout",
+        {},
+        {
+          headers: {
+            Authorization: `${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    } catch (e) {
+      console.log(e);
+    }
+    router.push("/")
+  };
+
   return (
     <>
       <View
@@ -67,6 +104,16 @@ const Footer = (props) => {
               source={require("../../assets/questions.png")}
             />
             <Text className="text-black text-xs">questions</Text>
+          </View>
+        </Pressable>
+        <Pressable onPress={logout}>
+          <View className="flex-col items-center">
+            <Image
+              resizeMode="cover"
+              className="mb-1"
+              source={require("../../assets/logout.png")}
+            />
+            <Text className="text-black text-xs">Logout</Text>
           </View>
         </Pressable>
       </View>

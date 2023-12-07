@@ -11,15 +11,16 @@ import { router } from "expo-router";
 import axios from "axios";
 
 import CustomButton from "../../components/CustomButton";
-import Input from "../../components/Input";
 import { AuthContext } from "../../contexts/user";
 import { getUrl } from "../../util";
+import Popup from "../../components/Popup";
 import colors from "../../styles/colors";
 
 const Feedback = () => {
   const [email, setEmail] = useState("");
   const [feedback, setFeedback] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [visiblePopup, setVisiblePopup] = useState(false);
   const { authToken } = useContext(AuthContext);
 
   useEffect(() => {
@@ -27,18 +28,35 @@ const Feedback = () => {
   }, [authToken]);
 
   const create = async () => {
+    console.log(feedback);
+    if (!feedback) return;
     setIsSaving(true);
     try {
-      await axios.post(getUrl() + "/profile/feedback", feedback, {
-        headers: {
-          Authorization: `${authToken}`,
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
+      await axios.post(
+        getUrl() + "/question/feedback",
+        { content: feedback },
+        {
+          headers: {
+            Authorization: `${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
     } catch (err) {
       console.log(err);
     }
+    setEmail("");
+    setFeedback("");
+    openPopup();
     setIsSaving(false);
+  };
+
+  const openPopup = () => {
+    setVisiblePopup(true);
+  };
+
+  const closePopup = () => {
+    setVisiblePopup(false);
   };
 
   const back = () => {
@@ -58,8 +76,7 @@ const Feedback = () => {
             />
           </Pressable>
           <Text className="text-black text-xl font-semibold flex-1 text-center">
-            {" "}
-            We value your Iinput
+            We value your input
           </Text>
         </View>
         <TextInput
@@ -85,7 +102,7 @@ const Feedback = () => {
           multiline
           numberOfLines={15}
           defaultValue={feedback}
-          setText={(value) => {
+          onChangeText={(value) => {
             setFeedback(value);
           }}
         />
@@ -103,6 +120,17 @@ const Feedback = () => {
           />
         </View>
       </View>
+      <Popup
+        visible={visiblePopup}
+        dismiss={closePopup}
+        viewContainerClassName={
+          "border-gray-950 h-[220] pt-5 pl-5 pr-5 rounded-3xl"
+        }
+      >
+        <Text className="text-black text-xl text-center">
+          You feedback was submitted successfully!
+        </Text>
+      </Popup>
     </SafeAreaView>
   );
 };

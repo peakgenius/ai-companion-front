@@ -1,33 +1,51 @@
 import React, { useState, useContext } from "react";
-import {
-  Text,
-  View,
-  Image,
-  SafeAreaView,
-  Pressable,
-  TextInput,
-} from "react-native";
-import { Link, router } from "expo-router";
+import { Text, View, Image, SafeAreaView, Pressable } from "react-native";
+import { router } from "expo-router";
 import axios from "axios";
 
 import CustomButton from "../../components/CustomButton";
+import { AuthContext } from "../../contexts/user";
 import ResetPasswordInput from "../../components/auth/ResetPasswordInput";
 import { getUrl } from "../../util";
 import colors from "../../styles/colors";
 
 const SetPassword = () => {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const { forgotPasswordInfo, setForgotPasswordInfo } = useContext(AuthContext);
   const [invisiblePassword, setInvisiblePassword] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  const submitPassword = () => {
+  const submitPassword = async () => {
+    if (forgotPasswordInfo.newPassword !== forgotPasswordInfo.confirmPassword)
+      return;
+    setIsSaving(true);
+    try {
+      await axios.post(
+        getUrl() + "/auth/reset-password",
+        {
+          email: forgotPasswordInfo.email,
+          password: forgotPasswordInfo.newPassword,
+        },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    } catch (err) {
+      console.log(err.message, "->");
+    }
+    setIsSaving(false);
+    router.push("/signin");
+  };
+
+  const back = () => {
+    if (isSaving) return;
     router.push("/otp");
   };
 
   return (
     <SafeAreaView className="flex bg-white pt-10">
-      <Pressable onPress={() => router.push("/otp")} className="pl-4">
+      <Pressable onPress={back} className="pl-4">
         <Image
           resizeMode="contain"
           className="w-[40px] h-[40px]"
@@ -56,8 +74,10 @@ const SetPassword = () => {
           <ResetPasswordInput
             placeholderTextColor={"#828d9c"}
             placeholder={"New Password"}
-            setText={(val) => setPassword(val)}
-            defaultValue={password}
+            setText={(val) =>
+              setForgotPasswordInfo((prev) => ({ ...prev, newPassword: val }))
+            }
+            defaultValue={forgotPasswordInfo.newPassword}
             secureTextEntry={invisiblePassword}
             onPressEye={() => setInvisiblePassword(!invisiblePassword)}
           />
@@ -66,8 +86,13 @@ const SetPassword = () => {
           <ResetPasswordInput
             placeholderTextColor={"#828d9c"}
             placeholder={"Reset Password"}
-            setText={(val) => setConfirmPassword(val)}
-            defaultValue={confirmPassword}
+            setText={(val) =>
+              setForgotPasswordInfo((prev) => ({
+                ...prev,
+                confirmPassword: val,
+              }))
+            }
+            defaultValue={forgotPasswordInfo.confirmPassword}
             secureTextEntry={invisiblePassword}
             onPressEye={() => setInvisiblePassword(!invisiblePassword)}
           />

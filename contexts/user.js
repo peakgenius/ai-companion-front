@@ -81,6 +81,13 @@ const AuthProvider = ({ children }) => {
       });
   };
 
+  const [forgotPasswordInfo, setForgotPasswordInfo] = useState({
+    email: "",
+    newPassword: "",
+    confirmPassword: "",
+    code: "",
+  })
+
   return (
     <AuthContext.Provider
       value={{
@@ -102,7 +109,9 @@ const AuthProvider = ({ children }) => {
         goal,
         setGoal,
         questionCount,
-        setQuestionCount
+        setQuestionCount,
+        forgotPasswordInfo,
+        setForgotPasswordInfo
       }}
     >
       {children}

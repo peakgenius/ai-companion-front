@@ -7,24 +7,45 @@ import {
   Pressable,
   TextInput,
 } from "react-native";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import axios from "axios";
 
 import CustomButton from "../../components/CustomButton";
-import Input from "../../components/Input";
 import { getUrl } from "../../util";
+import { AuthContext } from "../../contexts/user";
 import colors from "../../styles/colors";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
-
-  const sendCode = () => {
+  const { forgotPasswordInfo, setForgotPasswordInfo } = useContext(AuthContext);
+  const [isSaving, setIsSaving] = useState(false);
+  const sendCode = async () => {
+    if (!forgotPasswordInfo.email) return;
+    setIsSaving(true);
+    try {
+      await axios.post(
+        getUrl() + "/auth/send-code",
+        { email: forgotPasswordInfo.email },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    } catch (err) {
+      console.log(err.message, "->");
+    }
+    setIsSaving(false);
     router.push("/otp");
+  };
+
+  const back = () => {
+    if (isSaving) return;
+    router.push("/signin");
   };
 
   return (
     <SafeAreaView className="flex bg-white pt-10">
-      <Pressable onPress={() => router.push("/signin")} className="pl-4">
+      <Pressable onPress={back} className="pl-4">
         <Image
           resizeMode="contain"
           className="w-[40px] h-[40px]"
@@ -52,8 +73,13 @@ const ForgotPassword = () => {
           className="border border-gray-200 rounded-xl pl-6 font-bold text-[14px] shadow-inner h-[55px] bg-neutral-100"
           placeholderTextColor={"#828d9c"}
           placeholder={"Email"}
-          onChangeText={(val) => setEmail(val)}
-          defaultValue={email}
+          onChangeText={(val) =>
+            setForgotPasswordInfo((prev) => ({
+              ...prev,
+              email: val,
+            }))
+          }
+          defaultValue={forgotPasswordInfo.email}
         />
         <View className="flex-1 justify-center">
           <CustomButton
@@ -61,6 +87,7 @@ const ForgotPassword = () => {
             color={colors.buttonColor}
             onPress={sendCode}
             textStyle={{ fontSize: 18 }}
+            disabled={isSaving}
           />
         </View>
       </View>

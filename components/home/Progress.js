@@ -14,11 +14,11 @@ import colors from "../../styles/colors";
 import Popup from "../Popup";
 import InputNumber from "../InputNumber";
 import CustomButton from "../CustomButton";
+import RangeSlider from "../RangeSlider";
 import { getUrl } from "../../util";
 import { AuthContext } from "../../contexts/user";
 //Tailwind CSS
 import { NativeWindStyleSheet } from "nativewind";
-
 NativeWindStyleSheet.setOutput({
   default: "native",
 });
@@ -373,33 +373,32 @@ const ProgressRings = (props) => {
         visible={visibleProgressPopup}
         dismiss={closeProgressPopup}
         viewContainerClassName={
-          "bg-white border-gray-950 h-[327] pt-5 pl-5 pr-5 rounded-md relative"
+          "bg-white border-gray-950 h-[300] pt-5 pl-5 pr-5 rounded-3xl relative"
         }
       >
         <Text
-          className="text-center text-3xl mb-3"
+          className="text-center text-xl mb-3"
           style={{ color: colors.buttonColor }}
         >
           {progress.title}
         </Text>
-        <Text className="text-center text-black text-xl mb-3">
+        <Text className="text-center text-black text-[14] mb-3">
           {progress.content}
         </Text>
-        <View className="flex-row justify-center">
-          <InputNumber
-            separatorWidth={0}
-            minValue={0}
-            maxValue={10}
-            totalWidth={250}
-            value={progress.number}
-            textColor="white"
-            containerStyle={{ border: "none" }}
-            onChange={(value) => {
-              setProgress((prev) => ({ ...prev, number: value }));
+        <View>
+          <Text className="text-center">{progress.number}</Text>
+          <RangeSlider
+            onValueChanged={(value) => {
+              setProgress((prev) => ({ ...prev, number: value[0] }));
             }}
+            min={1}
+            max={10}
+            step={1}
+            value={progress.number}
+            width={220}
           />
         </View>
-        <View className="flex-row justify-center gap-3 mt-3">
+        <View className="flex-row justify-center gap-3">
           <View>
             <CustomButton
               color={colors.buttonColor}
