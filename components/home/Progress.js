@@ -1,10 +1,4 @@
-import {
-  Text,
-  View,
-  Dimensions,
-  Pressable,
-  StyleSheet,
-} from "react-native";
+import { Text, View, Dimensions, Pressable, StyleSheet } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import { CircularProgress } from "react-native-circular-progress";
 import axios from "axios";
@@ -103,7 +97,7 @@ const ProgressRings = (props) => {
 
   const healthText = () => {
     return (
-      <Text className="text-black font-bold  text-[19px]">
+      <Text className="text-black font-bold  text-[15px]">
         {Math.ceil(health * 10)}
       </Text>
     );
@@ -111,28 +105,28 @@ const ProgressRings = (props) => {
 
   const incomeText = () => {
     return (
-      <Text className="text-black font-bold text-[19px]">
+      <Text className="text-black font-bold text-[15px]">
         {Math.ceil(income * 10)}
       </Text>
     );
   };
   const happinessText = () => {
     return (
-      <Text className="text-black font-bold text-[19px]">
+      <Text className="text-black font-bold text-[15px]">
         {Math.ceil(happiness * 10)}
       </Text>
     );
   };
   const familyText = () => {
     return (
-      <Text className="text-black font-bold text-[19px]">
+      <Text className="text-black font-bold text-[15px]">
         {Math.ceil(family * 10)}
       </Text>
     );
   };
   const romanticText = () => {
     return (
-      <Text className="text-black font-bold text-[19px]">
+      <Text className="text-black font-bold text-[15px]">
         {Math.ceil(romantic * 10)}
       </Text>
     );
@@ -145,15 +139,15 @@ const ProgressRings = (props) => {
           <View
             style={{
               ...styles.shadowProp,
-              width: Math.ceil(screenWidth * 0.6 + 40),
-              height: Math.ceil(screenWidth * 0.6 + 40),
+              width: Math.ceil(screenWidth * 0.4 + 40),
+              height: Math.ceil(screenWidth * 0.4 + 40),
             }}
           >
             <View
               style={{
                 ...styles.shadowContainer,
-                width: Math.ceil(screenWidth * 0.6),
-                height: Math.ceil(screenWidth * 0.6),
+                width: Math.ceil(screenWidth * 0.4),
+                height: Math.ceil(screenWidth * 0.4),
               }}
               className="flex justify-center items-center"
             >
@@ -161,9 +155,9 @@ const ProgressRings = (props) => {
                 children={totalText}
                 childrenContainerStyle={{}}
                 rotation={0}
-                size={screenWidth * 0.4}
-                width={36}
-                backgroundWidth={36}
+                size={screenWidth * 0.28}
+                width={25}
+                backgroundWidth={25}
                 fill={total * 10}
                 tintColor={colors.buttonColor}
                 backgroundColor={colors.progressCircleBackgroundColor}
@@ -173,7 +167,7 @@ const ProgressRings = (props) => {
           <Text className="text-black font-bold text-lg">Life</Text>
         </View>
 
-        <View className="flex-row justify-around mb-5">
+        <View className="flex-row justify-around mb-2">
           <Pressable
             className="items-center"
             onPress={() =>
@@ -190,14 +184,14 @@ const ProgressRings = (props) => {
               children={healthText}
               childrenContainerStyle={{}}
               rotation={0}
-              size={screenWidth * 0.3}
-              width={27}
-              backgroundWidth={27}
+              size={screenWidth * 0.22}
+              width={22}
+              backgroundWidth={22}
               fill={health * 10}
               tintColor="#BF8639"
               backgroundColor={colors.progressCircleBackgroundColor}
             />
-            <Text className="text-black mt-2 text-[19px]">Health</Text>
+            <Text className="text-black mt-2 text-[15px]">Health</Text>
           </Pressable>
           <Pressable
             className="items-center"
@@ -215,20 +209,19 @@ const ProgressRings = (props) => {
               children={incomeText}
               childrenContainerStyle={{}}
               rotation={0}
-              size={screenWidth * 0.3}
-              width={27}
-              backgroundWidth={27}
+              size={screenWidth * 0.22}
+              width={22}
+              backgroundWidth={22}
               fill={income * 10}
               tintColor="#D9AB3C"
               backgroundColor={colors.progressCircleBackgroundColor}
             />
-            <Text className="text-black text-center text-[19px] mt-3">
+            <Text className="text-black text-center text-[15px] mt-3">
               Income
             </Text>
           </Pressable>
         </View>
-        {/* bottom-left progress ring */}
-        <View className="flex-row justify-around mb-5">
+        <View className="flex-row justify-around mb-2">
           <Pressable
             className="items-center"
             onPress={() =>
@@ -245,14 +238,14 @@ const ProgressRings = (props) => {
               children={happinessText}
               childrenContainerStyle={{}}
               rotation={0}
-              size={screenWidth * 0.3}
-              width={27}
-              backgroundWidth={27}
+              size={screenWidth * 0.22}
+              width={22}
+              backgroundWidth={22}
               fill={happiness * 10}
               tintColor="#FD1B1D"
               backgroundColor={colors.progressCircleBackgroundColor}
             />
-            <Text className="text-black text-center text-[19px] mt-3">
+            <Text className="text-black text-center text-[15px] mt-3">
               Happiness
             </Text>
           </Pressable>
@@ -272,14 +265,14 @@ const ProgressRings = (props) => {
               children={romanticText}
               childrenContainerStyle={{}}
               rotation={0}
-              size={screenWidth * 0.3}
-              width={27}
-              backgroundWidth={27}
+              size={screenWidth * 0.22}
+              width={22}
+              backgroundWidth={22}
               fill={romantic * 10}
               tintColor="#9BD420"
               backgroundColor={colors.progressCircleBackgroundColor}
             />
-            <Text className="text-black text-center text-[19px] mt-3">
+            <Text className="text-black text-center text-[15px] mt-3">
               Romantic
             </Text>
           </Pressable>
@@ -301,14 +294,14 @@ const ProgressRings = (props) => {
               children={familyText}
               childrenContainerStyle={{}}
               rotation={0}
-              size={screenWidth * 0.3}
-              width={27}
-              backgroundWidth={27}
+              size={screenWidth * 0.22}
+              width={22}
+              backgroundWidth={22}
               fill={family * 10}
               tintColor="#D05253"
               backgroundColor={colors.progressCircleBackgroundColor}
             />
-            <Text className="text-black text-center text-[19px] mt-3">
+            <Text className="text-black text-center text-[15px] mt-3">
               Family
             </Text>
           </Pressable>
@@ -351,7 +344,7 @@ const ProgressRings = (props) => {
                 tintColor={goalColors[index]}
                 backgroundColor={colors.progressCircleBackgroundColor}
               />
-              <Text className="text-black mt-3 w-27 text-[16px]">
+              <Text className="text-black mt-3 w-22 text-[16px]">
                 {item.content.slice(0, 9)}...
               </Text>
             </View>

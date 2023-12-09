@@ -19,6 +19,7 @@ const Input = (props) => {
     iconSrc,
     onPressEye,
     tailwindClass,
+    textInputRef,
   } = props;
 
   return (
@@ -34,6 +35,7 @@ const Input = (props) => {
             source={iconSrc}
           />
           <TextInput
+            ref={textInputRef}
             style={{ height: 64, ...style }}
             className="border border-gray-300 rounded-xl pl-16 pt-6 mb-3 font-bold"
             placeholderTextColor={"#828d9c"}

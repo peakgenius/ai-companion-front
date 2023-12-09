@@ -11,9 +11,13 @@ NativeWindStyleSheet.setOutput({
 });
 
 const UserInfo = (props) => {
-  const { user, openProgressPopup } = props;
-  const gender = ["female", "male"];
-  const marial_status = ["single", "married", "divorced"];
+  const {
+    user,
+    openProgressPopup,
+    openPersonalEditingPopup,
+    gender,
+    marial_status,
+  } = props;
 
   return (
     <View className="w-full flex justify-center">
@@ -25,30 +29,38 @@ const UserInfo = (props) => {
       </Text>
       <View className="flex-row justify-center gap-1 mb-1">
         <UserInfoCard
+          openPersonalEditingPopup={() => openPersonalEditingPopup("name")}
           src={require("../../assets/name.png")}
           text={`Name: ${user.name}`}
         />
         <UserInfoCard
+          openPersonalEditingPopup={() => openPersonalEditingPopup("age")}
           src={require("../../assets/age.png")}
           text={`Age: ${user.age}`}
         />
       </View>
       <View className="flex-row justify-center gap-1 mb-1">
         <UserInfoCard
+          openPersonalEditingPopup={() => openPersonalEditingPopup("height")}
           src={require("../../assets/height.png")}
           text={`Height: ${user.height} cm`}
         />
         <UserInfoCard
+          openPersonalEditingPopup={() => openPersonalEditingPopup("weight")}
           src={require("../../assets/weight.png")}
           text={`Weight: ${user.weight} kg`}
         />
       </View>
       <View className="flex-row justify-center gap-1 mb-1">
         <UserInfoCard
+          openPersonalEditingPopup={() => openPersonalEditingPopup("gender")}
           src={require("../../assets/gender.png")}
           text={`Gender: ${gender[user.gender]}`}
         />
         <UserInfoCard
+          openPersonalEditingPopup={() =>
+            openPersonalEditingPopup("marial_status")
+          }
           src={require("../../assets/marial.png")}
           text={`Marial: ${marial_status[user.marial_status]}`}
         />
@@ -63,25 +75,30 @@ const UserInfo = (props) => {
         <LifesyncCard
           openProgressPopup={() => openProgressPopup("health", true)}
           domain={"Health"}
+          progress={user.health}
         />
         <LifesyncCard
           openProgressPopup={() => openProgressPopup("income", true)}
+          progress={user.income}
           domain={"Income"}
         />
-        </View>
+      </View>
       <View className="flex-row justify-center">
         <LifesyncCard
           openProgressPopup={() => openProgressPopup("family", true)}
+          progress={user.family}
           domain={"Family"}
         />
         <LifesyncCard
           openProgressPopup={() => openProgressPopup("romantic", true)}
+          progress={user.romantic}
           domain={"Romantic"}
         />
       </View>
       <View className="flex-row justify-center">
         <LifesyncCard
           openProgressPopup={() => openProgressPopup("happiness", true)}
+          progress={user.happiness}
           domain={"Happiness"}
         />
       </View>

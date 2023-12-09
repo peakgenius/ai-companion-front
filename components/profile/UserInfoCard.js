@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text, StyleSheet, Pressable } from "react-native";
 //Tailwind CSS
 import { NativeWindStyleSheet } from "nativewind";
 
@@ -8,18 +8,20 @@ NativeWindStyleSheet.setOutput({
 });
 
 const UserInfoCard = (prop) => {
-  const { src, text } = prop;
+  const { src, text, openPersonalEditingPopup } = prop;
 
   return (
-    <View style={styles.shadowProp}>
-      <View
-        style={styles.shadowContainer}
-        className="w-[150px] h-[150px] flex items-center justify-center"
-      >
-        <Image resizeMode="contain" source={src} />
-        <Text className="text-center mt-2">{text}</Text>
+    <Pressable onPress={openPersonalEditingPopup}>
+      <View style={styles.shadowProp}>
+        <View
+          style={styles.shadowContainer}
+          className="w-[150px] h-[150px] flex items-center justify-center"
+        >
+          <Image resizeMode="contain" source={src} />
+          <Text className="text-center mt-2">{text}</Text>
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

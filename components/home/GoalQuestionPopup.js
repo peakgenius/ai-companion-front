@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, Text, Pressable, StyleSheet } from "react-native";
+import { View, Image, Text, Pressable } from "react-native";
 import TypingText from "react-native-typing-text";
 
 import Popup from "../Popup";
@@ -88,11 +88,5 @@ const GoalQuestionPopup = (props) => {
     </Popup>
   );
 };
-
-const styles = StyleSheet.create({
-  textAlignCenter: {
-    textAlign: "center",
-  },
-});
 
 export default GoalQuestionPopup;

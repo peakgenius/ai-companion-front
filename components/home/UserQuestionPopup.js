@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Pressable, Text, StyleSheet, Image } from "react-native";
+import { View, Pressable, Text, Image } from "react-native";
 import TypingText from "react-native-typing-text";
 
 import Popup from "../Popup";
@@ -81,11 +81,5 @@ const QuestionPopup = (props) => {
     </Popup>
   );
 };
-
-const styles = StyleSheet.create({
-  textAlignCenter: {
-    textAlign: "center",
-  },
-});
 
 export default QuestionPopup;

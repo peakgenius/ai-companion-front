@@ -44,6 +44,11 @@ const Footer = (props) => {
     router.push("/profile/setgoal");
   };
 
+  const goToHome = () => {
+    if (isLoading) return;
+    router.push("/home");
+  };
+
   const logout = async () => {
     setIsAuthenticated(false);
     setUser({});
@@ -65,15 +70,12 @@ const Footer = (props) => {
     } catch (e) {
       console.log(e);
     }
-    router.push("/")
+    router.push("/");
   };
 
   return (
     <>
-      <View
-        className="flex-row justify-around fixed pt-3 pb-2"
-        style={styles.grayBorder}
-      >
+      <View className="flex-row justify-around fixed pt-3 pb-2 border-t border-gray-200">
         <Pressable onPress={goToSetgoal}>
           <View className="flex-col items-center">
             <Image
@@ -87,7 +89,7 @@ const Footer = (props) => {
           </View>
         </Pressable>
         <Pressable onPress={openPopupSettingTip}>
-          <View className="flex-col items-center">
+          <View className="flex-col items-center mr-7">
             <Image
               resizeMode="contain"
               className="mb-1"
@@ -96,8 +98,24 @@ const Footer = (props) => {
             <Text className="text-black text-xs mr-2">tips</Text>
           </View>
         </Pressable>
+        <Pressable
+          onPress={goToHome}
+          className="flex-col items-center absolute  left-1/2 w-[100px] bottom-2"
+          style={{ transform: [{ translateX: -50 }] }}
+        >
+          <View
+            className="flex-col items-center p-2 rounded-full mb-5"
+            style={{ backgroundColor: colors.buttonColor }}
+          >
+            <Image
+              resizeMode="contain"
+              source={require("../../assets/home-icon.png")}
+            />
+          </View>
+          <Text className="text-black text-xs font-bold">Home</Text>
+        </Pressable>
         <Pressable onPress={openPopupSettingQuestion}>
-          <View className="flex-col items-center">
+          <View className="flex-col items-center ml-7">
             <Image
               resizeMode="cover"
               className="mb-1"
@@ -240,19 +258,12 @@ const Footer = (props) => {
 };
 
 const styles = StyleSheet.create({
-  textCenter: {
-    textAlign: "center",
-  },
   radioMarginB: {
     marginBottom: 10,
   },
   radioButtonItemText: {
     marginLeft: 12,
-  },
-  grayBorder: {
-    borderTopWidth: 1,
-    borderTopColor: "#efeeee",
-  },
+  }
 });
 
 export default Footer;

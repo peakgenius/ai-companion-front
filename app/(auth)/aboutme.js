@@ -10,17 +10,24 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import CustomButton from "../../components/CustomButton";
 import CustomRangeSlider from "../../components/auth/CustomRangeSlider";
-import { getUrl } from "../../util";
+import { getUrl, getTokenExpiryTime } from "../../util";
 import { AuthContext } from "../../contexts/user";
 import colors from "../../styles/colors";
 import Card from "../../components/auth/Card";
 
 const Aboutme = () => {
   const [isSaving, setIsSaving] = useState(false);
-  const { signupUser, setSignupUser } = useContext(AuthContext);
+  const {
+    signupUser,
+    setSignupUser,
+    setUser,
+    setIsAuthenticated,
+    setAuthToken,
+  } = useContext(AuthContext);
 
   const signUp = async () => {
     if (
@@ -38,18 +45,37 @@ const Aboutme = () => {
       return;
     setIsSaving(true);
     try {
-      await axios.post(getUrl() + "/auth/signup", signupUser, {
+      const res = await axios.post(getUrl() + "/auth/signup", signupUser, {
         headers: {
           "Access-Control-Allow-Origin": "*",
         },
       });
-      setIsSaving(false);
-      setSignupUser({});
-      router.push("/signin");
+      const { user, token } = res.data;
+      if (token) {
+        setIsAuthenticated(true);
+        setUser(user);
+        try {
+          setAuthToken(token);
+          const storageExpirationTimeInMinutes = getTokenExpiryTime();
+          const now = new Date();
+          now.setMinutes(now.getMinutes() + storageExpirationTimeInMinutes); // add the expiration time to the current Date time
+          const expiryTimeInTimestamp = Math.floor(now.getTime() / 1000);
+          const authTokenData = {
+            token: token,
+            expiryTime: expiryTimeInTimestamp,
+          };
+          const authTokenJson = JSON.stringify(authTokenData);
+          await AsyncStorage.setItem("auth-token", authTokenJson);
+        } catch (e) {
+          console.log(e);
+        }
+        router.push("/loading");
+        setSignupUser({});
+      }
     } catch (err) {
-      setIsSaving(false);
       console.log(err.message, "->");
     }
+    setIsSaving(false);
   };
 
   const changeSignupUser = (val, name) => {

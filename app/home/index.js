@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   Pressable,
   ScrollView,
-  StyleSheet,
 } from "react-native";
 import { Link, router } from "expo-router";
 import axios from "axios";
@@ -20,11 +19,7 @@ import colors from "../../styles/colors";
 import ChatIcon from "../../components/ChatIcon.js";
 
 const Home = () => {
-  const {
-    authToken,
-    isAuthenticated,
-    user,
-  } = useContext(AuthContext);
+  const { authToken, isAuthenticated, user } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [progresses, setProgresses] = useState([]);
 
@@ -96,10 +91,7 @@ const Home = () => {
         )}
       </ScrollView>
       {isAuthenticated && (
-        <View
-          className="flex-row justify-around fixed pt-3 pb-2 border-gray-200"
-          style={styles.grayBorder}
-        >
+        <View className="flex-row justify-around fixed pt-3 pb-2 border-t border-gray-200">
           <ChatIcon isLoading={isLoading} />
           <Pressable
             onPress={goToProfile}
@@ -107,15 +99,15 @@ const Home = () => {
             style={{ transform: [{ translateX: -50 }] }}
           >
             <View
-              className="flex-col items-center p-2 rounded-full mb-5"
+              className="flex-col items-center justify-center p-2 rounded-full w-[55px] h-[55px] mb-5"
               style={{ backgroundColor: colors.buttonColor }}
             >
               <Image
                 resizeMode="contain"
-                source={require("../../assets/home-icon.png")}
+                source={require("../../assets/white-user.png")}
               />
             </View>
-            <Text className="text-black text-xs font-bold">Home</Text>
+            <Text className="text-black text-xs font-bold">Profile</Text>
           </Pressable>
           <Pressable onPress={goToFeedback}>
             <View className="flex-col items-center">
@@ -131,19 +123,5 @@ const Home = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  bellBadge: {
-    borderTopColor: colors.backgroundStartColor,
-    borderLeftColor: colors.backgroundStartColor,
-    borderRightColor: colors.backgroundStartColor,
-    borderBottomColor: colors.backgroundStartColor,
-    borderWidth: 1,
-  },
-  grayBorder: {
-    borderTopWidth: 1,
-    borderTopColor: "#efeeee",
-  },
-});
 
 export default Home;

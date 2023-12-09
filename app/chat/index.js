@@ -5,7 +5,6 @@ import {
   Text,
   Pressable,
   ScrollView,
-  StyleSheet,
   SafeAreaView,
 } from "react-native";
 import axios from "axios";
@@ -159,26 +158,5 @@ const ChatPopup = (props) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  textAlignCenter: {
-    textAlign: "center",
-  },
-  container: {
-    flex: 1,
-    marginHorizontal: 16,
-    marginVertical: 32,
-  },
-  section: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  paragraph: {
-    fontSize: 15,
-  },
-  checkbox: {
-    margin: 8,
-  },
-});
 
 export default ChatPopup;

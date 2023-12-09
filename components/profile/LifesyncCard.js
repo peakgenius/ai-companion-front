@@ -8,22 +8,23 @@ NativeWindStyleSheet.setOutput({
 });
 
 const LifesyncCard = (prop) => {
-  const { domain, openProgressPopup } = prop;
+  const { domain, openProgressPopup, progress } = prop;
   return (
-    <Pressable onPress={openProgressPopup}>
-      <View style={styles.shadowProp}>
-        <View
-          style={styles.shadowContainer}
-          className="p-6 pt-8 pb-8 w-[150px] flex items-center"
-        >
-          <Text className="text-black text-lg mb-2">{domain}</Text>
+    <View style={styles.shadowProp}>
+      <View
+        style={styles.shadowContainer}
+        className="p-6 pt-5 pb-5 w-[150px] flex items-center"
+      >
+        <Text className="text-black text-lg mb-1">{domain}</Text>
+        <Text className="text-black text-sm mb-1">{progress}</Text>
+        <Pressable onPress={openProgressPopup}>
           <Image
             resizeMode="cover"
             source={require("../../assets/pencil.png")}
           />
-        </View>
+        </Pressable>
       </View>
-    </Pressable>
+    </View>
   );
 };
 

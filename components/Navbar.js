@@ -221,6 +221,11 @@ const Navbar = ({ isLoading, setIsLoading }) => {
     router.push("/home");
   };
 
+  const goToProfile = () => {
+    if (isLoading) return;
+    router.push("/profile");
+  };
+
   return (
     <View className="pt-4 pb-0">
       <View className="flex-row">
@@ -252,12 +257,14 @@ const Navbar = ({ isLoading, setIsLoading }) => {
             </View>
           </Pressable>
         </View>
-        <Image
-          resizeMode="contain"
-          style={{ width: 36, height: 36 }}
-          className="rounded-full"
-          source={require("../assets/female_avatar.png")}
-        />
+        <Pressable onPress={goToProfile}>
+          <Image
+            resizeMode="contain"
+            style={{ width: 36, height: 36 }}
+            className="rounded-full"
+            source={require("../assets/female_avatar.png")}
+          />
+        </Pressable>
       </View>
       <View className=" w-full bg-white opacity-25" style={{ height: 1 }} />
       <UserQeustionPopup

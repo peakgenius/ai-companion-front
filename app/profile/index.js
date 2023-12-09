@@ -10,8 +10,6 @@ import {
 import axios from "axios";
 
 import { AuthContext } from "../../contexts/user";
-import Popup from "../../components/Popup";
-import CustomButton from "../../components/CustomButton";
 import { getUrl } from "../../util";
 import Footer from "../../components/profile/Footer";
 import UserInfo from "../../components/profile/UserInfo";
@@ -19,14 +17,32 @@ import TipsPopup from "../../components/profile/TipsPopup";
 import colors from "../../styles/colors";
 import Navbar from "../../components/Navbar";
 import GoalItem from "../../components/profile/GoalItem";
-import RangeSlider from "../../components/RangeSlider";
 import NoGoals from "../../components/NoGoals";
+import GoalDeletingPopup from "../../components/profile/GoalDeletingPopup";
+import ProgressEditingPopup from "../../components/profile/ProgressEditingPopup";
+import PinWarningPopup from "../../components/profile/PinWarningPopup";
+import PersonalEditingPopup from "../../components/profile/PersonalEditingPopup";
 
 const Profile = () => {
+  const gender = ["female", "male"];
+  const marial_status = ["single", "married", "divorced"];
+
   const { user, setUser, getUser, authToken, dayToGetTips, setDayToGetTips } =
     useContext(AuthContext);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [personalEditingPopup, setPersonalEditingPopup] = useState({
+    visible: false,
+    item: "",
+  });
+  const [personalEditingData, setPersonalEditingData] = useState({
+    name: "",
+    age: 0,
+    height: 0,
+    weight: 0,
+    gender: 0,
+    marial_status: 0,
+  });
   const [visibleConfirmPopup, setVisibleConfirmPopup] = useState(false);
   const [visibleProgressPopup, setVisibleProgressPopup] = useState(false);
   const [visibleSettingQuestion, setVisibleSettingQuestion] = useState(false);
@@ -67,6 +83,22 @@ const Profile = () => {
       console.log(err);
     }
     setIsLoading(false);
+  };
+
+  const openPersonalEditingPopup = (item) => {
+    setPersonalEditingData({
+      name: user.name,
+      age: user.age,
+      height: user.height,
+      weight: user.weight,
+      gender: user.gender,
+      marial_status: user.marial_status,
+    });
+    setPersonalEditingPopup({ visible: true, item });
+  };
+
+  const closePersonalEditingPopup = () => {
+    setPersonalEditingPopup((prev) => ({ ...prev, visible: false }));
   };
 
   const openPopupSettingQuestion = () => {
@@ -272,7 +304,7 @@ const Profile = () => {
             },
           }
         );
-        closeProgressPopup();
+        getGoals();
       } catch (err) {
         console.log(err);
       }
@@ -288,12 +320,12 @@ const Profile = () => {
             },
           }
         );
-        closeProgressPopup();
         getUser();
       } catch (err) {
         console.log(err);
       }
     }
+    closeProgressPopup();
     setIsSaving(false);
   };
 
@@ -315,6 +347,23 @@ const Profile = () => {
     setIsSaving(false);
   };
 
+  const updatePersonal = async () => {
+    setIsSaving(true);
+    try {
+      await axios.patch(`${getUrl()}/profile/personal`, personalEditingData, {
+        headers: {
+          Authorization: `${authToken}`,
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    setIsSaving(false);
+    getUser();
+    closePersonalEditingPopup();
+  };
+
   return (
     <SafeAreaView className="flex-1 pt-5">
       <View className="pl-6 pr-6">
@@ -322,9 +371,12 @@ const Profile = () => {
       </View>
       <ScrollView className="bg-white pl-6 pr-6">
         <UserInfo
+          gender={gender}
+          marial_status={marial_status}
           user={user}
           isLoading={isLoading}
           openProgressPopup={openProgressPopup}
+          openPersonalEditingPopup={openPersonalEditingPopup}
         />
         <View className="mb-10 relative">
           <Text
@@ -352,117 +404,6 @@ const Profile = () => {
           )}
         </View>
       </ScrollView>
-      <Popup
-        visible={visibleConfirmPopup}
-        dismiss={closeConfimrPopup}
-        viewContainerClassName={
-          "bg-white border-gray-950 h-[200] pt-5 pl-5 pr-5 rounded-3xl"
-        }
-      >
-        <View>
-          <Text className="text-xl mb-8 text-center text-black">
-            Are you sure to delete?
-          </Text>
-          <View className="flex-row justify-center gap-3">
-            <View>
-              <CustomButton
-                title={isSaving ? "Deleting..." : "Delete"}
-                disabled={isSaving}
-                color={"red"}
-                onPress={deleteGoal}
-              />
-            </View>
-            <View>
-              <CustomButton
-                color={"grey"}
-                title={"Cancel"}
-                onPress={closeConfimrPopup}
-              />
-            </View>
-          </View>
-        </View>
-      </Popup>
-      <Popup
-        visible={visibleProgressPopup}
-        dismiss={closeProgressPopup}
-        viewContainerClassName={
-          "bg-white border-gray-950 h-[320] pt-5 pl-5 pr-5 rounded-3xl"
-        }
-      >
-        <View>
-          {!goalId.isDomain && (
-            <Text className="text-xl mb-8 text-center text-black">
-              How would you rank your progress of this goal between 1-10?
-            </Text>
-          )}
-          {goalId.isDomain && (
-            <Text className="text-xl mb-2 text-center text-black">
-              {goalId.id === "health" &&
-                "How healthy are you at this current time?"}
-              {goalId.id === "income" &&
-                "How satisfied are you with your current income?"}
-              {goalId.id === "romantic" &&
-                "How satisfied are you with your current romantic life?"}
-              {goalId.id === "family" &&
-                "How would you rank your overall immediate family life?"}
-              {goalId.id === "happiness" &&
-                "How would you rank your overall happiness right now?"}
-            </Text>
-          )}
-          <View>
-            <Text className="text-center mb-3 text-lg">{progress}</Text>
-            <RangeSlider
-              onValueChanged={(value) => setProgress(value[0])}
-              min={1}
-              max={10}
-              step={1}
-              value={progress}
-              width={220}
-            />
-          </View>
-          <View className="flex-row justify-center gap-3">
-            <View>
-              <CustomButton
-                color={colors.buttonColor}
-                title={isSaving ? "Saving..." : "Save"}
-                disabled={isSaving}
-                onPress={saveGoalProgress}
-              />
-            </View>
-            <View>
-              <CustomButton
-                color={"grey"}
-                title={"Cancel"}
-                onPress={closeProgressPopup}
-              />
-            </View>
-          </View>
-        </View>
-      </Popup>
-      <TipsPopup
-        visibleTipsPopup={visibleTipsPopup}
-        tips={tips}
-        isSaving={isSaving}
-        nodisplayAnymore={nodisplayAnymore}
-        closeTipsPopup={closeTipsPopup}
-      />
-      <Popup
-        visible={visibleWarningPopup}
-        dismiss={closeWarningPopup}
-        viewContainerClassName={
-          "border-gray-950 h-[220] pt-5 pl-5 pr-5 rounded-3xl"
-        }
-      >
-        <View className=" flex-row justify-center mb-3">
-          <Image
-            resizeMode="cover"
-            source={require("../../assets/warning-64.png")}
-          />
-        </View>
-        <Text className="text-black text-xl text-center">
-          You cannot pin more than 3!
-        </Text>
-      </Popup>
       <Footer
         openPopupSettingTip={openPopupSettingTip}
         openPopupSettingQuestion={openPopupSettingQuestion}
@@ -475,6 +416,42 @@ const Profile = () => {
         tipDisplayInterval={tipDisplayInterval}
         setTipInterval={setTipInterval}
         isLoading={isLoading}
+      />
+      <PersonalEditingPopup
+        personalEditingData={personalEditingData}
+        setPersonalEditingData={setPersonalEditingData}
+        personalEditingPopup={personalEditingPopup}
+        isSaving={isSaving}
+        closePersonalEditingPopup={closePersonalEditingPopup}
+        gender={gender}
+        marial_status={marial_status}
+        updatePersonal={updatePersonal}
+      />
+      <GoalDeletingPopup
+        visibleConfirmPopup={visibleConfirmPopup}
+        closeConfimrPopup={closeConfimrPopup}
+        isSaving={isSaving}
+        deleteGoal={deleteGoal}
+      />
+      <ProgressEditingPopup
+        visibleProgressPopup={visibleProgressPopup}
+        closeProgressPopup={closeProgressPopup}
+        goalId={goalId}
+        progress={progress}
+        setProgress={setProgress}
+        isSaving={isSaving}
+        saveGoalProgress={saveGoalProgress}
+      />
+      <TipsPopup
+        visibleTipsPopup={visibleTipsPopup}
+        tips={tips}
+        isSaving={isSaving}
+        nodisplayAnymore={nodisplayAnymore}
+        closeTipsPopup={closeTipsPopup}
+      />
+      <PinWarningPopup
+        visibleWarningPopup={visibleWarningPopup}
+        closeWarningPopup={closeWarningPopup}
       />
     </SafeAreaView>
   );
