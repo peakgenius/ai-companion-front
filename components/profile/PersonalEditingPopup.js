@@ -58,7 +58,7 @@ const PersonalEditingPopup = (props) => {
                 }))
               }
               min={1}
-              max={250}
+              max={personalEditingPopup.item === "age" ? 110 : 250}
               step={1}
               value={personalEditingData[personalEditingPopup.item]}
               width={220}

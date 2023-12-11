@@ -20,7 +20,7 @@ import GoalItem from "../../components/profile/GoalItem";
 import NoGoals from "../../components/NoGoals";
 import GoalDeletingPopup from "../../components/profile/GoalDeletingPopup";
 import ProgressEditingPopup from "../../components/profile/ProgressEditingPopup";
-import PinWarningPopup from "../../components/profile/PinWarningPopup";
+import WarningPopup from "../../components/WarningPopup";
 import PersonalEditingPopup from "../../components/profile/PersonalEditingPopup";
 
 const Profile = () => {
@@ -449,9 +449,10 @@ const Profile = () => {
         nodisplayAnymore={nodisplayAnymore}
         closeTipsPopup={closeTipsPopup}
       />
-      <PinWarningPopup
+      <WarningPopup
         visibleWarningPopup={visibleWarningPopup}
         closeWarningPopup={closeWarningPopup}
+        text={"You cannot pin more than 3!"}
       />
     </SafeAreaView>
   );

@@ -6,6 +6,7 @@ import {
   Pressable,
   SafeAreaView,
   TextInput,
+  ScrollView,
 } from "react-native";
 import { router } from "expo-router";
 import axios from "axios";
@@ -65,7 +66,7 @@ const Feedback = () => {
 
   return (
     <SafeAreaView className="bg-white h-screen">
-      <View className="p-6">
+      <ScrollView className="p-6">
         <View className="w-full flex-row pt-6 mb-10">
           <Pressable onPress={back}>
             <Image
@@ -118,7 +119,7 @@ const Feedback = () => {
             }}
           />
         </View>
-      </View>
+      </ScrollView>
       <Popup
         visible={visiblePopup}
         dismiss={closePopup}

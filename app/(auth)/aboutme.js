@@ -18,6 +18,7 @@ import { getUrl, getTokenExpiryTime } from "../../util";
 import { AuthContext } from "../../contexts/user";
 import colors from "../../styles/colors";
 import Card from "../../components/auth/Card";
+import WarningPopup from "../../components/WarningPopup";
 
 const Aboutme = () => {
   const [isSaving, setIsSaving] = useState(false);
@@ -28,6 +29,7 @@ const Aboutme = () => {
     setIsAuthenticated,
     setAuthToken,
   } = useContext(AuthContext);
+  const [warning, setWarning] = useState({ visiblePopup: false, text: "" });
 
   const signUp = async () => {
     if (
@@ -73,9 +75,13 @@ const Aboutme = () => {
         setSignupUser({});
       }
     } catch (err) {
-      console.log(err.message, "->");
+      setWarning({ visiblePopup: true, text: err.response.data.message });
     }
     setIsSaving(false);
+  };
+
+  const closeWarningPopup = () => {
+    setWarning({ visiblePopup: false, text: "" });
   };
 
   const changeSignupUser = (val, name) => {
@@ -234,6 +240,11 @@ const Aboutme = () => {
           />
         </View>
       </ScrollView>
+      <WarningPopup
+        visibleWarningPopup={warning.visiblePopup}
+        closeWarningPopup={closeWarningPopup}
+        text={warning.text}
+      />
     </SafeAreaView>
   );
 };

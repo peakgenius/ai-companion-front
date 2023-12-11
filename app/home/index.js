@@ -55,12 +55,17 @@ const Home = () => {
   };
 
   return (
-    <SafeAreaView className="h-full bg-white">
+    <SafeAreaView className="h-full bg-white pt-5">
+      {isAuthenticated && (
+        <View className="pl-6 pr-6">
+
+        <Navbar setIsLoading={setIsLoading} isLoading={isLoading} />
+        </View>
+      )}
       <ScrollView>
         {isAuthenticated && (
           <>
-            <View className="flex p-5">
-              <Navbar setIsLoading={setIsLoading} isLoading={isLoading} />
+            <View className="flex">
               <Progress
                 user={user}
                 goalProgresses={progresses}
