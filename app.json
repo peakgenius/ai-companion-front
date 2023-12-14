@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Life Sync",
-    "slug": "Life Sync",
+    "slug": "life-sync",
     "scheme": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.peakgenius226.aicompanion"
@@ -43,14 +45,16 @@
     "notification": {
       "icon": "./assets/notification-icon.png",
       "color": "#ffffff",
-      "sounds": ["./assets/notification-sound.wav"]
+      "sounds": [
+        "./assets/notification-sound.wav"
+      ]
     },
     "extra": {
       "router": {
         "origin": false
       },
       "eas": {
-        "projectId": "97d07e24-3553-4c65-a31d-8c4241eb2ca3"
+        "projectId": "b0d4ec33-98bc-4e77-bd40-f8f3c2513da3"
       }
     },
     "owner": "maxym221101"

@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
     happiness: 0,
     pin_count: 0,
   });
-  const [signupUser, setSignupUser] = useState({});
+  const [signupUserInfo, setSignupUserInfo] = useState({});
   const [userQuestion, setUserQuestion] = useState({
     id: "",
     content: "",
@@ -85,7 +85,7 @@ const AuthProvider = ({ children }) => {
     newPassword: "",
     confirmPassword: "",
     code: "",
-  })
+  });
 
   return (
     <AuthContext.Provider
@@ -101,8 +101,8 @@ const AuthProvider = ({ children }) => {
         setDayToGetQuestions,
         dayToGetTips,
         setDayToGetTips,
-        signupUser,
-        setSignupUser,
+        signupUserInfo,
+        setSignupUserInfo,
         userQuestion,
         setUserQuestion,
         goal,
@@ -110,7 +110,7 @@ const AuthProvider = ({ children }) => {
         questionCount,
         setQuestionCount,
         forgotPasswordInfo,
-        setForgotPasswordInfo
+        setForgotPasswordInfo,
       }}
     >
       {children}

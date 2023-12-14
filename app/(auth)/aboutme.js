@@ -23,13 +23,14 @@ import WarningPopup from "../../components/WarningPopup";
 const Aboutme = () => {
   const [isSaving, setIsSaving] = useState(false);
   const {
-    signupUser,
-    setSignupUser,
+    signupUserInfo,
+    setSignupUserInfo,
     setUser,
     setIsAuthenticated,
     setAuthToken,
   } = useContext(AuthContext);
   const [warning, setWarning] = useState({ visiblePopup: false, text: "" });
+  const [signupUser, setSignupUser] = useState({});
 
   const signUp = async () => {
     if (
@@ -47,11 +48,15 @@ const Aboutme = () => {
       return;
     setIsSaving(true);
     try {
-      const res = await axios.post(getUrl() + "/auth/signup", signupUser, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      });
+      const res = await axios.patch(
+        getUrl() + "/auth/signup",
+        { email: signupUserInfo.email, ...signupUser },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
       const { user, token } = res.data;
       if (token) {
         setIsAuthenticated(true);
@@ -72,7 +77,7 @@ const Aboutme = () => {
           console.log(e);
         }
         router.push("/loading");
-        setSignupUser({});
+        setSignupUserInfo({});
       }
     } catch (err) {
       setWarning({ visiblePopup: true, text: err.response.data.message });

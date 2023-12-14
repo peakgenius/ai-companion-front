@@ -23,7 +23,7 @@ const SetGoal = () => {
   const create = async () => {
     setIsSaving(true);
     try {
-      await axios.post(
+      axios.post(
         getUrl() + "/profile/set-goal",
         { goalContent: goal },
         {
