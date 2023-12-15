@@ -1,5 +1,5 @@
 import Modal from "react-native-modal";
-import { View, Pressable, Image } from "react-native";
+import { View, Pressable, TouchableHighlight, Image, SafeAreaView } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 import colors from "../styles/colors";
 NativeWindStyleSheet.setOutput({
@@ -14,6 +14,7 @@ export default function Popup({
   ...rest
 }) {
   return (
+    <View>
     <Modal isVisible={visible}>
       <View
         style={{
@@ -36,5 +37,6 @@ export default function Popup({
         </View>
       </View>
     </Modal>
+  </View>
   );
 }

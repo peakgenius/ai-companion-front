@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Pressable,
   ScrollView,
+  Platform
 } from "react-native";
 import { router } from "expo-router";
 import axios from "axios";
@@ -16,12 +17,14 @@ import CustomButton from "../../components/CustomButton";
 import { AuthContext } from "../../contexts/user";
 import { getUrl } from "../../util";
 import colors from "../../styles/colors";
+import WarningPopup from "../../components/WarningPopup";
 
 const Otp = () => {
   const { forgotPasswordInfo, setForgotPasswordInfo } = useContext(AuthContext);
   const [countDown, setCountDown] = useState(120);
   const [confirm, setConfirm] = useState({ isMatch: false, isDirty: false });
   const [isSaving, setIsSaving] = useState(false);
+  const [warning, setWarning] = useState({ visiblePopup: false, text: "" });
 
   useEffect(() => {
     if (countDown <= 0) {
@@ -57,6 +60,7 @@ const Otp = () => {
     if (value.length < 4) {
       setConfirm({ isDirty: false, isMatch: false });
     }
+    console.log("vlue", value)
     setForgotPasswordInfo((prev) => ({ ...prev, code: value }));
   };
 
@@ -80,7 +84,7 @@ const Otp = () => {
   };
 
   const goToPassword = async () => {
-    if (forgotPasswordInfo.code.length !== 4 || countDown <= 0) return;
+    if (forgotPasswordInfo.code.length < 4 || countDown <= 0) return;
     setIsSaving(true);
     try {
       const res = await axios.post(
@@ -92,7 +96,7 @@ const Otp = () => {
           },
         }
       );
-      console.log(res.data.confirm);
+      console.log("confirm", res.data.confirm);
       if (res.data.confirm) {
         setConfirm({ isDirty: true, isMatch: true });
         router.push("/resetpassword");
@@ -100,17 +104,21 @@ const Otp = () => {
         setConfirm({ isDirty: true, isMatch: false });
       }
     } catch (err) {
-      console.log(err.message, "->");
+      if (err.response) {
+        setWarning({ visiblePopup: true, text: err.response.data.message });
+      }
     }
     setIsSaving(false);
+  };
 
-    router.push("/resetpassword")
+  const closeWarningPopup = () => {
+    setWarning({ visiblePopup: false, text: "" });
   };
 
   return (
     <KeyboardAwareScrollView>
       <SafeAreaView className="bg-white pt-10">
-        <ScrollView>
+        <ScrollView  className={Platform.OS === "ios" ? "mt-8" : ""}>
           <View className="w-full pl-4 pr-4 flex-row h-[350px] overflow-hidden mb-6">
             <Pressable onPress={() => router.push("/forgotpassword")}>
               <Image
@@ -131,8 +139,8 @@ const Otp = () => {
             <Text className="text-[24px] text-black font-bold mb-4">
               OTP VERIFICATION
             </Text>
-            <View className="flex-row mr-1 mb-6">
-              <Text className="text-[14px] text-[#5A5A5A] mr-2">
+            <View className="mr-1 break-all mb-6 ">
+              <Text className="text-[14px] text-[#5A5A5A] mb-1 mr-2">
                 Enter the OTP sent to-
               </Text>
               <Text className="text-[14px] text-black font-bold">
@@ -171,6 +179,11 @@ const Otp = () => {
             </View>
           </View>
         </ScrollView>
+        <WarningPopup
+        visibleWarningPopup={warning.visiblePopup}
+        closeWarningPopup={closeWarningPopup}
+        text={warning.text}
+      />
       </SafeAreaView>
     </KeyboardAwareScrollView>
   );

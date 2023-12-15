@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput, View, Text, Image, Pressable } from "react-native";
+import { TextInput, View, Text, Image, Pressable, Platform } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 
 NativeWindStyleSheet.setOutput({
@@ -73,6 +73,7 @@ const Input = (props) => {
           maxLength={maxLength}
           placeholder={placeholder}
           className={`bg-[#f5f5f5] ${tailwindClass}`}
+          style={Platform.OS === "ios" ? {paddingVertical: 20, paddingTop: 20, paddingLeft: 20} : {}}
         />
       )}
     </>

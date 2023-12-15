@@ -7,6 +7,7 @@ import {
   Pressable,
   TextInput,
   ScrollView,
+  Platform
 } from "react-native";
 import { router } from "expo-router";
 import axios from "axios";
@@ -16,9 +17,11 @@ import CustomButton from "../../components/CustomButton";
 import { getUrl } from "../../util";
 import { AuthContext } from "../../contexts/user";
 import colors from "../../styles/colors";
+import WarningPopup from "../../components/WarningPopup";
 
 const ForgotPassword = () => {
   const { forgotPasswordInfo, setForgotPasswordInfo } = useContext(AuthContext);
+  const [warning, setWarning] = useState({ visiblePopup: false, text: "" });
   const [isSaving, setIsSaving] = useState(false);
   const sendCode = async () => {
     if (!forgotPasswordInfo.email) return;
@@ -33,11 +36,13 @@ const ForgotPassword = () => {
           },
         }
       );
+      router.push("/otp");
     } catch (err) {
-      console.log(err.message, "->");
+      if (err.response) {
+        setWarning({ visiblePopup: true, text: err.response.data.message });
+      }
     }
     setIsSaving(false);
-    router.push("/otp");
   };
 
   const back = () => {
@@ -45,10 +50,14 @@ const ForgotPassword = () => {
     router.push("/signin");
   };
 
+  const closeWarningPopup = () => {
+    setWarning({ visiblePopup: false, text: "" });
+  };
+
   return (
     <KeyboardAwareScrollView className="h-screen">
       <SafeAreaView className="pt-10">
-        <ScrollView>
+        <ScrollView className={Platform.OS === "ios" ? "mt-8" : ""}>
           <Pressable onPress={back} className="pl-4">
             <Image
               resizeMode="contain"
@@ -94,6 +103,11 @@ const ForgotPassword = () => {
             </View>
           </View>
         </ScrollView>
+        <WarningPopup
+        visibleWarningPopup={warning.visiblePopup}
+        closeWarningPopup={closeWarningPopup}
+        text={warning.text}
+      />
       </SafeAreaView>
     </KeyboardAwareScrollView>
   );

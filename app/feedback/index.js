@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   TextInput,
   ScrollView,
+  Platform
 } from "react-native";
 import { router } from "expo-router";
 import axios from "axios";
@@ -93,7 +94,8 @@ const Feedback = () => {
           optional
         </Text>
         <TextInput
-          className="pl-4 pt-8 pr-8 text-sm rounded-[10px] bg-white w-full border-gray-200 border"
+          className={`${Platform.OS === "ios" ? "h-[200px]" : "" }
+          pl-4 pt-8 pr-8 text-sm rounded-[10px] bg-white w-full border-gray-200 border`}
           placeholderTextColor={"#212121"}
           placeholder={
             "Please help us to continually improve LifeSync by providing your thoughts, feedback or ideas."

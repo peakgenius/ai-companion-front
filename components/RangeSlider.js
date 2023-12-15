@@ -13,7 +13,7 @@ const RangeSlider = (props) => {
         backgroundColor: colors.buttonColor,
         borderRadius: 10,
       }}
-      unselectedStyle={{ height: 6, borderRadius: 10 }}
+      unselectedStyle={{ height: 6, borderRadius: 10, backgroundColor: "#E8E6EA"}}
       containerStyle={{
         alignSelf: "center",
         marginTop: -10,
@@ -26,6 +26,13 @@ const RangeSlider = (props) => {
             width: 30,
             borderRadius: 50,
             backgroundColor: colors.buttonColor,
+          },
+          ios: {
+            height: 30,
+            width: 30,
+            borderRadius: 50,
+            backgroundColor: colors.buttonColor,
+            borderColor: colors.buttonColor
           },
         }),
       }}

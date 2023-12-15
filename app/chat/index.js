@@ -6,6 +6,7 @@ import {
   Pressable,
   ScrollView,
   SafeAreaView,
+  Platform,
 } from "react-native";
 import axios from "axios";
 import { router } from "expo-router";
@@ -130,9 +131,9 @@ const ChatPopup = (props) => {
             ))}
           </ScrollView>
         )}
-        <View className="pt-2 flex-row items-center">
+        <View className="pt-2 flex-row items-center mb-3">
           <Input
-            tailwindClass={"pl-4 mb-3 rounded-[20px] w-10/12"}
+            tailwindClass={`pl-4 rounded-[20px] w-10/12 ${Platform.OS === "ios" ? "h-[60px]" : ""}`}
             multiline={true}
             numberOfLines={4}
             defaultValue={userMessage}

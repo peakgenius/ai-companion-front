@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, View, Image, Pressable, SafeAreaView } from "react-native";
+import { Text, View, Image, Pressable, SafeAreaView, Platform } from "react-native";
 import { router } from "expo-router";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -79,7 +79,7 @@ const SetGoal = () => {
             Goal
           </Text>
           <Input
-            tailwindClass={"pl-4 mb-3 rounded-3xl w-full"}
+            tailwindClass={`pl-4 mb-3 rounded-3xl w-full ${Platform.OS === "ios" ? "h-[80px]" : ""}`}
             multiline={true}
             numberOfLines={5}
             defaultValue={goal}

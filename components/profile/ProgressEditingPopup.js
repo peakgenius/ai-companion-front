@@ -27,7 +27,7 @@ const ProgressEditingPopup = (props) => {
     >
       <View>
         {!goalId.isDomain && (
-          <Text className="text-xl mb-8 text-center text-black">
+          <Text className="text-xl mb-4 text-center text-black">
             How would you rank your progress of this goal between 1-10?
           </Text>
         )}

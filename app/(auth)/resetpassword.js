@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Pressable,
   ScrollView,
+  Platform
 } from "react-native";
 import { router } from "expo-router";
 import axios from "axios";
@@ -53,7 +54,7 @@ const SetPassword = () => {
 
   return (
     <KeyboardAwareScrollView>
-      <ScrollView>
+      <ScrollView className={Platform.OS === "ios" ? "mt-8" : ""}>
         <SafeAreaView className="bg-white pt-10">
           <Pressable onPress={back} className="pl-4">
             <Image

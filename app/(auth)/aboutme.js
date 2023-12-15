@@ -7,6 +7,7 @@ import {
   ScrollView,
   Pressable,
   StyleSheet,
+  Platform
 } from "react-native";
 import { router } from "expo-router";
 import axios from "axios";
@@ -95,7 +96,7 @@ const Aboutme = () => {
 
   return (
     <SafeAreaView className="flex bg-white p-6 pt-10">
-      <View className="flex-row mb-2">
+      <View className={`flex-row mb-2 ${Platform.OS === 'ios' ? "pl-6 pr-6 pt-10" : "" }`}>
         <Pressable onPress={() => router.push("/signup")}>
           <Image
             resizeMode="contain"
@@ -107,7 +108,7 @@ const Aboutme = () => {
           About me
         </Text>
       </View>
-      <ScrollView>
+      <ScrollView className={Platform.OS === 'ios' ? "pl-6 pr-6 mb-14" : ""}>
         <Text className="text-[16px] mb-2">Select one option</Text>
         <View className="flex-row justify-around mb-2">
           <Card
@@ -134,7 +135,7 @@ const Aboutme = () => {
             text={"single"}
             onPress={() => changeSignupUser(0, "marial_status")}
             selectedCard={signupUser.marial_status === 0}
-            containerPadding={"p-3 pl-6 pr-6"}
+            containerPadding={Platform.OS === "ios" ? "p-3 pl-7 pr-7" : "p-3 pl-6 pr-6"}
             src={require("../../assets/single-35.png")}
           />
           <Card
@@ -148,7 +149,7 @@ const Aboutme = () => {
             text={"divorced"}
             onPress={() => changeSignupUser(2, "marial_status")}
             selectedCard={signupUser.marial_status === 2}
-            containerPadding={"p-3 pl-6 pr-6"}
+            containerPadding={Platform.OS === "ios" ? "p-3 pl-5 pr-5" : "p-3 pl-6 pr-6"}
             src={require("../../assets/divorced-35.png")}
           />
         </View>
@@ -182,7 +183,7 @@ const Aboutme = () => {
           text={`${signupUser.weight ? signupUser.weight : 0} kg`}
           onValueChanged={(val) => changeSignupUser(val[0], "weight")}
         />
-        <Text className="text-sm">
+        <Text className="text-sm mb-2">
           Rank the following areas of your life from 1-10 with 1 being the
           extremely unsatisfied and 10 being extremely satisfied
         </Text>

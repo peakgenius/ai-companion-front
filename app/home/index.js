@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Pressable,
   ScrollView,
+  Platform,
 } from "react-native";
 import { Link, router } from "expo-router";
 import axios from "axios";
@@ -62,7 +63,7 @@ const Home = () => {
         <Navbar setIsLoading={setIsLoading} isLoading={isLoading} />
         </View>
       )}
-      <ScrollView>
+      <ScrollView className={Platform.OS === "ios" ? "mb-6" : ""}>
         {isAuthenticated && (
           <>
             <View className="flex">
