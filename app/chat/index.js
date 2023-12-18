@@ -96,7 +96,7 @@ const ChatPopup = (props) => {
 
   return (
     <KeyboardAwareScrollView>
-      <SafeAreaView className={Platform.OS === "ios" ? "h-screen" : "h-full"}>
+      <SafeAreaView className="h-screen">
         <View className="flex-1 pt-7 pl-4 pr-4" style={colors.mainBackground}>
           <Pressable className="mb-1" onPress={goToHome}>
             <Image
