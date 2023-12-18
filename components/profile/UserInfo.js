@@ -62,7 +62,7 @@ const UserInfo = (props) => {
             openPersonalEditingPopup("marial_status")
           }
           src={require("../../assets/marial.png")}
-          text={`Marial: ${marial_status[user.marial_status]}`}
+          text={`Marital: ${marial_status[user.marial_status]}`}
         />
       </View>
       <Text

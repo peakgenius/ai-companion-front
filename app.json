@@ -5,7 +5,7 @@
     "scheme": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/favicon.png",
+    "icon": "./assets/home.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/home.png",
@@ -17,7 +17,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.peakgenius226.aicompanion"
+      "bundleIdentifier": "com.lifesync.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +28,7 @@
     },
     "web": {
       "bundler": "metro",
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/home.png"
     },
     "plugins": [
       "expo-router",

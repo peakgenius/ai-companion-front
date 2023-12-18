@@ -2,6 +2,9 @@
 
 # dependencies
 node_modules/
+#prebuild
+ios/
+android/
 #env file
 .env
 # Expo
