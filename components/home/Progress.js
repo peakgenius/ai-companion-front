@@ -254,7 +254,7 @@ const ProgressRings = (props) => {
             onPress={() =>
               openProgressPopup(
                 "nogoal",
-                "Romantic/Partner",
+                "Romantic",
                 "How satisfied are you with your current romantic life?",
                 romantic,
                 true
