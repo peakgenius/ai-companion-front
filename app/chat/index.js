@@ -131,6 +131,7 @@ const ChatPopup = (props) => {
                   {item.ai_message && <AiMessage message={item.ai_message} />}
                 </View>
               ))}
+              {isSaving && <AiMessage message={"Thinking..."} />}
             </ScrollView>
           )}
           <View className="pt-2 flex-row items-center mb-3">
